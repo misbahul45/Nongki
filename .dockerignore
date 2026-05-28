@@ -1,0 +1,14 @@
+**/node_modules
+**/.svelte-kit
+**/dist
+**/build
+**/__pycache__
+**/*.pyc
+**/.venv
+.git
+.gitignore
+.env
+*.md
+infra/ssl
+**/coverage
+**/*.log

@@ -1,0 +1,263 @@
+# ─────────────────────────────────────────
+# NETWORKS
+# ─────────────────────────────────────────
+networks:
+  nongki_net:
+    driver: bridge
+
+# ─────────────────────────────────────────
+# VOLUMES
+# ─────────────────────────────────────────
+volumes:
+  mysql_data:
+  redis_data:
+  rabbitmq_data:
+  faiss_data:
+  sqlite_data:
+  wa_sessions:
+
+# ─────────────────────────────────────────
+# SERVICES
+# ─────────────────────────────────────────
+services:
+
+  # ─── MySQL ──────────────────────────────
+  mysql:
+    image: mysql:8.0
+    container_name: nongki-mysql
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - nongki_net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # ─── Redis ──────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: nongki-redis
+    restart: unless-stopped
+    env_file: .env
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis_data:/data
+    networks:
+      - nongki_net
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: nongki-rabbitmq
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    ports:
+      - "15672:15672"
+    networks:
+      - nongki_net
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  # ─── API (Fastify) ──────────────────────
+  api:
+    build:
+      context: ./services/api
+      dockerfile: Dockerfile
+      target: dev
+    container_name: nongki-api
+    restart: unless-stopped
+    env_file: .env
+    command: pnpm dev
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      PORT: ${API_PORT}
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+      RABBITMQ_URL: ${RABBITMQ_URL}
+      JWT_SECRET: ${JWT_SECRET}
+    ports:
+      - "4000:4000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - nongki_net
+    develop:
+      watch:
+        - action: sync
+          path: ./services/api/src
+          target: /app/src
+        - action: rebuild
+          path: ./services/api/package.json
+        - action: rebuild
+          path: ./services/api/pnpm-lock.yaml
+
+  # ─── WA-Worker (Baileys) ────────────────
+  wa-worker:
+    build:
+      context: ./services/wa-worker
+      dockerfile: Dockerfile
+      target: dev
+    container_name: nongki-wa-worker
+    restart: unless-stopped
+    env_file: .env
+    command: pnpm dev
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      RABBITMQ_URL: ${RABBITMQ_URL}
+      REDIS_URL: ${REDIS_URL}
+      API_INTERNAL_URL: ${API_INTERNAL_URL}
+    ports:
+      - "5000:5000"
+    volumes:
+      - wa_sessions:/app/sessions
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - nongki_net
+    develop:
+      watch:
+        - action: sync
+          path: ./services/wa-worker/src
+          target: /app/src
+        - action: rebuild
+          path: ./services/wa-worker/package.json
+        - action: rebuild
+          path: ./services/wa-worker/pnpm-lock.yaml
+
+  # ─── AI-Engine (Python/LangChain) ───────
+  # Catatan: folder di disk adalah "ai-enggine" (double g)
+  ai-engine:
+    build:
+      context: ./services/ai-enggine
+      dockerfile: Dockerfile
+      target: dev
+    container_name: nongki-ai-engine
+    restart: unless-stopped
+    env_file: .env
+    command: uv run uvicorn main:app --host 0.0.0.0 --port 8000 --reload --reload-dir /app
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      GROQ_API_KEY: ${GROQ_API_KEY}
+      REDIS_URL: ${REDIS_URL}
+      RABBITMQ_URL: ${RABBITMQ_URL}
+      SQLITE_PATH: ${SQLITE_PATH}
+      FAISS_PATH: ${FAISS_PATH}
+      API_INTERNAL_URL: ${API_INTERNAL_URL}
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONUNBUFFERED: "1"
+    ports:
+      - "8000:8000"
+    volumes:
+      - faiss_data:/app/vector_store
+      - sqlite_data:/app/db
+    depends_on:
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - nongki_net
+    develop:
+      watch:
+        - action: sync
+          path: ./services/ai-enggine
+          target: /app
+          ignore:
+            - __pycache__
+            - "*.pyc"
+            - .venv
+            - vector_store
+            - "*.db"
+        - action: rebuild
+          path: ./services/ai-enggine/pyproject.toml
+        - action: rebuild
+          path: ./services/ai-enggine/uv.lock
+
+  # ─── Web (SvelteKit) ────────────────────
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+      target: dev
+    container_name: nongki-web
+    restart: unless-stopped
+    env_file: .env
+    command: pnpm dev --host 0.0.0.0
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      PUBLIC_API_URL: ${PUBLIC_API_URL}
+      API_SSR_URL: ${API_SSR_URL}
+    ports:
+      - "5173:5173"
+    depends_on:
+      api:
+        condition: service_started
+    networks:
+      - nongki_net
+    develop:
+      watch:
+        - action: sync
+          path: ./apps/web/src
+          target: /app/src
+        - action: sync
+          path: ./apps/web/static
+          target: /app/static
+        - action: rebuild
+          path: ./apps/web/package.json
+        - action: rebuild
+          path: ./apps/web/pnpm-lock.yaml
+        - action: rebuild
+          path: ./apps/web/svelte.config.js
+        - action: rebuild
+          path: ./apps/web/vite.config.ts
+
+# ─── Nginx ──────────────────────────────
+  nginx:
+    image: nginx:alpine
+    container_name: nongki-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./infra/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./infra/nginx/conf.d:/etc/nginx/conf.d:ro
+    depends_on:
+      web:
+        condition: service_started
+      api:
+        condition: service_started
+    networks:
+      - nongki_net
