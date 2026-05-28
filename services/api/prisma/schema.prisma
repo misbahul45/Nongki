@@ -1,0 +1,1142 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserStatus {
+  active
+  inactive
+  suspended
+}
+
+enum BusinessType {
+  coffee_shop
+  cafe
+  restaurant
+  bakery
+  service
+  other
+}
+
+enum BusinessStatus {
+  onboarding
+  active
+  paused
+  suspended
+}
+
+enum MemberRole {
+  owner
+  manager
+  admin
+  staff
+}
+
+enum MemberStatus {
+  active
+  invited
+  disabled
+}
+
+enum OnboardingStepKey {
+  business_profile
+  business_goal
+  menu_upload
+  opening_hours
+  location
+  reservation_policy
+  order_policy
+  payment_policy
+  promo
+  faq
+  agent_persona
+  human_handoff_rule
+  whatsapp_connect
+  bot_test
+  go_live
+}
+
+enum OnboardingStepStatus {
+  pending
+  in_progress
+  completed
+  skipped
+  needs_review
+}
+
+enum AgentTone {
+  friendly
+  casual
+  professional
+  warm
+  playful
+}
+
+enum WhatsappSessionStatus {
+  not_connected
+  qr_pending
+  connecting
+  connected
+  disconnected
+  expired
+  error
+}
+
+enum LeadStatus {
+  new
+  interested
+  hot_lead
+  reserved
+  ordered
+  inactive
+  complaint
+  need_admin
+}
+
+enum ConversationChannel {
+  whatsapp
+  web
+}
+
+enum ConversationStatus {
+  open
+  pending
+  closed
+  human_takeover
+}
+
+enum MessageSenderType {
+  customer
+  ai
+  admin
+  system
+}
+
+enum MessageType {
+  text
+  image
+  document
+  audio
+  video
+  sticker
+  location
+}
+
+enum MessageDirection {
+  inbound
+  outbound
+}
+
+enum MessageStatus {
+  received
+  processing
+  sent
+  delivered
+  read
+  failed
+}
+
+enum KnowledgeDocumentType {
+  menu
+  price_list
+  opening_hours
+  location
+  reservation_policy
+  order_policy
+  payment_policy
+  promo
+  faq
+  brand_tone
+  admin_policy
+  other
+}
+
+enum KnowledgeSourceType {
+  manual
+  pdf
+  image
+  spreadsheet
+  website
+  chat_history
+}
+
+enum KnowledgeStatus {
+  draft
+  processing
+  indexed
+  needs_review
+  failed
+  archived
+}
+
+enum OrderStatus {
+  draft
+  pending_confirmation
+  confirmed
+  preparing
+  ready
+  completed
+  cancelled
+}
+
+enum FulfillmentType {
+  dine_in
+  takeaway
+  delivery
+}
+
+enum ReservationStatus {
+  pending
+  confirmed
+  cancelled
+  completed
+  no_show
+}
+
+enum ReminderType {
+  follow_up_customer
+  reservation_confirmation
+  payment_follow_up
+  admin_task
+  promo_follow_up
+  manual
+}
+
+enum ReminderStatus {
+  scheduled
+  sent
+  completed
+  cancelled
+  failed
+}
+
+enum ReminderChannel {
+  whatsapp
+  admin_notification
+  email
+}
+
+enum ReminderCreatedBy {
+  ai
+  admin
+  system
+}
+
+enum IntegrationProvider {
+  google_sheets
+  astrapay
+  other
+}
+
+enum IntegrationStatus {
+  connected
+  disconnected
+  expired
+  error
+}
+
+enum SyncStatus {
+  pending
+  success
+  failed
+}
+
+enum HandoffReason {
+  customer_requested_admin
+  complaint
+  refund_request
+  unknown_answer
+  sensitive_request
+  bot_failed
+  other
+}
+
+enum HandoffStatus {
+  open
+  assigned
+  resolved
+  cancelled
+}
+
+enum AgentType {
+  onboarding_agent
+  whatsapp_customer_agent
+  crm_assistant_agent
+  knowledge_agent
+}
+
+enum AgentRunStatus {
+  running
+  success
+  failed
+  interrupted
+}
+
+enum ToolExecutionStatus {
+  running
+  success
+  failed
+}
+
+enum NotificationType {
+  whatsapp_disconnected
+  new_handoff
+  new_reservation
+  new_order
+  reminder_due
+  bot_error
+  system
+}
+
+enum WebhookEventStatus {
+  received
+  processed
+  failed
+  ignored
+}
+
+enum CronJobStatus {
+  running
+  success
+  failed
+}
+
+enum PaymentProvider {
+  manual
+  astrapay
+  other
+}
+
+enum PaymentMethod {
+  manual
+  qris
+  transfer
+  cash
+}
+
+enum PaymentStatus {
+  unpaid
+  waiting_payment
+  paid
+  expired
+  failed
+  cancelled
+  refunded
+}
+
+model User {
+  id                   String         @id @default(uuid()) @db.Uuid
+  name                 String
+  email                String         @unique
+  passwordHash         String         @map("password_hash")
+  avatarUrl            String?        @map("avatar_url")
+  status               UserStatus     @default(active)
+  lastLoginAt          DateTime?      @map("last_login_at")
+  createdAt            DateTime       @default(now()) @map("created_at")
+  updatedAt            DateTime       @updatedAt @map("updated_at")
+  deletedAt            DateTime?      @map("deleted_at")
+
+  ownedBusinesses      Business[]     @relation("BusinessOwner")
+  memberships          BusinessMember[]
+  assignedConversations Conversation[] @relation("AssignedConversations")
+  assignedHandoffs     HumanHandoff[] @relation("AssignedHandoffs")
+  notifications        Notification[]
+  auditLogs            AuditLog[]
+  uploadedFiles        File[]
+
+  @@map("users")
+}
+
+model Business {
+  id               String         @id @default(uuid()) @db.Uuid
+  ownerId          String         @map("owner_id") @db.Uuid
+  name             String
+  slug             String         @unique
+  type             BusinessType   @default(coffee_shop)
+  description      String?
+  phone            String?
+  address          String?
+  googleMapsUrl    String?        @map("google_maps_url")
+  timezone         String         @default("Asia/Jakarta")
+  currency         String         @default("IDR")
+  status           BusinessStatus @default(onboarding)
+  createdAt        DateTime       @default(now()) @map("created_at")
+  updatedAt        DateTime       @updatedAt @map("updated_at")
+  deletedAt        DateTime?      @map("deleted_at")
+
+  owner            User           @relation("BusinessOwner", fields: [ownerId], references: [id])
+  members          BusinessMember[]
+  onboarding       BusinessOnboarding?
+  onboardingSteps  OnboardingStep[]
+  agentSettings    AgentSettings?
+  whatsappSessions WhatsappSession[]
+  customers        Customer[]
+  customerTags     CustomerTag[]
+  customerTagAssignments CustomerTagAssignment[]
+  conversations    Conversation[]
+  messages         Message[]
+  knowledgeDocs    KnowledgeDocument[]
+  knowledgeChunks  KnowledgeChunk[]
+  productCategories ProductCategory[]
+  products         Product[]
+  orders           Order[]
+  orderItems       OrderItem[]
+  reservations     Reservation[]
+  reminders        Reminder[]
+  integrations     Integration[]
+  spreadsheetConfigs SpreadsheetConfig[]
+  spreadsheetSyncLogs SpreadsheetSyncLog[]
+  humanHandoffs    HumanHandoff[]
+  agentRuns        AgentRun[]
+  toolExecutions   ToolExecution[]
+  notifications    Notification[]
+  auditLogs        AuditLog[]
+  files            File[]
+  webhookEvents    WebhookEvent[]
+  payments         Payment[]
+  paymentEvents    PaymentEvent[]
+
+  @@map("businesses")
+}
+
+model BusinessMember {
+  id           String       @id @default(uuid()) @db.Uuid
+  businessId   String       @map("business_id") @db.Uuid
+  userId       String       @map("user_id") @db.Uuid
+  role         MemberRole   @default(owner)
+  status       MemberStatus @default(active)
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedAt    DateTime     @updatedAt @map("updated_at")
+
+  business     Business     @relation(fields: [businessId], references: [id])
+  user         User         @relation(fields: [userId], references: [id])
+
+  @@unique([businessId, userId])
+  @@map("business_members")
+}
+
+model BusinessOnboarding {
+  id                      String    @id @default(uuid()) @db.Uuid
+  businessId              String    @unique @map("business_id") @db.Uuid
+  currentStep             String?   @map("current_step")
+  progressPercent         Int       @default(0) @map("progress_percent")
+  mainGoal                Json      @default("[]") @map("main_goal")
+  needsReservation        Boolean   @default(false) @map("needs_reservation")
+  needsOrder              Boolean   @default(false) @map("needs_order")
+  needsSpreadsheet        Boolean   @default(false) @map("needs_spreadsheet")
+  needsReminder           Boolean   @default(false) @map("needs_reminder")
+  needsHumanTakeover      Boolean   @default(true) @map("needs_human_takeover")
+  readyForWhatsapp        Boolean   @default(false) @map("ready_for_whatsapp")
+  readyForBotActivation   Boolean   @default(false) @map("ready_for_bot_activation")
+  completedAt             DateTime? @map("completed_at")
+  createdAt               DateTime  @default(now()) @map("created_at")
+  updatedAt               DateTime  @updatedAt @map("updated_at")
+
+  business                Business  @relation(fields: [businessId], references: [id])
+
+  @@map("business_onboarding")
+}
+
+model OnboardingStep {
+  id           String               @id @default(uuid()) @db.Uuid
+  businessId   String               @map("business_id") @db.Uuid
+  stepKey      OnboardingStepKey    @map("step_key")
+  title        String
+  description  String?
+  status       OnboardingStepStatus @default(pending)
+  data         Json                 @default("{}")
+  required     Boolean              @default(true)
+  sortOrder    Int                  @default(0) @map("sort_order")
+  completedAt  DateTime?            @map("completed_at")
+  createdAt    DateTime             @default(now()) @map("created_at")
+  updatedAt    DateTime             @updatedAt @map("updated_at")
+
+  business     Business             @relation(fields: [businessId], references: [id])
+
+  @@index([businessId])
+  @@index([businessId, stepKey])
+  @@index([businessId, status])
+  @@map("onboarding_steps")
+}
+
+model AgentSettings {
+  id                   String     @id @default(uuid()) @db.Uuid
+  businessId           String     @unique @map("business_id") @db.Uuid
+  agentName            String     @default("Ningki") @map("agent_name")
+  persona              String?
+  tone                 AgentTone  @default(friendly)
+  language             String     @default("id")
+  autoReplyEnabled     Boolean    @default(false) @map("auto_reply_enabled")
+  humanTakeoverEnabled Boolean    @default(true) @map("human_takeover_enabled")
+  maxUnknownAttempts   Int        @default(2) @map("max_unknown_attempts")
+  businessRules        Json       @default("{}") @map("business_rules")
+  handoffRules         Json       @default("{}") @map("handoff_rules")
+  allowedTools         Json       @default("[]") @map("allowed_tools")
+  createdAt            DateTime   @default(now()) @map("created_at")
+  updatedAt            DateTime   @updatedAt @map("updated_at")
+
+  business             Business   @relation(fields: [businessId], references: [id])
+
+  @@map("agent_settings")
+}
+
+model WhatsappSession {
+  id                    String                @id @default(uuid()) @db.Uuid
+  businessId            String                @map("business_id") @db.Uuid
+  sessionName           String                @map("session_name")
+  phoneNumber           String?               @map("phone_number")
+  status                WhatsappSessionStatus @default(not_connected)
+  qrCode                String?               @map("qr_code")
+  qrExpiresAt           DateTime?             @map("qr_expires_at")
+  sessionDataEncrypted  String?               @map("session_data_encrypted")
+  lastConnectedAt       DateTime?             @map("last_connected_at")
+  lastDisconnectedAt    DateTime?             @map("last_disconnected_at")
+  disconnectReason      String?               @map("disconnect_reason")
+  botEnabled            Boolean               @default(false) @map("bot_enabled")
+  createdAt             DateTime              @default(now()) @map("created_at")
+  updatedAt             DateTime              @updatedAt @map("updated_at")
+
+  business              Business              @relation(fields: [businessId], references: [id])
+
+  @@unique([businessId, sessionName])
+  @@index([businessId])
+  @@index([status])
+  @@index([botEnabled])
+  @@map("whatsapp_sessions")
+}
+
+model Customer {
+  id                 String       @id @default(uuid()) @db.Uuid
+  businessId         String       @map("business_id") @db.Uuid
+  waPhone            String       @map("wa_phone")
+  waName             String?      @map("wa_name")
+  name               String?
+  email              String?
+  leadStatus         LeadStatus   @default(new) @map("lead_status")
+  lastMessageAt      DateTime?    @map("last_message_at")
+  totalInteractions  Int          @default(0) @map("total_interactions")
+  totalOrders        Int          @default(0) @map("total_orders")
+  totalReservations  Int          @default(0) @map("total_reservations")
+  notes              String?
+  metadata           Json         @default("{}")
+  createdAt          DateTime     @default(now()) @map("created_at")
+  updatedAt          DateTime     @updatedAt @map("updated_at")
+  deletedAt          DateTime?    @map("deleted_at")
+
+  business           Business     @relation(fields: [businessId], references: [id])
+  tagAssignments     CustomerTagAssignment[]
+  conversations      Conversation[]
+  messages           Message[]
+  orders             Order[]
+  reservations       Reservation[]
+  reminders          Reminder[]
+  humanHandoffs      HumanHandoff[]
+  agentRuns          AgentRun[]
+  payments           Payment[]
+
+  @@unique([businessId, waPhone])
+  @@index([businessId])
+  @@index([businessId, leadStatus])
+  @@index([businessId, lastMessageAt])
+  @@map("customers")
+}
+
+model CustomerTag {
+  id           String    @id @default(uuid()) @db.Uuid
+  businessId   String    @map("business_id") @db.Uuid
+  name         String
+  color        String?
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  business     Business  @relation(fields: [businessId], references: [id])
+  assignments  CustomerTagAssignment[]
+
+  @@unique([businessId, name])
+  @@map("customer_tags")
+}
+
+model CustomerTagAssignment {
+  id           String      @id @default(uuid()) @db.Uuid
+  businessId   String      @map("business_id") @db.Uuid
+  customerId   String      @map("customer_id") @db.Uuid
+  tagId        String      @map("tag_id") @db.Uuid
+  createdAt    DateTime    @default(now()) @map("created_at")
+
+  business     Business    @relation(fields: [businessId], references: [id])
+  customer     Customer    @relation(fields: [customerId], references: [id])
+  tag          CustomerTag @relation(fields: [tagId], references: [id])
+
+  @@unique([customerId, tagId])
+  @@map("customer_tag_assignments")
+}
+
+model Conversation {
+  id                String              @id @default(uuid()) @db.Uuid
+  businessId        String              @map("business_id") @db.Uuid
+  customerId        String              @map("customer_id") @db.Uuid
+  channel           ConversationChannel @default(whatsapp)
+  status            ConversationStatus  @default(open)
+  aiEnabled         Boolean             @default(true) @map("ai_enabled")
+  humanTakeover     Boolean             @default(false) @map("human_takeover")
+  assignedUserId    String?             @map("assigned_user_id") @db.Uuid
+  lastMessage       String?             @map("last_message")
+  lastMessageAt     DateTime?           @map("last_message_at")
+  lastAiReplyAt     DateTime?           @map("last_ai_reply_at")
+  lastAdminReplyAt  DateTime?           @map("last_admin_reply_at")
+  summary           String?
+  metadata          Json                @default("{}")
+  createdAt         DateTime            @default(now()) @map("created_at")
+  updatedAt         DateTime            @updatedAt @map("updated_at")
+  closedAt          DateTime?           @map("closed_at")
+
+  business          Business            @relation(fields: [businessId], references: [id])
+  customer          Customer            @relation(fields: [customerId], references: [id])
+  assignedUser      User?               @relation("AssignedConversations", fields: [assignedUserId], references: [id])
+  messages          Message[]
+  orders            Order[]
+  reservations      Reservation[]
+  reminders         Reminder[]
+  humanHandoffs     HumanHandoff[]
+  agentRuns         AgentRun[]
+  toolExecutions    ToolExecution[]
+  payments          Payment[]
+
+  @@index([businessId])
+  @@index([businessId, status])
+  @@index([businessId, customerId])
+  @@index([businessId, lastMessageAt])
+  @@index([humanTakeover])
+  @@map("conversations")
+}
+
+model Message {
+  id              String            @id @default(uuid()) @db.Uuid
+  businessId      String            @map("business_id") @db.Uuid
+  conversationId  String            @map("conversation_id") @db.Uuid
+  customerId      String?           @map("customer_id") @db.Uuid
+  senderType      MessageSenderType @map("sender_type")
+  messageType     MessageType       @default(text) @map("message_type")
+  content         String?
+  mediaUrl        String?           @map("media_url")
+  waMessageId     String?           @map("wa_message_id")
+  direction       MessageDirection
+  status          MessageStatus     @default(sent)
+  metadata        Json              @default("{}")
+  createdAt       DateTime          @default(now()) @map("created_at")
+
+  business        Business          @relation(fields: [businessId], references: [id])
+  conversation    Conversation      @relation(fields: [conversationId], references: [id])
+  customer        Customer?         @relation(fields: [customerId], references: [id])
+
+  @@index([businessId])
+  @@index([conversationId])
+  @@index([customerId])
+  @@index([createdAt])
+  @@index([senderType])
+  @@map("messages")
+}
+
+model KnowledgeDocument {
+  id             String                @id @default(uuid()) @db.Uuid
+  businessId     String                @map("business_id") @db.Uuid
+  title          String
+  documentType   KnowledgeDocumentType @map("document_type")
+  sourceType     KnowledgeSourceType   @map("source_type")
+  content        String?
+  fileId         String?               @map("file_id") @db.Uuid
+  fileUrl        String?               @map("file_url")
+  status         KnowledgeStatus       @default(draft)
+  extractedText  String?               @map("extracted_text")
+  metadata       Json                  @default("{}")
+  createdAt      DateTime              @default(now()) @map("created_at")
+  updatedAt      DateTime              @updatedAt @map("updated_at")
+  deletedAt      DateTime?             @map("deleted_at")
+
+  business       Business              @relation(fields: [businessId], references: [id])
+  file           File?                 @relation(fields: [fileId], references: [id])
+  chunks         KnowledgeChunk[]
+
+  @@index([businessId])
+  @@index([businessId, documentType])
+  @@index([businessId, status])
+  @@map("knowledge_documents")
+}
+
+model KnowledgeChunk {
+  id           String            @id @default(uuid()) @db.Uuid
+  businessId   String            @map("business_id") @db.Uuid
+  documentId   String            @map("document_id") @db.Uuid
+  chunkText    String            @map("chunk_text")
+  chunkIndex   Int               @default(0) @map("chunk_index")
+  embeddingRef String?           @map("embedding_ref")
+  vectorStore  String            @default("faiss") @map("vector_store")
+  metadata     Json              @default("{}")
+  createdAt    DateTime          @default(now()) @map("created_at")
+  updatedAt    DateTime          @updatedAt @map("updated_at")
+
+  business     Business          @relation(fields: [businessId], references: [id])
+  document     KnowledgeDocument @relation(fields: [documentId], references: [id])
+
+  @@index([businessId])
+  @@index([documentId])
+  @@index([businessId, documentId])
+  @@map("knowledge_chunks")
+}
+
+model ProductCategory {
+  id           String    @id @default(uuid()) @db.Uuid
+  businessId   String    @map("business_id") @db.Uuid
+  name         String
+  description  String?
+  sortOrder    Int       @default(0) @map("sort_order")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  business     Business  @relation(fields: [businessId], references: [id])
+  products     Product[]
+
+  @@unique([businessId, name])
+  @@map("product_categories")
+}
+
+model Product {
+  id           String           @id @default(uuid()) @db.Uuid
+  businessId   String           @map("business_id") @db.Uuid
+  categoryId   String?          @map("category_id") @db.Uuid
+  name         String
+  description  String?
+  price        Int              @default(0)
+  currency     String           @default("IDR")
+  isAvailable  Boolean          @default(true) @map("is_available")
+  imageUrl     String?          @map("image_url")
+  metadata     Json             @default("{}")
+  createdAt    DateTime         @default(now()) @map("created_at")
+  updatedAt    DateTime         @updatedAt @map("updated_at")
+  deletedAt    DateTime?        @map("deleted_at")
+
+  business     Business         @relation(fields: [businessId], references: [id])
+  category     ProductCategory? @relation(fields: [categoryId], references: [id])
+  orderItems   OrderItem[]
+
+  @@index([businessId])
+  @@index([businessId, isAvailable])
+  @@index([businessId, categoryId])
+  @@map("products")
+}
+
+model Order {
+  id              String         @id @default(uuid()) @db.Uuid
+  businessId      String         @map("business_id") @db.Uuid
+  customerId      String         @map("customer_id") @db.Uuid
+  conversationId  String?        @map("conversation_id") @db.Uuid
+  orderNumber     String         @map("order_number")
+  status          OrderStatus    @default(draft)
+  fulfillmentType FulfillmentType @default(takeaway) @map("fulfillment_type")
+  totalAmount     Int            @default(0) @map("total_amount")
+  currency        String         @default("IDR")
+  paymentStatus   PaymentStatus  @default(unpaid) @map("payment_status")
+  pickupTime      DateTime?      @map("pickup_time")
+  deliveryAddress String?        @map("delivery_address")
+  notes           String?
+  metadata        Json           @default("{}")
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+  cancelledAt     DateTime?      @map("cancelled_at")
+  completedAt     DateTime?      @map("completed_at")
+
+  business        Business       @relation(fields: [businessId], references: [id])
+  customer        Customer       @relation(fields: [customerId], references: [id])
+  conversation    Conversation?  @relation(fields: [conversationId], references: [id])
+  items           OrderItem[]
+  reminders       Reminder[]
+  payments        Payment[]
+
+  @@unique([businessId, orderNumber])
+  @@index([businessId])
+  @@index([businessId, status])
+  @@index([customerId])
+  @@map("orders")
+}
+
+model OrderItem {
+  id           String   @id @default(uuid()) @db.Uuid
+  businessId   String   @map("business_id") @db.Uuid
+  orderId      String   @map("order_id") @db.Uuid
+  productId    String?  @map("product_id") @db.Uuid
+  productName  String   @map("product_name")
+  quantity     Int      @default(1)
+  unitPrice    Int      @default(0) @map("unit_price")
+  subtotal     Int      @default(0)
+  notes        String?
+  metadata     Json     @default("{}")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  business     Business @relation(fields: [businessId], references: [id])
+  order        Order    @relation(fields: [orderId], references: [id])
+  product      Product? @relation(fields: [productId], references: [id])
+
+  @@index([businessId])
+  @@index([orderId])
+  @@index([productId])
+  @@map("order_items")
+}
+
+model Reservation {
+  id                 String            @id @default(uuid()) @db.Uuid
+  businessId         String            @map("business_id") @db.Uuid
+  customerId         String            @map("customer_id") @db.Uuid
+  conversationId     String?           @map("conversation_id") @db.Uuid
+  reservationNumber  String            @map("reservation_number")
+  reservationDate    DateTime          @map("reservation_date") @db.Date
+  reservationTime    DateTime          @map("reservation_time") @db.Time()
+  guestCount         Int               @default(1) @map("guest_count")
+  customerName       String?           @map("customer_name")
+  customerPhone      String?           @map("customer_phone")
+  status             ReservationStatus @default(pending)
+  notes              String?
+  reminderSentAt     DateTime?         @map("reminder_sent_at")
+  metadata           Json              @default("{}")
+  createdAt          DateTime          @default(now()) @map("created_at")
+  updatedAt          DateTime          @updatedAt @map("updated_at")
+  cancelledAt        DateTime?         @map("cancelled_at")
+  completedAt        DateTime?         @map("completed_at")
+
+  business           Business          @relation(fields: [businessId], references: [id])
+  customer           Customer          @relation(fields: [customerId], references: [id])
+  conversation       Conversation?     @relation(fields: [conversationId], references: [id])
+  reminders          Reminder[]
+  payments           Payment[]
+
+  @@unique([businessId, reservationNumber])
+  @@index([businessId])
+  @@index([businessId, reservationDate])
+  @@index([businessId, status])
+  @@index([customerId])
+  @@index([conversationId])
+  @@map("reservations")
+}
+
+model Reminder {
+  id              String            @id @default(uuid()) @db.Uuid
+  businessId      String            @map("business_id") @db.Uuid
+  customerId      String?           @map("customer_id") @db.Uuid
+  conversationId  String?           @map("conversation_id") @db.Uuid
+  reservationId   String?           @map("reservation_id") @db.Uuid
+  orderId         String?           @map("order_id") @db.Uuid
+  type            ReminderType
+  title           String
+  description     String?
+  scheduledAt     DateTime          @map("scheduled_at")
+  status          ReminderStatus    @default(scheduled)
+  channel         ReminderChannel   @default(admin_notification)
+  createdBy       ReminderCreatedBy @default(system) @map("created_by")
+  sentAt          DateTime?         @map("sent_at")
+  completedAt     DateTime?         @map("completed_at")
+  metadata        Json              @default("{}")
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
+
+  business        Business          @relation(fields: [businessId], references: [id])
+  customer        Customer?         @relation(fields: [customerId], references: [id])
+  conversation    Conversation?     @relation(fields: [conversationId], references: [id])
+  reservation     Reservation?      @relation(fields: [reservationId], references: [id])
+  order           Order?            @relation(fields: [orderId], references: [id])
+
+  @@index([businessId])
+  @@index([businessId, scheduledAt])
+  @@index([businessId, status])
+  @@index([customerId])
+  @@index([reservationId])
+  @@index([orderId])
+  @@map("reminders")
+}
+
+model Integration {
+  id                    String              @id @default(uuid()) @db.Uuid
+  businessId            String              @map("business_id") @db.Uuid
+  provider              IntegrationProvider
+  status                IntegrationStatus   @default(disconnected)
+  accessTokenEncrypted  String?             @map("access_token_encrypted")
+  refreshTokenEncrypted String?             @map("refresh_token_encrypted")
+  expiresAt             DateTime?           @map("expires_at")
+  metadata              Json                @default("{}")
+  createdAt             DateTime            @default(now()) @map("created_at")
+  updatedAt             DateTime            @updatedAt @map("updated_at")
+
+  business              Business            @relation(fields: [businessId], references: [id])
+  spreadsheetConfigs    SpreadsheetConfig[]
+
+  @@index([businessId])
+  @@index([businessId, provider])
+  @@map("integrations")
+}
+
+model SpreadsheetConfig {
+  id                     String      @id @default(uuid()) @db.Uuid
+  businessId             String      @map("business_id") @db.Uuid
+  integrationId          String      @map("integration_id") @db.Uuid
+  spreadsheetId          String      @map("spreadsheet_id")
+  spreadsheetUrl         String?     @map("spreadsheet_url")
+  customersSheetName     String      @default("Customers") @map("customers_sheet_name")
+  reservationsSheetName  String      @default("Reservations") @map("reservations_sheet_name")
+  ordersSheetName        String      @default("Orders") @map("orders_sheet_name")
+  remindersSheetName     String      @default("Reminders") @map("reminders_sheet_name")
+  syncCustomers          Boolean     @default(true) @map("sync_customers")
+  syncOrders             Boolean     @default(true) @map("sync_orders")
+  syncReservations       Boolean     @default(true) @map("sync_reservations")
+  syncReminders          Boolean     @default(false) @map("sync_reminders")
+  autoSyncEnabled        Boolean     @default(false) @map("auto_sync_enabled")
+  createdAt              DateTime    @default(now()) @map("created_at")
+  updatedAt              DateTime    @updatedAt @map("updated_at")
+
+  business               Business    @relation(fields: [businessId], references: [id])
+  integration            Integration @relation(fields: [integrationId], references: [id])
+  syncLogs               SpreadsheetSyncLog[]
+
+  @@map("spreadsheet_configs")
+}
+
+model SpreadsheetSyncLog {
+  id                   String            @id @default(uuid()) @db.Uuid
+  businessId           String            @map("business_id") @db.Uuid
+  spreadsheetConfigId  String            @map("spreadsheet_config_id") @db.Uuid
+  entityType           String            @map("entity_type")
+  entityId             String?           @map("entity_id") @db.Uuid
+  status               SyncStatus        @default(pending)
+  errorMessage         String?           @map("error_message")
+  syncedAt             DateTime?         @map("synced_at")
+  createdAt            DateTime          @default(now()) @map("created_at")
+
+  business             Business          @relation(fields: [businessId], references: [id])
+  spreadsheetConfig    SpreadsheetConfig @relation(fields: [spreadsheetConfigId], references: [id])
+
+  @@map("spreadsheet_sync_logs")
+}
+
+model HumanHandoff {
+  id               String        @id @default(uuid()) @db.Uuid
+  businessId       String        @map("business_id") @db.Uuid
+  conversationId   String        @map("conversation_id") @db.Uuid
+  customerId       String        @map("customer_id") @db.Uuid
+  reason           HandoffReason
+  summary          String?
+  status           HandoffStatus @default(open)
+  assignedUserId   String?       @map("assigned_user_id") @db.Uuid
+  resolvedAt       DateTime?     @map("resolved_at")
+  createdAt        DateTime      @default(now()) @map("created_at")
+  updatedAt        DateTime      @updatedAt @map("updated_at")
+
+  business         Business      @relation(fields: [businessId], references: [id])
+  conversation     Conversation  @relation(fields: [conversationId], references: [id])
+  customer         Customer      @relation(fields: [customerId], references: [id])
+  assignedUser     User?         @relation("AssignedHandoffs", fields: [assignedUserId], references: [id])
+
+  @@map("human_handoffs")
+}
+
+model AgentRun {
+  id              String         @id @default(uuid()) @db.Uuid
+  businessId      String         @map("business_id") @db.Uuid
+  conversationId  String?        @map("conversation_id") @db.Uuid
+  customerId      String?        @map("customer_id") @db.Uuid
+  agentType       AgentType      @map("agent_type")
+  input           String?
+  output          String?
+  intent          String?
+  status          AgentRunStatus @default(running)
+  errorMessage    String?        @map("error_message")
+  tokensInput     Int            @default(0) @map("tokens_input")
+  tokensOutput    Int            @default(0) @map("tokens_output")
+  latencyMs       Int?           @map("latency_ms")
+  metadata        Json           @default("{}")
+  createdAt       DateTime       @default(now()) @map("created_at")
+  completedAt     DateTime?      @map("completed_at")
+
+  business        Business       @relation(fields: [businessId], references: [id])
+  conversation    Conversation?  @relation(fields: [conversationId], references: [id])
+  customer        Customer?      @relation(fields: [customerId], references: [id])
+  toolExecutions  ToolExecution[]
+
+  @@index([businessId])
+  @@index([conversationId])
+  @@index([customerId])
+  @@index([agentType])
+  @@index([createdAt])
+  @@map("agent_runs")
+}
+
+model ToolExecution {
+  id              String               @id @default(uuid()) @db.Uuid
+  businessId      String               @map("business_id") @db.Uuid
+  agentRunId      String?              @map("agent_run_id") @db.Uuid
+  conversationId  String?              @map("conversation_id") @db.Uuid
+  toolName        String               @map("tool_name")
+  input           Json                 @default("{}")
+  output          Json                 @default("{}")
+  status          ToolExecutionStatus  @default(running)
+  errorMessage    String?              @map("error_message")
+  latencyMs       Int?                 @map("latency_ms")
+  createdAt       DateTime             @default(now()) @map("created_at")
+  completedAt     DateTime?            @map("completed_at")
+
+  business        Business             @relation(fields: [businessId], references: [id])
+  agentRun        AgentRun?            @relation(fields: [agentRunId], references: [id])
+  conversation    Conversation?        @relation(fields: [conversationId], references: [id])
+
+  @@map("tool_executions")
+}
+
+model Notification {
+  id           String           @id @default(uuid()) @db.Uuid
+  businessId   String           @map("business_id") @db.Uuid
+  userId       String?          @map("user_id") @db.Uuid
+  type         NotificationType
+  title        String
+  message      String?
+  isRead       Boolean          @default(false) @map("is_read")
+  metadata     Json             @default("{}")
+  createdAt    DateTime         @default(now()) @map("created_at")
+  readAt       DateTime?        @map("read_at")
+
+  business     Business         @relation(fields: [businessId], references: [id])
+  user         User?            @relation(fields: [userId], references: [id])
+
+  @@map("notifications")
+}
+
+model AuditLog {
+  id           String    @id @default(uuid()) @db.Uuid
+  businessId   String?   @map("business_id") @db.Uuid
+  userId       String?   @map("user_id") @db.Uuid
+  action       String
+  entityType   String    @map("entity_type")
+  entityId     String?   @map("entity_id") @db.Uuid
+  oldData      Json?     @map("old_data")
+  newData      Json?     @map("new_data")
+  ipAddress    String?   @map("ip_address")
+  userAgent    String?   @map("user_agent")
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  business     Business? @relation(fields: [businessId], references: [id])
+  user         User?     @relation(fields: [userId], references: [id])
+
+  @@index([businessId])
+  @@index([userId])
+  @@index([entityType])
+  @@index([entityId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+model File {
+  id               String    @id @default(uuid()) @db.Uuid
+  businessId       String    @map("business_id") @db.Uuid
+  uploadedBy       String?   @map("uploaded_by") @db.Uuid
+  filename         String
+  originalName     String    @map("original_name")
+  mimeType         String    @map("mime_type")
+  sizeBytes        Int       @map("size_bytes")
+  storageProvider  String    @default("local") @map("storage_provider")
+  storagePath      String    @map("storage_path")
+  publicUrl        String?   @map("public_url")
+  metadata         Json      @default("{}")
+  createdAt        DateTime  @default(now()) @map("created_at")
+
+  business         Business  @relation(fields: [businessId], references: [id])
+  uploader         User?     @relation(fields: [uploadedBy], references: [id])
+  knowledgeDocs    KnowledgeDocument[]
+
+  @@map("files")
+}
+
+model WebhookEvent {
+  id           String             @id @default(uuid()) @db.Uuid
+  businessId   String?            @map("business_id") @db.Uuid
+  provider     String
+  eventType    String             @map("event_type")
+  externalId   String?            @map("external_id")
+  payload      Json
+  status       WebhookEventStatus @default(received)
+  processedAt  DateTime?          @map("processed_at")
+  errorMessage String?            @map("error_message")
+  createdAt    DateTime           @default(now()) @map("created_at")
+
+  business     Business?          @relation(fields: [businessId], references: [id])
+
+  @@index([provider, externalId])
+  @@map("webhook_events")
+}
+
+model CronJob {
+  id           String        @id @default(uuid()) @db.Uuid
+  jobName      String        @map("job_name")
+  status       CronJobStatus @default(running)
+  startedAt    DateTime      @map("started_at")
+  finishedAt   DateTime?     @map("finished_at")
+  result       Json          @default("{}")
+  errorMessage String?       @map("error_message")
+  createdAt    DateTime      @default(now()) @map("created_at")
+
+  @@map("cron_jobs")
+}
+
+model Payment {
+  id                   String          @id @default(uuid()) @db.Uuid
+  businessId           String          @map("business_id") @db.Uuid
+  orderId              String?         @map("order_id") @db.Uuid
+  reservationId        String?         @map("reservation_id") @db.Uuid
+  customerId           String?         @map("customer_id") @db.Uuid
+  conversationId       String?         @map("conversation_id") @db.Uuid
+  provider             PaymentProvider @default(manual)
+  method               PaymentMethod   @default(manual)
+  status               PaymentStatus   @default(unpaid)
+  amount               Int
+  currency             String          @default("IDR")
+  merchantReferenceNo  String          @unique @map("merchant_reference_no")
+  providerReferenceNo  String?         @map("provider_reference_no")
+  qrContent            String?         @map("qr_content")
+  qrImageUrl           String?         @map("qr_image_url")
+  expiresAt            DateTime?       @map("expires_at")
+  paidAt               DateTime?       @map("paid_at")
+  rawRequest           Json?           @map("raw_request")
+  rawResponse          Json?           @map("raw_response")
+  rawCallback          Json?           @map("raw_callback")
+  createdAt            DateTime        @default(now()) @map("created_at")
+  updatedAt            DateTime        @updatedAt @map("updated_at")
+
+  business             Business        @relation(fields: [businessId], references: [id])
+  order                Order?          @relation(fields: [orderId], references: [id])
+  reservation          Reservation?    @relation(fields: [reservationId], references: [id])
+  customer             Customer?       @relation(fields: [customerId], references: [id])
+  conversation         Conversation?   @relation(fields: [conversationId], references: [id])
+  events               PaymentEvent[]
+
+  @@index([businessId])
+  @@index([businessId, status])
+  @@index([orderId])
+  @@index([reservationId])
+  @@index([merchantReferenceNo])
+  @@map("payments")
+}
+
+model PaymentEvent {
+  id          String   @id @default(uuid()) @db.Uuid
+  businessId  String   @map("business_id") @db.Uuid
+  paymentId   String   @map("payment_id") @db.Uuid
+  eventType   String   @map("event_type")
+  payload     Json     @default("{}")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  business    Business @relation(fields: [businessId], references: [id])
+  payment     Payment  @relation(fields: [paymentId], references: [id])
+
+  @@index([paymentId])
+  @@index([businessId])
+  @@map("payment_events")
+}

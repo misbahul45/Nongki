@@ -1,48 +1,21 @@
-# ─────────────────────────────────────────
-# AI-Engine — Python/LangChain/FAISS
-# ─────────────────────────────────────────
-# ─────────────────────────────────────────
-# Dev stage (used by docker-compose.dev.yml)
-# ─────────────────────────────────────────
-FROM python:3.12-slim AS dev
-RUN apt-get update && apt-get install -y libgomp1 curl && rm -rf /var/lib/apt/lists/*
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh
-ENV PATH="/root/.local/bin:$PATH"
+FROM python:3.11-slim
+
 WORKDIR /app
-COPY pyproject.toml uv.lock ./
-RUN uv sync --frozen
-COPY . .
-RUN mkdir -p /app/vector_store /app/db
-EXPOSE 8000
-CMD ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
-
-# ─────────────────────────────────────────
-# Production stage
-# ─────────────────────────────────────────
-FROM python:3.12-slim AS production
-
-RUN apt-get update && apt-get install -y \
-    libgomp1 \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
 
 # Install uv
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh
-ENV PATH="/root/.cargo/bin:/root/.local/bin:$PATH"
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-WORKDIR /app
-
+# Copy project files
 COPY pyproject.toml uv.lock ./
-RUN uv sync --frozen --no-dev
 
-COPY main.py ./
-COPY src/ src/
+# Install dependencies
+RUN uv sync --frozen
 
-RUN mkdir -p /app/vector_store /app/db
+# Copy the rest of the application
+COPY . .
 
+# Expose port
 EXPOSE 8000
 
-CMD ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
-
-# libgomp1 is required by FAISS for OpenMP support.
-# uv run respects the virtual environment defined in pyproject.toml.
+# Run uvicorn
+CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
