@@ -1,1 +1,10 @@
 .env
+# env files
+.env
+*.env
+**/.env
+services/*/.env
+
+# dependencies
+node_modules/
+**/node_modules/
