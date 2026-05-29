@@ -1,6 +1,8 @@
 import type { FastifyInstance } from 'fastify';
-import { authRoutes } from './modules/auth/auth.route';
+import { authPlugin } from './modules/auth/auth.plugin';
+import { internalRoutes } from './modules/internal/internal.route';
 
 export async function registerRoutes(app: FastifyInstance) {
-  await app.register(authRoutes, { prefix: '/auth' });
+  await app.register(authPlugin, { prefix: '/auth' });
+  await app.register(internalRoutes, { prefix: '/internal' });
 }

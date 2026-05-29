@@ -20,14 +20,18 @@ export type LoginInput = {
 };
 
 export type RequestContext = {
+  requestId?: string;
+  correlationId?: string;
   userAgent?: string;
   ipAddress?: string;
+  idempotencyKey?: string;
 };
 
 export type AccessTokenPayload = {
   sub: string;
   email: string;
   type: "access";
+  jti: string;
 };
 
 export type AuthUser = {

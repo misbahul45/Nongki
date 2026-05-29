@@ -7,5 +7,8 @@ venv
 vector_store/
 .env
 .env.*
-*.md
 .pytest_cache
+
+# Ignore markdown files except README.md
+*.md
+!README.md

@@ -1,5 +1,5 @@
 import { app } from "./app";
-import { env } from "./env";
+import { env } from "./config/env";
 
 const start = async () => {
   try {
@@ -14,5 +14,4 @@ const start = async () => {
     process.exit(1);
   }
 };
-
 start();

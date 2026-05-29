@@ -1,0 +1,18 @@
+export const eventRoutingKeys = {
+  authUserRegistered: "auth.user_registered",
+  authUserLoggedIn: "auth.user_logged_in",
+  authUserLoggedOut: "auth.user_logged_out",
+  authRefreshRotated: "auth.refresh_rotated",
+  authRefreshReplayDetected: "auth.refresh_replay_detected",
+  businessWorkspaceCreated: "business.workspace_created",
+  onboardingSeeded: "onboarding.seeded",
+  agentSettingsCreated: "agent_settings.created",
+  waMessageReceived: "wa.message.received",
+  aiAgentRunCompleted: "ai.agent.run_completed",
+  reservationCreated: "reservation.created",
+  orderCreated: "order.created",
+  handoffCreated: "handoff.created",
+  notificationRequested: "notification.requested",
+  auditLogRequested: "audit.log_requested",
+  jobFailed: "job.failed",
+} as const;

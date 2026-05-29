@@ -1,7 +1,7 @@
 import crypto from "node:crypto";
 import jwt from "jsonwebtoken";
 
-import { env } from "../env";
+import { env } from "../config/env";
 import { unauthorized } from "./errors";
 import type { AccessTokenPayload } from "../modules/auth/auth.types";
 
@@ -9,11 +9,13 @@ type JwtPayload = jwt.JwtPayload & {
   sub?: string;
   email?: string;
   type?: string;
+  jti?: string;
 };
 
 export function signAccessToken(payload: AccessTokenPayload): string {
   const options: jwt.SignOptions = {
     subject: payload.sub,
+    jwtid: payload.jti,
     expiresIn: env.JWT_ACCESS_EXPIRES_IN as NonNullable<jwt.SignOptions["expiresIn"]>,
   };
 
@@ -39,10 +41,19 @@ export function verifyAccessToken(token: string): AccessTokenPayload {
       sub: payload.sub,
       email: payload.email,
       type: "access",
+      jti: assertJti(payload.jti),
     };
   } catch {
     throw unauthorized("Unauthorized");
   }
+}
+
+function assertJti(value: unknown): string {
+  if (typeof value !== "string" || value.length === 0) {
+    throw unauthorized("Unauthorized");
+  }
+
+  return value;
 }
 
 export function generateRefreshToken(): string {

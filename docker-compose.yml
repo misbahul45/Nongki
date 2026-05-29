@@ -71,7 +71,7 @@ services:
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
     ports:
-      - "15672:15672"
+      - "${RABBITMQ_MANAGEMENT_PORT:-15673}:15672"
     networks:
       - nongki_net
     healthcheck:
@@ -97,6 +97,7 @@ services:
       DATABASE_URL: ${DATABASE_URL}
       REDIS_URL: ${REDIS_URL}
       RABBITMQ_URL: ${RABBITMQ_URL}
+      EVENT_EXCHANGE: ${EVENT_EXCHANGE}
       JWT_SECRET: ${JWT_SECRET}
     ports:
       - "4000:4000"
@@ -133,6 +134,7 @@ services:
       NODE_ENV: ${NODE_ENV}
       RABBITMQ_URL: ${RABBITMQ_URL}
       REDIS_URL: ${REDIS_URL}
+      EVENT_EXCHANGE: ${EVENT_EXCHANGE}
       API_INTERNAL_URL: ${API_INTERNAL_URL}
     ports:
       - "5000:5000"
@@ -172,6 +174,7 @@ services:
       GROQ_API_KEY: ${GROQ_API_KEY}
       REDIS_URL: ${REDIS_URL}
       RABBITMQ_URL: ${RABBITMQ_URL}
+      EVENT_EXCHANGE: ${EVENT_EXCHANGE}
       SQLITE_PATH: ${SQLITE_PATH}
       FAISS_PATH: ${FAISS_PATH}
       API_INTERNAL_URL: ${API_INTERNAL_URL}

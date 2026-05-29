@@ -1,18 +1,18 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
-
 import { authCookieNames, clearAuthCookies, setAuthCookies } from "../../lib/cookie";
 import { unauthorized } from "../../lib/errors";
+import { getRequestContext } from "../../lib/request-context";
 import { successResponse } from "../../lib/response";
 import type { AuthService } from "./auth.service";
 import { loginSchema, registerSchema } from "./auth.schema";
-import type { AuthResult, AuthSessionPayload, RequestContext } from "./auth.types";
+import type { AuthResult, AuthSessionPayload } from "./auth.types";
 
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   register = async (request: FastifyRequest, reply: FastifyReply) => {
     const input = registerSchema.parse(request.body);
-    const result = await this.authService.register(input, this.getRequestContext(request));
+    const result = await this.authService.register(input, this.getContext(request));
 
     setAuthCookies(reply, result.accessToken, result.refreshToken);
 
@@ -21,7 +21,7 @@ export class AuthController {
 
   login = async (request: FastifyRequest, reply: FastifyReply) => {
     const input = loginSchema.parse(request.body);
-    const result = await this.authService.login(input, this.getRequestContext(request));
+    const result = await this.authService.login(input, this.getContext(request));
 
     setAuthCookies(reply, result.accessToken, result.refreshToken);
 
@@ -32,7 +32,7 @@ export class AuthController {
     try {
       const result = await this.authService.refresh(
         request.cookies[authCookieNames.refresh],
-        this.getRequestContext(request),
+        this.getContext(request),
       );
 
       setAuthCookies(reply, result.accessToken, result.refreshToken);
@@ -51,14 +51,22 @@ export class AuthController {
   };
 
   logout = async (request: FastifyRequest, reply: FastifyReply) => {
-    await this.authService.logout(request.cookies[authCookieNames.refresh]);
+    await this.authService.logout(
+      request.cookies[authCookieNames.refresh],
+      request.cookies[authCookieNames.access],
+      this.getContext(request),
+    );
     clearAuthCookies(reply);
 
     return reply.send(successResponse({ success: true }, "Logout success"));
   };
 
   logoutAll = async (request: FastifyRequest, reply: FastifyReply) => {
-    await this.authService.logoutAll(this.getAuthenticatedUserId(request));
+    await this.authService.logoutAll(
+      this.getAuthenticatedUserId(request),
+      request.cookies[authCookieNames.access],
+      this.getContext(request),
+    );
     clearAuthCookies(reply);
 
     return reply.send(successResponse({ success: true }, "Logout all success"));
@@ -72,14 +80,12 @@ export class AuthController {
     };
   }
 
-  private getRequestContext(request: FastifyRequest): RequestContext {
-    const userAgentHeader = request.headers["user-agent"];
-    const context: RequestContext = {
-      ipAddress: request.ip,
-    };
+  private getContext(request: FastifyRequest) {
+    const context = getRequestContext(request);
+    const idempotencyKey = request.headers["idempotency-key"];
 
-    if (typeof userAgentHeader === "string") {
-      context.userAgent = userAgentHeader;
+    if (typeof idempotencyKey === "string") {
+      context.idempotencyKey = idempotencyKey;
     }
 
     return context;

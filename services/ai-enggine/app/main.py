@@ -3,11 +3,28 @@ FastAPI application entry point untuk Ningki AI Engine.
 Mendaftarkan semua router API.
 """
 
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 
-from app.api import health, onboarding, whatsapp_agent, knowledge, crm_assistant, tools
+from app.api import crm_assistant, health, knowledge, onboarding, tools, whatsapp_agent
+from app.infra import rabbitmq
+from app.infra.redis_client import close as close_redis
+from app.infra.redis_client import ping as redis_ping
 
-app = FastAPI(title="Ningki AI Engine", version="0.1.0")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await redis_ping()
+    await rabbitmq.connect()
+    try:
+        yield
+    finally:
+        await rabbitmq.close()
+        await close_redis()
+
+
+app = FastAPI(title="Ningki AI Engine", version="0.1.0", lifespan=lifespan)
 
 app.include_router(health.router)
 app.include_router(onboarding.router, prefix="/agent")

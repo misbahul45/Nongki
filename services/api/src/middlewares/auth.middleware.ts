@@ -13,10 +13,17 @@ export async function authenticate(request: FastifyRequest, reply: FastifyReply)
 
   try {
     const payload = verifyAccessToken(token);
+    const denied = await request.server.redis.get(`auth:access-denylist:${payload.jti}`);
+
+    if (denied === "true") {
+      clearAccessCookie(reply);
+      throw unauthorized("Unauthorized");
+    }
 
     request.user = {
       userId: payload.sub,
       email: payload.email,
+      jti: payload.jti,
     };
   } catch (error) {
     clearAccessCookie(reply);

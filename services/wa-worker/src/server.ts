@@ -2,6 +2,11 @@ import { serve } from "@hono/node-server"
 import { buildApp } from "./app.js"
 import { env } from "./config/env.js"
 import { logger } from "./core/logger.js"
+import { closeRabbitMq, connectRabbitMq } from "./infra/rabbitmq.js"
+import { connectRedis, redisClient } from "./infra/redis.js"
+
+await connectRedis()
+await connectRabbitMq()
 
 const app = buildApp()
 
@@ -22,6 +27,8 @@ const server = serve(
 function gracefulShutdown(signal: string) {
   logger.info({ signal }, "Received shutdown signal")
   server.close()
+  void closeRabbitMq()
+  void redisClient.quit().catch((err) => logger.warn({ err }, "Redis close failed"))
   process.exit(0)
 }
 

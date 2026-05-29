@@ -36,6 +36,7 @@ dependencies = [
     "tenacity>=9.1.4",
     "structlog>=25.5.0",
     "redis>=6.2.0",
+    "aio-pika>=9.5.7",
 ]
 
 [project.optional-dependencies]
@@ -68,5 +69,4 @@ packages = ["app"]
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
-
 

@@ -3,12 +3,12 @@ import type { FastifyInstance } from "fastify";
 import { authenticate } from "../../middlewares/auth.middleware";
 
 export async function authRoutes(app: FastifyInstance) {
-  const { authController } = app.container;
+  const { controller } = app.auth;
 
-  app.post("/register", authController.register);
-  app.post("/login", authController.login);
-  app.post("/refresh", authController.refresh);
-  app.get("/me", { preHandler: authenticate }, authController.me);
-  app.post("/logout", authController.logout);
-  app.post("/logout-all", { preHandler: authenticate }, authController.logoutAll);
+  app.post("/register", controller.register);
+  app.post("/login", controller.login);
+  app.post("/refresh", controller.refresh);
+  app.get("/me", { preHandler: authenticate }, controller.me);
+  app.post("/logout", controller.logout);
+  app.post("/logout-all", { preHandler: authenticate }, controller.logoutAll);
 }

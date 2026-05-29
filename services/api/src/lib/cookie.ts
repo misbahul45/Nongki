@@ -1,6 +1,6 @@
 import type { FastifyReply } from "fastify";
 
-import { env } from "../env";
+import { env } from "../config/env";
 import { accessTokenMaxAgeSeconds } from "./token";
 
 const ACCESS_COOKIE_NAME = "access_token";

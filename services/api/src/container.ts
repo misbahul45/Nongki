@@ -1,26 +1,29 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
+import fp from "fastify-plugin";
 import type { FastifyInstance } from "fastify";
 
-import { env } from "./env";
-import { AuthController } from "./modules/auth/auth.controller";
-import { AuthRepository } from "./modules/auth/auth.repository";
-import { AuthService } from "./modules/auth/auth.service";
+import { env } from "./config/env";
+import { EventBus } from "./lib/event-bus";
+import { RateLimiter } from "./lib/rate-limit";
 
-export function registerContainer(app: FastifyInstance) {
+export const containerPlugin = fp(async (app: FastifyInstance) => {
   const adapter = new PrismaPg(env.DATABASE_URL);
   const prisma = new PrismaClient({ adapter });
-  const authRepository = new AuthRepository(prisma);
-  const authService = new AuthService(authRepository);
-  const authController = new AuthController(authService);
+  const eventBus = new EventBus(app.rabbitmq.channel);
+  const rateLimiter = new RateLimiter(app.redis);
 
+  app.decorate("prisma", prisma);
+  app.decorate("eventBus", eventBus);
+  app.decorate("rateLimiter", rateLimiter);
   app.decorate("container", {
-    authRepository,
-    authService,
-    authController,
+    prisma,
+    redis: app.redis,
+    eventBus,
+    rateLimiter,
   });
 
   app.addHook("onClose", async () => {
     await prisma.$disconnect();
   });
-}
+});

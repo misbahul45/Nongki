@@ -22,6 +22,10 @@ class Settings(BaseSettings):
     upload_tmp_dir: str = "./app/storage/tmp"
 
     redis_url: str = "redis://localhost:6379"
+    rabbitmq_url: str = "amqp://localhost:5672"
+    event_exchange: str = "nongki.events"
+    event_exchange_type: str = "topic"
+    event_producer_ai: str = "services/ai-engine"
     log_level: str = "info"
 
     class Config:

@@ -178,6 +178,39 @@ export class AuthRepository {
     });
   }
 
+  rotateRefreshToken(oldTokenId: string, newTokenData: CreateRefreshTokenData) {
+    return this.prisma.$transaction(async (tx) => {
+      const createData: Prisma.RefreshTokenCreateInput = {
+        user: { connect: { id: newTokenData.userId } },
+        tokenHash: newTokenData.tokenHash,
+        familyId: newTokenData.familyId,
+        expiresAt: newTokenData.expiresAt,
+      };
+
+      if (newTokenData.userAgent) createData.userAgent = newTokenData.userAgent;
+      if (newTokenData.ipAddress) createData.ipAddress = newTokenData.ipAddress;
+
+      const newToken = await tx.refreshToken.create({
+        data: createData,
+        select: {
+          id: true,
+          familyId: true,
+        },
+      });
+
+      await tx.refreshToken.update({
+        where: { id: oldTokenId },
+        data: {
+          revokedAt: new Date(),
+          replacedBy: newToken.id,
+        },
+        select: { id: true },
+      });
+
+      return newToken;
+    });
+  }
+
   findRefreshTokenByHash(tokenHash: string) {
     return this.prisma.refreshToken.findUnique({
       where: { tokenHash },
@@ -226,6 +259,14 @@ export class AuthRepository {
       data: {
         revokedAt: new Date(),
       },
+    });
+  }
+
+  findRefreshTokenFamilyMaxExpiry(familyId: string) {
+    return this.prisma.refreshToken.findFirst({
+      where: { familyId },
+      orderBy: { expiresAt: "desc" },
+      select: { expiresAt: true },
     });
   }
 
