@@ -1,0 +1,5041 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+docs/
+  flow.md
+  mvp-endpoints.md
+prisma/
+  schema.prisma
+src/
+  clients/
+    ai-engine.client.ts
+    google-sheets.client.ts
+    payment.client.ts
+    wa-worker.client.ts
+  config/
+    env.ts
+  jobs/
+    cleanup.job.ts
+    queues.ts
+    reminder.job.ts
+    spreadsheet-sync.job.ts
+    webhook-retry.job.ts
+  lib/
+    crypto.ts
+    date.ts
+    errors.ts
+    id.ts
+    logger.ts
+    pagination.ts
+    prisma.ts
+    response.ts
+    slug.ts
+    tenant.ts
+  middlewares/
+    auth.middleware.ts
+    business-context.middleware.ts
+    error.middleware.ts
+    internal-token.middleware.ts
+    rate-limit.middleware.ts
+  modules/
+    agent-runs/
+      agent-runs.controller.ts
+      agent-runs.repository.ts
+      agent-runs.route.ts
+      agent-runs.schema.ts
+      agent-runs.service.ts
+      agent-runs.types.ts
+    agent-settings/
+      agent-settings.controller.ts
+      agent-settings.repository.ts
+      agent-settings.route.ts
+      agent-settings.schema.ts
+      agent-settings.service.ts
+      agent-settings.types.ts
+    auth/
+      auth.controller.ts
+      auth.repository.ts
+      auth.route.ts
+      auth.schema.ts
+      auth.service.ts
+      auth.types.ts
+    businesses/
+      businesses.controller.ts
+      businesses.repository.ts
+      businesses.route.ts
+      businesses.schema.ts
+      businesses.service.ts
+      businesses.types.ts
+    conversations/
+      conversations.controller.ts
+      conversations.repository.ts
+      conversations.route.ts
+      conversations.schema.ts
+      conversations.service.ts
+      conversations.types.ts
+    cron/
+      cron.controller.ts
+      cron.repository.ts
+      cron.route.ts
+      cron.schema.ts
+      cron.service.ts
+      cron.types.ts
+    customer-tags/
+      customer-tags.controller.ts
+      customer-tags.repository.ts
+      customer-tags.route.ts
+      customer-tags.schema.ts
+      customer-tags.service.ts
+      customer-tags.types.ts
+    customers/
+      customers.controller.ts
+      customers.repository.ts
+      customers.route.ts
+      customers.schema.ts
+      customers.service.ts
+      customers.types.ts
+    files/
+      files.controller.ts
+      files.repository.ts
+      files.route.ts
+      files.schema.ts
+      files.service.ts
+      files.types.ts
+    human-handoffs/
+      human-handoffs.controller.ts
+      human-handoffs.repository.ts
+      human-handoffs.route.ts
+      human-handoffs.schema.ts
+      human-handoffs.service.ts
+      human-handoffs.types.ts
+    integrations/
+      integrations.controller.ts
+      integrations.repository.ts
+      integrations.route.ts
+      integrations.schema.ts
+      integrations.service.ts
+      integrations.types.ts
+    internal/
+      internal.controller.ts
+      internal.repository.ts
+      internal.route.ts
+      internal.schema.ts
+      internal.service.ts
+      internal.types.ts
+    knowledge/
+      knowledge.controller.ts
+      knowledge.repository.ts
+      knowledge.route.ts
+      knowledge.schema.ts
+      knowledge.service.ts
+      knowledge.types.ts
+    members/
+      members.controller.ts
+      members.repository.ts
+      members.route.ts
+      members.schema.ts
+      members.service.ts
+      members.types.ts
+    messages/
+      messages.controller.ts
+      messages.repository.ts
+      messages.route.ts
+      messages.schema.ts
+      messages.service.ts
+      messages.types.ts
+    notifications/
+      notifications.controller.ts
+      notifications.repository.ts
+      notifications.route.ts
+      notifications.schema.ts
+      notifications.service.ts
+      notifications.types.ts
+    onboarding/
+      onboarding.controller.ts
+      onboarding.repository.ts
+      onboarding.route.ts
+      onboarding.schema.ts
+      onboarding.service.ts
+      onboarding.types.ts
+    orders/
+      orders.controller.ts
+      orders.repository.ts
+      orders.route.ts
+      orders.schema.ts
+      orders.service.ts
+      orders.types.ts
+    payment/
+      providers/
+        astrapay.provider.ts
+      payment.controller.ts
+      payment.repository.ts
+      payment.route.ts
+      payment.schema.ts
+      payment.service.ts
+      payment.types.ts
+    payments/
+      payments.controller.ts
+      payments.repository.ts
+      payments.route.ts
+      payments.schema.ts
+      payments.service.ts
+      payments.types.ts
+    products/
+      products.controller.ts
+      products.repository.ts
+      products.route.ts
+      products.schema.ts
+      products.service.ts
+      products.types.ts
+    reminders/
+      reminders.controller.ts
+      reminders.repository.ts
+      reminders.route.ts
+      reminders.schema.ts
+      reminders.service.ts
+      reminders.types.ts
+    reservations/
+      reservations.controller.ts
+      reservations.repository.ts
+      reservations.route.ts
+      reservations.schema.ts
+      reservations.service.ts
+      reservations.types.ts
+    spreadsheets/
+      spreadsheets.controller.ts
+      spreadsheets.repository.ts
+      spreadsheets.route.ts
+      spreadsheets.schema.ts
+      spreadsheets.service.ts
+      spreadsheets.types.ts
+    tool-executions/
+      tool-executions.controller.ts
+      tool-executions.repository.ts
+      tool-executions.route.ts
+      tool-executions.schema.ts
+      tool-executions.service.ts
+      tool-executions.types.ts
+    user/
+      user.controller.ts
+      user.repository.ts
+      user.route.ts
+      user.schema.ts
+      user.service.ts
+      user.types.ts
+    users/
+      users.controller.ts
+      users.repository.ts
+      users.route.ts
+      users.schema.ts
+      users.service.ts
+      users.types.ts
+    webhooks/
+      webhooks.controller.ts
+      webhooks.repository.ts
+      webhooks.route.ts
+      webhooks.schema.ts
+      webhooks.service.ts
+      webhooks.types.ts
+    whatsapp/
+      whatsapp.controller.ts
+      whatsapp.repository.ts
+      whatsapp.route.ts
+      whatsapp.schema.ts
+      whatsapp.service.ts
+      whatsapp.types.ts
+  plugins/
+    cors.plugin.ts
+    cors.ts
+    jwt.plugin.ts
+    multipart.plugin.ts
+    prisma.plugin.ts
+    redis.plugin.ts
+    sensible.ts
+    swagger.ts
+  types/
+    auth.ts
+    common.ts
+    fastify.d.ts
+    global.d.ts
+    internal.ts
+  utils/
+    generate-id.ts
+  app.ts
+  env.ts
+  routes.ts
+  server.ts
+tests/
+  health.test.ts
+.dockerignore
+.env.example
+.gitignore
+Dockerfile
+package.json
+pnpm-workspace.yaml
+prisma.config.ts
+README.md
+tsconfig.json
+vitest.config.ts
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="docs/flow.md">
+---
+
+## 1. Service Architecture
+
+```mermaid
+flowchart LR
+  subgraph CLIENT["Client Layer"]
+    WEB["apps/web<br/>Dashboard + Onboarding UI"]
+    CUSTOMER["Customer WhatsApp"]
+  end
+
+  subgraph CORE["Backend Ecosystem"]
+    API["services/api<br/>Main API + Prisma + Cron"]
+    AI["services/ai-engine<br/>LangGraph Agent + FAISS"]
+    WA["services/wa-worker<br/>Baileys WhatsApp Gateway"]
+  end
+
+  subgraph DATA["Data Layer"]
+    DB[("PostgreSQL<br/>Prisma Models")]
+    FAISS[("FAISS Local Index<br/>businessId namespace")]
+    STORAGE[("File Storage<br/>menu / faq / promo docs")]
+  end
+
+  subgraph EXTERNAL["External Integrations"]
+    SHEETS["Google Sheets"]
+    PAYMENT["AstraPay QRIS"]
+    WHATSAPP["WhatsApp Network"]
+  end
+
+  WEB -->|"REST API"| API
+  CUSTOMER -->|"chat message"| WHATSAPP
+  WHATSAPP --> WA
+
+  WA -->|"internal HTTP only"| API
+  API -->|"internal HTTP only"| AI
+  AI -->|"internal HTTP tools"| API
+
+  API -->|"Prisma read/write"| DB
+  API -->|"upload metadata + file url"| STORAGE
+  AI -->|"read/write vector index"| FAISS
+
+  API -->|"sync orders/reservations/customers"| SHEETS
+  API -->|"generate QRIS + webhook callback"| PAYMENT
+  API -->|"send message command"| WA
+  WA -->|"send outbound WA"| WHATSAPP
+
+  classDef api fill:#f4f4f4,stroke:#333,stroke-width:2px;
+  classDef data fill:#fff,stroke:#333,stroke-width:1px;
+  class API api;
+  class DB,FAISS,STORAGE data;
+```
+
+---
+
+## 2. MVP Goal Flow — From Register to Live Bot
+
+```mermaid
+flowchart TD
+  A["User Register"] --> B["Create User"]
+  B --> C["Create Business Workspace"]
+  C --> D["Seed Business Member"]
+  D --> E["Create Business Onboarding"]
+  E --> F["Seed Onboarding Steps"]
+  F --> G["Create Default Agent Settings"]
+
+  G --> H["User completes onboarding"]
+  H --> I["Upload knowledge docs<br/>menu / FAQ / promo"]
+  I --> J["API stores File + KnowledgeDocument"]
+  J --> K["AI Engine extracts, chunks, embeds"]
+  K --> L["API stores KnowledgeChunks<br/>status=indexed"]
+
+  L --> M["Connect WhatsApp"]
+  M --> N["WA Worker returns QR"]
+  N --> O["User scans QR"]
+  O --> P["WhatsappSession connected"]
+
+  P --> Q["Check Readiness"]
+  Q --> R{"Ready?"}
+  R -->|"No"| H
+  R -->|"Yes"| S["Business active<br/>Bot activation allowed"]
+
+  S --> T["Enable Bot"]
+  T --> U["Customer sends WhatsApp message"]
+  U --> V["AI replies using business knowledge"]
+  V --> W["MVP Success:<br/>AI can answer, reserve, order, handoff"]
+```
+
+---
+
+## 3. Register + Workspace Transaction
+
+```mermaid
+sequenceDiagram
+  autonumber
+  actor User
+  participant Web as apps/web
+  participant API as services/api
+  participant DB as PostgreSQL
+
+  User->>Web: Submit register form
+  Web->>API: POST /auth/register
+  API->>DB: BEGIN TRANSACTION
+  API->>DB: INSERT users
+  API->>DB: INSERT businesses status=onboarding
+  API->>DB: INSERT business_members role=owner
+  API->>DB: INSERT business_onboarding progress=0
+  API->>DB: INSERT onboarding_steps default steps
+  API->>DB: INSERT agent_settings default Ningki
+  API->>DB: COMMIT
+  API-->>Web: accessToken + business profile
+  Web-->>User: Redirect to onboarding
+```
+
+---
+
+## 4. Onboarding Guided Setup
+
+```mermaid
+sequenceDiagram
+  autonumber
+  actor Owner
+  participant Web as apps/web
+  participant API as services/api
+  participant AI as services/ai-engine
+  participant DB as PostgreSQL
+
+  Owner->>Web: Answer onboarding step
+  Web->>API: POST /onboarding/answer
+  API->>DB: Read business_onboarding
+  API->>DB: Read onboarding_steps
+  API->>DB: Read agent_settings
+  API->>AI: POST /ai/onboarding/process
+  AI-->>API: parsed data + next step + flags
+  API->>DB: Update onboarding_steps status=completed
+  API->>DB: Update business_onboarding currentStep/progress/needs*
+  API->>DB: Update agent_settings when needed
+  API->>DB: Insert audit_logs
+  API-->>Web: nextStep + progressPercent
+  Web-->>Owner: Show next onboarding step
+```
+
+---
+
+## 5. Knowledge Upload + Indexing
+
+```mermaid
+sequenceDiagram
+  autonumber
+  actor Owner
+  participant Web as apps/web
+  participant API as services/api
+  participant AI as services/ai-engine
+  participant DB as PostgreSQL
+  participant Store as File Storage
+  participant FAISS as FAISS Index
+
+  Owner->>Web: Upload menu / FAQ / promo file
+  Web->>API: POST /knowledge/documents/upload
+  API->>Store: Save file
+  API->>DB: INSERT files
+  API->>DB: INSERT knowledge_documents status=draft
+  API->>AI: POST /ai/knowledge/process {businessId, documentId}
+  AI->>API: GET /internal/knowledge/{documentId}
+  API-->>AI: fileUrl + metadata
+  AI->>AI: Extract text
+  AI->>AI: Classify documentType
+  AI->>AI: Chunk text
+  AI->>FAISS: Store embeddings namespaced by businessId
+  AI-->>API: extractedText + chunks + embeddingRefs
+  API->>DB: UPDATE knowledge_documents status=indexed
+  API->>DB: INSERT knowledge_chunks
+  API->>DB: INSERT audit_logs action=KNOWLEDGE_INDEXED
+  API-->>Web: document indexed
+```
+
+---
+
+## 6. WhatsApp Connect + Bot Enable
+
+```mermaid
+sequenceDiagram
+  autonumber
+  actor Owner
+  participant Web as apps/web
+  participant API as services/api
+  participant WA as services/wa-worker
+  participant DB as PostgreSQL
+
+  Owner->>Web: Click connect WhatsApp
+  Web->>API: POST /whatsapp/session/start
+  API->>DB: INSERT whatsapp_sessions status=qr_pending
+  API->>WA: POST /sessions/{businessId}/start
+  WA-->>API: qrCode + qrExpiresAt
+  API->>DB: UPDATE whatsapp_sessions qrCode
+  API->>DB: INSERT notifications QR ready
+  API-->>Web: QR code
+
+  Owner->>Web: Scan QR from WhatsApp app
+  WA->>API: POST /internal/wa/session-status connected
+  API->>DB: UPDATE whatsapp_sessions status=connected
+  API->>DB: UPDATE business_onboarding readyForWhatsapp=true
+  API->>DB: UPDATE onboarding_steps whatsapp_connect=completed
+  API->>DB: INSERT audit_logs WHATSAPP_CONNECTED
+
+  Owner->>Web: Enable bot
+  Web->>API: POST /whatsapp/bot/enable
+  API->>DB: Check readyForBotActivation=true
+  API->>DB: UPDATE whatsapp_sessions botEnabled=true
+  API->>DB: UPDATE agent_settings autoReplyEnabled=true
+  API-->>Web: bot enabled
+```
+
+---
+
+## 7. Incoming WhatsApp Message + AI Reply
+
+```mermaid
+sequenceDiagram
+  autonumber
+  actor Customer
+  participant WAApp as WhatsApp
+  participant Worker as services/wa-worker
+  participant API as services/api
+  participant AI as services/ai-engine
+  participant DB as PostgreSQL
+  participant FAISS as FAISS
+
+  Customer->>WAApp: Send message
+  WAApp->>Worker: Incoming Baileys event
+  Worker->>API: POST /internal/wa/incoming-message
+
+  API->>DB: Read whatsapp_sessions botEnabled
+  API->>DB: Read businesses status=active
+  API->>DB: Check messages.waMessageId idempotency
+  API->>DB: UPSERT customers by businessId + waPhone
+  API->>DB: UPSERT active conversations
+  API->>DB: INSERT messages inbound customer
+
+  alt humanTakeover=true or aiEnabled=false
+    API->>DB: INSERT notifications new message for admin
+    API-->>Worker: skip AI reply
+  else bot active
+    API->>AI: POST /ai/agent/run
+    AI->>API: GET /internal/context/{businessId}
+    AI->>API: GET /internal/customers/{customerId}
+    AI->>API: GET /internal/conversations/{conversationId}/history
+    AI->>FAISS: Search knowledge by businessId namespace
+    AI->>API: GET /internal/products/{businessId}
+    AI->>AI: classify intent + decide action + generate reply
+    AI-->>API: replyText + intent + toolsExecuted + usage
+    API->>DB: INSERT agent_runs
+    API->>DB: INSERT tool_executions
+    API->>DB: INSERT messages outbound ai
+    API->>DB: UPDATE conversations lastMessage/lastAiReplyAt
+    API->>DB: UPDATE customers leadStatus if needed
+    API->>Worker: POST /messages/send
+    Worker->>WAApp: Send AI reply
+    WAApp-->>Customer: Receive reply
+  end
+```
+
+---
+
+## 8. AI Agent Internal Graph
+
+```mermaid
+flowchart TD
+  A["receive_message"] --> B["load_business_context"]
+  B --> C["load_customer_profile"]
+  C --> D["load_conversation_history"]
+  D --> E["check_human_takeover"]
+
+  E --> F{"Human takeover?"}
+  F -->|"Yes"| G["stop_ai_reply<br/>notify admin"]
+  F -->|"No"| H["classify_intent"]
+
+  H --> I["retrieve_knowledge<br/>FAISS by businessId"]
+  I --> J["decide_action"]
+  J --> K{"Need tool?"}
+
+  K -->|"No"| L["generate_reply"]
+  K -->|"Yes"| M["tool_router"]
+
+  M --> N{"Tool type"}
+  N -->|"reservation"| O["create_reservation_tool"]
+  N -->|"order"| P["create_order_tool"]
+  N -->|"payment"| Q["create_payment_qris_tool"]
+  N -->|"handoff"| R["human_handoff_tool"]
+  N -->|"knowledge"| S["knowledge_search_tool"]```mermaid
+
+
+  O --> T["execute_tool via services/api"]
+  P --> T
+  Q --> T
+  R --> T
+  S --> T
+
+  T --> U["save_state"]
+  U --> L
+  L --> V["return_reply_to_api"]
+```
+
+---
+
+## 9. Reservation via AI Tool
+
+```mermaid
+sequenceDiagram
+  autonumber
+  actor Customer
+  participant API as services/api
+  participant AI as services/ai-engine
+  participant DB as PostgreSQL
+  participant WA as services/wa-worker
+
+  Customer->>API: Message: "reservasi besok 4 orang"
+  API->>AI: POST /ai/agent/run
+  AI->>AI: Detect intent make_reservation
+  AI->>AI: Slot filling date/time/guestCount/name
+
+  alt slot incomplete
+    AI-->>API: ask missing information
+    API->>DB: INSERT outbound AI message
+    API->>WA: send question
+  else slot complete
+    AI->>API: POST /internal/tools/reservations
+    API->>DB: BEGIN TRANSACTION
+    API->>DB: INSERT reservations status=pending
+    API->>DB: UPDATE customers leadStatus=reserved totalReservations++
+    API->>DB: INSERT reminders H-1 confirmation
+    API->>DB: INSERT reminders admin task
+    API->>DB: INSERT audit_logs RESERVATION_CREATED
+    API->>DB: COMMIT
+    API-->>AI: reservationNumber + status
+    AI-->>API: confirmation reply
+    API->>DB: INSERT agent_runs + tool_executions
+    API->>DB: INSERT messages outbound ai
+    API->>WA: send confirmation
+  end
+```
+
+---
+
+## 10. Order via AI Tool
+
+```mermaid
+sequenceDiagram
+  autonumber
+  actor Customer
+  participant API as services/api
+  participant AI as services/ai-engine
+  participant DB as PostgreSQL
+  participant WA as services/wa-worker
+
+  Customer->>API: Message: "pesan 2 iced latte takeaway"
+  API->>AI: POST /ai/agent/run
+  AI->>API: GET /internal/products/{businessId}
+  AI->>AI: Detect intent create_order
+  AI->>AI: Match item + quantity + fulfillmentType
+
+  alt item unclear
+    AI-->>API: ask clarification
+    API->>WA: send clarification
+  else order clear
+    AI->>API: POST /internal/tools/orders
+    API->>DB: BEGIN TRANSACTION
+    API->>DB: INSERT orders status=draft paymentStatus=unpaid
+    API->>DB: INSERT order_items
+    API->>DB: UPDATE orders totalAmount
+    API->>DB: UPDATE customers totalOrders++
+    API->>DB: COMMIT
+    API-->>AI: orderNumber + totalAmount
+    AI-->>API: order summary + ask confirmation
+    API->>DB: INSERT messages outbound ai
+    API->>WA: send order summary
+  end
+
+  Customer->>API: Message: "iya confirm"
+  API->>AI: POST /ai/agent/run
+  AI->>API: POST /internal/tools/orders/{id}/confirm
+  API->>DB: UPDATE orders status=pending_confirmation
+  API->>DB: INSERT reminders payment_follow_up
+  AI-->>API: confirmation reply
+  API->>WA: send confirmation
+```
+
+---
+
+## 11. Human Handoff Flow
+
+```mermaid
+sequenceDiagram
+  autonumber
+  actor Customer
+  actor Admin
+  participant API as services/api
+  participant AI as services/ai-engine
+  participant DB as PostgreSQL
+  participant WA as services/wa-worker
+  participant Web as apps/web
+
+  Customer->>API: Message asks admin / complaint / unknown answer
+  API->>AI: POST /ai/agent/run
+  AI->>AI: Detect handoff reason
+  AI->>API: POST /internal/tools/handoffs
+  API->>DB: BEGIN TRANSACTION
+  API->>DB: UPDATE conversations humanTakeover=true aiEnabled=false
+  API->>DB: INSERT human_handoffs status=open
+  API->>DB: INSERT notifications type=new_handoff
+  API->>DB: COMMIT
+  API->>WA: send "menghubungkan ke admin"
+  API-->>Web: Admin sees new handoff
+
+  Admin->>Web: Reply from inbox
+  Web->>API: POST /conversations/{id}/messages
+  API->>DB: INSERT messages senderType=admin outbound
+  API->>DB: UPDATE conversations lastAdminReplyAt
+  API->>WA: send admin message
+
+  Admin->>Web: Return to AI
+  Web->>API: POST /conversations/{id}/return-to-ai
+  API->>DB: UPDATE conversations humanTakeover=false aiEnabled=true
+  API->>DB: UPDATE human_handoffs status=resolved
+  API->>DB: INSERT audit_logs HANDOFF_RESOLVED
+```
+
+---
+
+## 12. API Module Dependency Map
+
+```mermaid
+flowchart TD
+  AUTH["auth module"] --> BUSINESS["business module"]
+  BUSINESS --> MEMBER["business-member module"]
+  BUSINESS --> ONBOARD["onboarding module"]
+  BUSINESS --> AGENT["agent-settings module"]
+
+  BUSINESS --> WHATSAPP["whatsapp module"]
+  BUSINESS --> KNOWLEDGE["knowledge module"]
+  BUSINESS --> CUSTOMER["customer/crm module"]
+  BUSINESS --> PRODUCT["product module"]
+
+  CUSTOMER --> CONV["conversation module"]
+  CONV --> MESSAGE["message module"]
+  CONV --> HANDOFF["human-handoff module"]
+
+  PRODUCT --> ORDER["order module"]
+  CUSTOMER --> ORDER
+  CUSTOMER --> RESERVATION["reservation module"]
+  CONV --> ORDER
+  CONV --> RESERVATION
+
+  ORDER --> PAYMENT["payment module"]
+  RESERVATION --> PAYMENT
+
+  ORDER --> REMINDER["reminder module"]
+  RESERVATION --> REMINDER
+  CUSTOMER --> REMINDER
+
+  BUSINESS --> INTEGRATION["integration module"]
+  INTEGRATION --> SHEET["spreadsheet-sync module"]
+
+  BUSINESS --> NOTIF["notification module"]
+  BUSINESS --> AUDIT["audit-log module"]
+  BUSINESS --> INTERNAL["internal-api module"]
+
+  INTERNAL --> AIHOOK["ai-engine contract"]
+  INTERNAL --> WAHOOK["wa-worker contract"]
+
+  AIHOOK --> AGENTRUN["agent-run module"]
+  AIHOOK --> TOOLLOG["tool-execution module"]
+
+  classDef p0 fill:#f4f4f4,stroke:#111,stroke-width:2px;
+  class AUTH,BUSINESS,ONBOARD,AGENT,WHATSAPP,KNOWLEDGE,CUSTOMER,CONV,MESSAGE,PRODUCT,ORDER,RESERVATION,HANDOFF,INTERNAL p0;
+```
+
+---
+
+## 13. MVP Endpoint Group Map
+
+```mermaid
+mindmap
+  root((services/api MVP))
+    Auth
+      POST /auth/register
+      POST /auth/login
+      GET /auth/me
+      POST /auth/logout
+    Business
+      GET /businesses/current
+      PATCH /businesses/current
+      GET /businesses/current/overview
+    Onboarding
+      GET /onboarding
+      POST /onboarding/answer
+      PATCH /onboarding/steps/:stepKey
+      POST /onboarding/check-readiness
+    Knowledge
+      POST /knowledge/documents/upload
+      GET /knowledge/documents
+      GET /knowledge/documents/:id
+      DELETE /knowledge/documents/:id
+      POST /knowledge/reindex
+    WhatsApp
+      POST /whatsapp/session/start
+      GET /whatsapp/session
+      POST /whatsapp/bot/enable
+      POST /whatsapp/bot/disable
+    CRM
+      GET /customers
+      GET /customers/:id
+      PATCH /customers/:id
+      POST /customers/:id/tags
+    Conversations
+      GET /conversations
+      GET /conversations/:id
+      POST /conversations/:id/messages
+      POST /conversations/:id/return-to-ai
+    Products
+      GET /products
+      POST /products
+      PATCH /products/:id
+      DELETE /products/:id
+    Reservations
+      GET /reservations
+      POST /reservations
+      POST /reservations/:id/confirm
+      POST /reservations/:id/cancel
+    Orders
+      GET /orders
+      POST /orders
+      POST /orders/:id/confirm
+      PATCH /orders/:id/status
+    Internal WA
+      POST /internal/wa/incoming-message
+      POST /internal/wa/session-status
+      POST /internal/wa/message-status
+    Internal AI
+      GET /internal/context/:businessId
+      GET /internal/conversations/:id/history
+      GET /internal/products/:businessId
+      GET /internal/knowledge/search
+      POST /internal/ai/reply
+    Internal Tools
+      POST /internal/tools/reservations
+      POST /internal/tools/orders
+      POST /internal/tools/handoffs
+```
+
+---
+
+## 14. Database Domain Map
+
+```mermaid
+erDiagram
+  User ||--o{ Business : owns
+  User ||--o{ BusinessMember : joins
+  Business ||--o{ BusinessMember : has
+  Business ||--|| BusinessOnboarding : has
+  Business ||--o{ OnboardingStep : has
+  Business ||--|| AgentSettings : configures
+  Business ||--o{ WhatsappSession : connects
+
+  Business ||--o{ Customer : has
+  Customer ||--o{ Conversation : starts
+  Conversation ||--o{ Message : contains
+  Customer ||--o{ Message : sends
+
+  Business ||--o{ KnowledgeDocument : owns
+  KnowledgeDocument ||--o{ KnowledgeChunk : chunks
+  Business ||--o{ ProductCategory : has
+  ProductCategory ||--o{ Product : contains
+  Product ||--o{ OrderItem : selected
+
+  Customer ||--o{ Order : creates
+  Order ||--o{ OrderItem : contains
+  Customer ||--o{ Reservation : books
+  Conversation ||--o{ Order : may_create
+  Conversation ||--o{ Reservation : may_create
+
+  Order ||--o{ Payment : paid_by
+  Reservation ||--o{ Payment : paid_by
+  Payment ||--o{ PaymentEvent : logs
+
+  Customer ||--o{ Reminder : receives
+  Order ||--o{ Reminder : schedules
+  Reservation ||--o{ Reminder : schedules
+
+  Conversation ||--o{ HumanHandoff : escalates
+  Customer ||--o{ HumanHandoff : needs_help
+
+  Business ||--o{ AgentRun : logs
+  AgentRun ||--o{ ToolExecution : executes
+  Conversation ||--o{ AgentRun : triggers
+  Conversation ||--o{ ToolExecution : relates
+
+  Business ||--o{ Notification : emits
+  Business ||--o{ AuditLog : records
+  Business ||--o{ WebhookEvent : receives
+  Business ||--o{ File : stores
+```
+
+---
+
+## 15. MVP Backend Build Order
+
+```mermaid
+gantt
+  title Ningki/Nongki MVP API Build Order
+  dateFormat  YYYY-MM-DD
+  axisFormat  %d %b
+
+  section Foundation
+  Project setup + env + Prisma wiring        :a1, 2026-05-29, 2d
+  Auth + business workspace transaction      :a2, after a1, 3d
+  Business tenant guard + middleware         :a3, after a1, 3d
+
+  section Onboarding
+  Onboarding steps API                       :b1, after a2, 3d
+  Agent settings API                         :b2, after b1, 2d
+  Readiness checker                          :b3, after b2, 2d
+
+  section Knowledge
+  File upload + KnowledgeDocument            :c1, after b1, 3d
+  Internal AI knowledge callback             :c2, after c1, 2d
+  Knowledge list/reindex/delete              :c3, after c2, 2d
+
+  section WhatsApp
+  WhatsApp session API                       :d1, after b3, 3d
+  Internal WA session-status webhook         :d2, after d1, 2d
+  Bot enable/disable                         :d3, after d2, 1d
+
+  section Conversation Core
+  Customer upsert                            :e1, after d2, 2d
+  Conversation upsert                        :e2, after e1, 2d
+  Message inbound/outbound                   :e3, after e2, 2d
+  Internal incoming-message endpoint         :e4, after e3, 2d
+
+  section AI Contract
+  Internal context endpoints                 :f1, after e2, 3d
+  AI reply callback                          :f2, after f1, 2d
+  Agent run + tool execution logs            :f3, after f2, 2d
+
+  section Business Tools
+  Product API                                :g1, after c1, 3d
+  Reservation API + AI tool                  :g2, after f2, 3d
+  Order API + AI tool                        :g3, after g1, 3d
+  Human handoff API + AI tool                :g4, after f2, 3d
+
+  section MVP Polish
+  Notifications                              :h1, after g2, 2d
+  Audit logs                                 :h2, after g3, 2d
+  Dashboard overview                         :h3, after g4, 2d
+  End-to-end test                            :h4, after h3, 3d
+```
+
+---
+
+## 16. MVP Success State
+
+```mermaid
+flowchart LR
+  A["Owner can register"] --> B["Business workspace created"]
+  B --> C["Onboarding completed"]
+  C --> D["Knowledge indexed"]
+  D --> E["WhatsApp connected"]
+  E --> F["Bot enabled"]
+  F --> G["Customer sends message"]
+  G --> H["API saves customer/conversation/message"]
+  H --> I["AI gets context + knowledge"]
+  I --> J["AI replies"]
+  J --> K["WA Worker sends reply"]
+  K --> L["Admin can view inbox"]
+  L --> M["AI can create reservation/order"]
+  M --> N["AI can handoff to admin"]
+```
+</file>
+
+<file path="docs/mvp-endpoints.md">
+=# Ningki/Nongki — MVP API Goal & Implementation Roadmap
+
+> Dokumen ini fokus untuk mengejar **MVP bagian `services/api`** berdasarkan Prisma DB model dan flow ekosistem microservice. Prinsip utamanya: **API adalah satu-satunya service yang boleh akses PostgreSQL langsung**. `apps/web`, `services/ai-engine`, dan `services/wa-worker` hanya boleh komunikasi lewat HTTP contract ke `services/api`.
+
+---
+
+## 1. MVP Goal
+
+### 1.1 Goal utama MVP
+
+MVP Ningki/Nongki adalah sistem **AI WhatsApp assistant untuk bisnis F&B/service kecil** yang bisa:
+
+1. Membuat workspace bisnis dari proses register.
+2. Mengarahkan owner melewati onboarding bisnis.
+3. Menyimpan knowledge bisnis seperti menu, FAQ, promo, jam buka, lokasi, policy reservasi, dan policy order.
+4. Menghubungkan WhatsApp bisnis melalui `wa-worker`.
+5. Menerima pesan customer WhatsApp.
+6. Menyimpan customer, conversation, dan message history.
+7. Meminta AI membalas customer berdasarkan context bisnis + knowledge.
+8. Membuat reservasi sederhana via AI.
+9. Membuat order sederhana via AI.
+10. Melakukan human handoff jika AI tidak bisa menjawab atau customer minta admin.
+11. Memberi dashboard data minimum untuk admin: inbox, customer, knowledge, reservation, order, handoff, notification.
+
+### 1.2 Definisi sukses MVP
+
+MVP dianggap sukses kalau demo bisa menunjukkan flow ini end-to-end:
+
+```txt
+Owner register
+→ workspace bisnis dibuat
+→ onboarding basic selesai
+→ upload/input menu dan FAQ
+→ WhatsApp connected
+→ bot enabled
+→ customer chat WhatsApp
+→ AI jawab berdasarkan menu/FAQ
+→ customer buat reservasi/order
+→ data masuk dashboard admin
+→ jika customer minta admin, bot stop dan admin bisa balas manual
+```
+
+### 1.3 Bukan goal MVP
+
+Fitur berikut **ditunda setelah MVP** agar backend bisa cepat selesai:
+
+- AstraPay QRIS production-ready.
+- Google Sheets OAuth production-ready.
+- Multi-role permission detail yang kompleks.
+- Analytics advanced.
+- Billing/subscription SaaS.
+- Omnichannel selain WhatsApp.
+- Full vector database hosted. Untuk MVP cukup FAISS lokal di `ai-engine`.
+- Full notification realtime pakai websocket. Untuk MVP boleh polling.
+- Complex campaign/promo automation.
+
+---
+
+## 2. Arsitektur Ekosistem
+
+```txt
+apps/web
+  ↓ REST API public/admin
+services/api
+  ↓ HTTP internal
+services/ai-engine
+  ↔ FAISS local per businessId
+
+services/wa-worker
+  ↓ HTTP internal event
+services/api
+  ↓ HTTP internal send command
+services/wa-worker
+```
+
+### 2.1 Aturan mutlak service
+
+| Service | Boleh akses DB langsung? | Tanggung jawab |
+|---|---:|---|
+| `services/api` | Ya | Owner utama PostgreSQL, auth, business logic, transaction, audit, API contract |
+| `apps/web` | Tidak | UI dashboard/onboarding, hanya panggil API |
+| `services/ai-engine` | Tidak | Agent reasoning, knowledge processing, FAISS, tool call via API |
+| `services/wa-worker` | Tidak | Baileys session, QR, receive/send WhatsApp, event ke API |
+
+### 2.2 Prinsip tenant isolation
+
+Semua query data bisnis wajib memakai `businessId`.
+
+Contoh:
+
+```ts
+where: {
+  id: reservationId,
+  businessId: ctx.businessId,
+}
+```
+
+Tidak boleh query entity tenant-sensitive hanya berdasarkan `id`.
+
+---
+
+## 3. Scope Modul MVP API
+
+### P0 — Wajib untuk demo end-to-end
+
+| Modul | Status MVP | Tujuan |
+|---|---|---|
+| Auth | Wajib | Register, login, session user |
+| Business Workspace | Wajib | Create/read/update workspace bisnis |
+| Onboarding | Wajib | Step setup bisnis sampai ready |
+| Agent Settings | Wajib | Persona, tone, auto reply, handoff rule |
+| Knowledge | Wajib | Input/upload knowledge dan indexing ke AI |
+| WhatsApp Session | Wajib | Start session, QR, status connected, enable bot |
+| Customer | Wajib | Upsert customer dari WhatsApp, list CRM basic |
+| Conversation & Message | Wajib | Inbox admin, history, send admin reply |
+| AI Internal Contract | Wajib | API menerima result AI dan menyediakan context |
+| Reservation | Wajib | Create/list/confirm/cancel reservasi |
+| Order | Wajib | Create/list/update order sederhana |
+| Human Handoff | Wajib | AI stop, admin takeover, return to AI |
+| Notification | Wajib basic | Admin alert untuk handoff/reservation/order/error |
+| Audit Log | Wajib basic | Catat action penting |
+
+### P1 — Setelah P0 stabil
+
+| Modul | Status | Tujuan |
+|---|---|---|
+| Product Category/Product CRUD lengkap | P1 tapi bisa sebagian P0 | Menu structured untuk AI/order |
+| Reminder Cron | P1 | Reminder reservasi/payment/admin task |
+| File upload storage real | P1 | Local dulu, cloud nanti |
+| Spreadsheet Sync | P1 | Export customers/orders/reservations |
+| Payment Manual/QRIS mock | P1 | Payment status tracking tanpa AstraPay production |
+
+### P2 — Post-MVP
+
+| Modul | Tujuan |
+|---|---|
+| AstraPay real callback | Production payment |
+| Google Sheets OAuth real | Production sync |
+| Advanced analytics | Insight bisnis |
+| Team permission detail | RBAC granular |
+| Multi-agent observability advanced | Debug production |
+
+---
+
+## 4. Data Model MVP yang Dipakai
+
+### 4.1 Core identity & workspace
+
+- `users`
+- `businesses`
+- `business_members`
+
+Dipakai untuk auth, workspace, ownership, dan akses dashboard.
+
+### 4.2 Onboarding & agent config
+
+- `business_onboarding`
+- `onboarding_steps`
+- `agent_settings`
+
+Dipakai untuk guided setup dan menentukan apakah bot boleh aktif.
+
+### 4.3 WhatsApp & chat
+
+- `whatsapp_sessions`
+- `customers`
+- `conversations`
+- `messages`
+
+Dipakai untuk menerima pesan, menyimpan history, inbox admin, dan state human takeover.
+
+### 4.4 Knowledge & menu
+
+- `files`
+- `knowledge_documents`
+- `knowledge_chunks`
+- `product_categories`
+- `products`
+
+Dipakai untuk RAG dan order structured.
+
+### 4.5 Business transaction
+
+- `reservations`
+- `orders`
+- `order_items`
+- `payments` optional/mock MVP
+
+Dipakai untuk outcome bisnis dari chat AI.
+
+### 4.6 Ops & observability
+
+- `human_handoffs`
+- `notifications`
+- `agent_runs`
+- `tool_executions`
+- `audit_logs`
+- `webhook_events`
+- `cron_jobs` optional P1
+
+Dipakai untuk audit, debugging, dan admin alert.
+
+---
+
+## 5. End-to-End Flow MVP
+
+## 5.1 Register workspace
+
+```txt
+POST /auth/register
+→ users
+→ businesses
+→ business_members
+→ business_onboarding
+→ onboarding_steps
+→ agent_settings
+```
+
+Semua insert harus dalam satu Prisma transaction.
+
+### Output minimal
+
+```json
+{
+  "user": { "id": "uuid", "name": "Owner", "email": "owner@mail.com" },
+  "business": { "id": "uuid", "name": "Kopi Senja", "status": "onboarding" },
+  "accessToken": "jwt-or-session-token"
+}
+```
+
+---
+
+## 5.2 Onboarding guided setup
+
+```txt
+GET /onboarding
+POST /onboarding/answer
+POST /onboarding/check-readiness
+```
+
+MVP onboarding tidak harus terlalu AI-heavy. Bisa dibuat hybrid:
+
+- API simpan jawaban user di `onboarding_steps.data`.
+- API update `businesses`, `agent_settings`, `business_onboarding` sesuai step.
+- Untuk step yang perlu AI, API forward ke `ai-engine`.
+
+### Step wajib MVP
+
+| Step | Wajib? | Output |
+|---|---:|---|
+| `business_profile` | Ya | name, type, phone, address |
+| `business_goal` | Ya | mainGoal, needsReservation, needsOrder |
+| `menu_upload` | Ya | minimal 1 knowledge/menu indexed atau product created |
+| `opening_hours` | Ya | businessRules.openingHours |
+| `location` | Ya | address/googleMapsUrl |
+| `reservation_policy` | Conditional | businessRules.reservationPolicy |
+| `order_policy` | Conditional | businessRules.orderPolicy |
+| `faq` | Ya | knowledge doc FAQ/manual |
+| `agent_persona` | Ya | persona, tone |
+| `human_handoff_rule` | Ya | handoffRules |
+| `whatsapp_connect` | Ya | whatsapp_sessions connected |
+| `bot_test` | Optional MVP | test AI reply |
+| `go_live` | Ya | bot enabled |
+
+---
+
+## 5.3 Knowledge setup
+
+Ada dua jalur MVP:
+
+### Jalur A — Manual text knowledge
+
+```txt
+POST /knowledge/documents
+```
+
+Untuk MVP paling cepat, buat input manual text:
+
+```json
+{
+  "title": "FAQ Kopi Senja",
+  "documentType": "faq",
+  "sourceType": "manual",
+  "content": "Jam buka 08.00-22.00..."
+}
+```
+
+API insert `knowledge_documents` status `processing`, lalu trigger AI:
+
+```txt
+POST /internal/ai/knowledge/process
+```
+
+Setelah AI selesai:
+
+```txt
+PATCH /internal/knowledge/documents/:documentId/indexed
+```
+
+### Jalur B — Upload file
+
+```txt
+POST /knowledge/documents/upload
+```
+
+API insert:
+
+```txt
+files
+knowledge_documents
+```
+
+Lalu trigger AI extraction/indexing.
+
+Untuk kejar MVP, manual text knowledge harus selesai dulu sebelum upload file kompleks.
+
+---
+
+## 5.4 WhatsApp connect
+
+```txt
+POST /whatsapp/session/start
+GET /whatsapp/session
+POST /internal/wa/session-status
+POST /whatsapp/bot/enable
+POST /whatsapp/bot/disable
+```
+
+Flow:
+
+```txt
+Admin start session
+→ API create whatsapp_sessions status=qr_pending
+→ API call wa-worker /sessions/{businessId}/start
+→ wa-worker return qrCode
+→ API update qrCode
+→ Web polling session
+→ QR scanned
+→ wa-worker call API /internal/wa/session-status connected
+→ API set readyForWhatsapp true
+→ Admin enable bot
+```
+
+---
+
+## 5.5 Incoming WhatsApp message
+
+```txt
+POST /internal/wa/incoming-message
+```
+
+API responsibility:
+
+1. Cek `waMessageId` idempotency.
+2. Cek `businesses.status=active`.
+3. Cek `whatsapp_sessions.botEnabled=true`.
+4. Upsert `customers` by `businessId + waPhone`.
+5. Upsert active `conversations`.
+6. Insert inbound `messages`.
+7. Jika `conversation.humanTakeover=true`, stop AI dan notify admin.
+8. Jika AI aktif, call `ai-engine`.
+
+---
+
+## 5.6 AI reply result
+
+```txt
+POST /internal/ai/reply
+```
+
+API responsibility:
+
+1. Insert `agent_runs`.
+2. Insert `tool_executions` jika ada.
+3. Insert outbound AI `messages`.
+4. Update `conversations.lastMessage`, `lastAiReplyAt`.
+5. Update `customers.leadStatus` jika intent mengarah ke lead stage tertentu.
+6. Call `wa-worker /messages/send`.
+
+---
+
+## 5.7 Reservation via AI tool
+
+AI tidak boleh insert DB langsung. AI memanggil API tool endpoint:
+
+```txt
+POST /internal/tools/reservations
+```
+
+API insert:
+
+```txt
+reservations
+customers.totalReservations++
+customers.leadStatus=reserved
+notifications type=new_reservation
+```
+
+Admin dashboard:
+
+```txt
+GET /reservations
+POST /reservations/:id/confirm
+POST /reservations/:id/cancel
+```
+
+---
+
+## 5.8 Order via AI tool
+
+AI memanggil API tool endpoint:
+
+```txt
+POST /internal/tools/orders
+```
+
+API transaction:
+
+```txt
+orders
+order_items
+orders.totalAmount
+customers.totalOrders++
+customers.leadStatus=ordered
+notifications type=new_order
+```
+
+Admin dashboard:
+
+```txt
+GET /orders
+PATCH /orders/:id/status
+```
+
+---
+
+## 5.9 Human handoff
+
+AI memanggil:
+
+```txt
+POST /internal/tools/handoffs
+```
+
+API transaction:
+
+```txt
+conversations.humanTakeover=true
+conversations.aiEnabled=false
+conversations.status=human_takeover
+human_handoffs status=open
+notifications type=new_handoff
+```
+
+Admin reply:
+
+```txt
+POST /conversations/:id/messages
+```
+
+Return to AI:
+
+```txt
+POST /conversations/:id/return-to-ai
+```
+
+---
+
+# 6. API Endpoint Blueprint
+
+## 6.1 Auth API
+
+### `POST /auth/register`
+
+Purpose: buat user + business workspace + seed onboarding.
+
+Request:
+
+```json
+{
+  "name": "Owner Kopi",
+  "email": "owner@mail.com",
+  "password": "secret123",
+  "businessName": "Kopi Senja",
+  "businessType": "coffee_shop"
+}
+```
+
+Writes:
+
+- `users`
+- `businesses`
+- `business_members`
+- `business_onboarding`
+- `onboarding_steps`
+- `agent_settings`
+
+### `POST /auth/login`
+
+Purpose: login owner/admin.
+
+Request:
+
+```json
+{
+  "email": "owner@mail.com",
+  "password": "secret123"
+}
+```
+
+Writes:
+
+- `users.lastLoginAt`
+- `audit_logs` optional MVP
+
+### `GET /auth/me`
+
+Purpose: return current user + active business.
+
+---
+
+## 6.2 Business API
+
+### `GET /businesses/current`
+
+Return workspace aktif user.
+
+### `PATCH /businesses/current`
+
+Update profile bisnis.
+
+Request:
+
+```json
+{
+  "name": "Kopi Senja",
+  "type": "coffee_shop",
+  "description": "Coffee shop cozy",
+  "phone": "628123",
+  "address": "Surabaya",
+  "googleMapsUrl": "https://maps.google.com/..."
+}
+```
+
+Writes:
+
+- `businesses`
+- `audit_logs`
+
+---
+
+## 6.3 Onboarding API
+
+### `GET /onboarding`
+
+Return:
+
+- `business_onboarding`
+- list `onboarding_steps`
+- readiness flags
+
+### `POST /onboarding/answer`
+
+Request:
+
+```json
+{
+  "stepKey": "business_profile",
+  "answer": {
+    "name": "Kopi Senja",
+    "phone": "628123",
+    "address": "Surabaya"
+  }
+}
+```
+
+Writes based on step:
+
+- `onboarding_steps`
+- `business_onboarding`
+- `businesses`
+- `agent_settings`
+- `audit_logs`
+
+### `POST /onboarding/check-readiness`
+
+Rules MVP:
+
+- Required onboarding steps completed.
+- Minimal one `knowledge_documents.status=indexed` OR minimal one product available.
+- WhatsApp session connected.
+- Agent settings exists.
+
+If valid:
+
+```txt
+business_onboarding.readyForBotActivation=true
+businesses.status=active
+```
+
+---
+
+## 6.4 Agent Settings API
+
+### `GET /agent-settings`
+
+Return persona/tone/rules.
+
+### `PATCH /agent-settings`
+
+Request:
+
+```json
+{
+  "agentName": "Ningki",
+  "persona": "Asisten ramah untuk coffee shop",
+  "tone": "friendly",
+  "language": "id",
+  "humanTakeoverEnabled": true,
+  "maxUnknownAttempts": 2,
+  "businessRules": {
+    "openingHours": "08.00-22.00",
+    "reservationPolicy": "Reservasi minimal H-1",
+    "orderPolicy": "Takeaway bisa diproses 15 menit"
+  },
+  "handoffRules": {
+    "handoffWhen": ["complaint", "refund_request", "unknown_answer"]
+  }
+}
+```
+
+---
+
+## 6.5 Knowledge API
+
+### `GET /knowledge/documents`
+
+Query:
+
+```txt
+?status=indexed&documentType=faq
+```
+
+### `POST /knowledge/documents`
+
+Manual knowledge text.
+
+Request:
+
+```json
+{
+  "title": "Menu dan FAQ",
+  "documentType": "faq",
+  "sourceType": "manual",
+  "content": "Menu: Kopi Susu 18000..."
+}
+```
+
+Writes:
+
+- `knowledge_documents.status=processing`
+- trigger AI indexing
+
+### `POST /knowledge/documents/upload`
+
+Multipart upload.
+
+Writes:
+
+- `files`
+- `knowledge_documents`
+
+### `GET /knowledge/documents/:id`
+
+Return document + chunks summary.
+
+### `DELETE /knowledge/documents/:id`
+
+Soft delete:
+
+- `knowledge_documents.deletedAt`
+- optional set status `archived`
+
+### `POST /knowledge/reindex`
+
+Trigger all business documents reindex.
+
+---
+
+## 6.6 Product/Menu API
+
+### `GET /products`
+
+Return product list with category.
+
+### `POST /product-categories`
+
+Request:
+
+```json
+{
+  "name": "Coffee",
+  "description": "Minuman kopi"
+}
+```
+
+### `POST /products`
+
+Request:
+
+```json
+{
+  "categoryId": "uuid",
+  "name": "Iced Latte",
+  "description": "Espresso, susu, ice",
+  "price": 22000,
+  "isAvailable": true
+}
+```
+
+### `PATCH /products/:id`
+
+Update product.
+
+### `DELETE /products/:id`
+
+Soft delete product.
+
+---
+
+## 6.7 WhatsApp API
+
+### `GET /whatsapp/session`
+
+Return current session.
+
+### `POST /whatsapp/session/start`
+
+Writes:
+
+- `whatsapp_sessions.status=qr_pending`
+- calls `wa-worker`
+
+### `POST /whatsapp/session/refresh-qr`
+
+Optional MVP if QR expired.
+
+### `POST /whatsapp/bot/enable`
+
+Validation:
+
+- `business_onboarding.readyForBotActivation=true`
+- `whatsapp_sessions.status=connected`
+
+Writes:
+
+- `whatsapp_sessions.botEnabled=true`
+- `agent_settings.autoReplyEnabled=true`
+- `businesses.status=active`
+
+### `POST /whatsapp/bot/disable`
+
+Writes:
+
+- `whatsapp_sessions.botEnabled=false`
+- `agent_settings.autoReplyEnabled=false`
+
+---
+
+## 6.8 Customer API
+
+### `GET /customers`
+
+Query:
+
+```txt
+?leadStatus=hot_lead&search=andi&page=1&limit=20
+```
+
+### `GET /customers/:id`
+
+Return profile + latest conversations + tags.
+
+### `PATCH /customers/:id`
+
+Admin update name, notes, leadStatus.
+
+Request:
+
+```json
+{
+  "name": "Andi",
+  "leadStatus": "hot_lead",
+  "notes": "Sering pesan iced latte"
+}
+```
+
+---
+
+## 6.9 Conversation & Message API
+
+### `GET /conversations`
+
+Query:
+
+```txt
+?status=open&humanTakeover=true&page=1&limit=20
+```
+
+Return list inbox.
+
+### `GET /conversations/:id`
+
+Return detail conversation + messages.
+
+### `GET /conversations/:id/messages`
+
+Paginated messages.
+
+### `POST /conversations/:id/messages`
+
+Admin sends manual reply.
+
+Request:
+
+```json
+{
+  "text": "Halo Kak, saya admin yang bantu ya."
+}
+```
+
+Writes:
+
+- `messages.senderType=admin`
+- `conversations.lastAdminReplyAt`
+- call `wa-worker /messages/send`
+
+### `POST /conversations/:id/takeover`
+
+Admin manually takeover.
+
+### `POST /conversations/:id/return-to-ai`
+
+Admin resolves handoff and enables AI.
+
+---
+
+## 6.10 Reservation API
+
+### `GET /reservations`
+
+Query:
+
+```txt
+?status=pending&date=2026-05-29
+```
+
+### `GET /reservations/:id`
+
+### `POST /reservations`
+
+Admin manual create reservation.
+
+### `POST /reservations/:id/confirm`
+
+Writes:
+
+- `reservations.status=confirmed`
+- `notifications`
+- `audit_logs`
+
+### `POST /reservations/:id/cancel`
+
+Writes:
+
+- `reservations.status=cancelled`
+- `reservations.cancelledAt`
+
+---
+
+## 6.11 Order API
+
+### `GET /orders`
+
+Query:
+
+```txt
+?status=pending_confirmation&paymentStatus=unpaid
+```
+
+### `GET /orders/:id`
+
+### `POST /orders`
+
+Admin manual create order.
+
+### `PATCH /orders/:id/status`
+
+Request:
+
+```json
+{
+  "status": "confirmed"
+}
+```
+
+### `POST /orders/:id/cancel`
+
+---
+
+## 6.12 Human Handoff API
+
+### `GET /handoffs`
+
+Query:
+
+```txt
+?status=open
+```
+
+### `GET /handoffs/:id`
+
+### `POST /handoffs/:id/assign`
+
+Request:
+
+```json
+{
+  "assignedUserId": "uuid"
+}
+```
+
+### `POST /handoffs/:id/resolve`
+
+Writes:
+
+- `human_handoffs.status=resolved`
+- `human_handoffs.resolvedAt`
+- `conversations.humanTakeover=false`
+- `conversations.aiEnabled=true`
+
+---
+
+## 6.13 Notification API
+
+### `GET /notifications`
+
+### `POST /notifications/:id/read`
+
+### `POST /notifications/read-all`
+
+---
+
+## 6.14 Internal API for wa-worker
+
+All endpoints below should require internal token header:
+
+```txt
+X-Internal-Token: <INTERNAL_API_TOKEN>
+```
+
+### `POST /internal/wa/session-status`
+
+Request:
+
+```json
+{
+  "businessId": "uuid",
+  "sessionName": "default",
+  "status": "connected",
+  "phoneNumber": "628123"
+}
+```
+
+### `POST /internal/wa/incoming-message`
+
+Request:
+
+```json
+{
+  "businessId": "uuid",
+  "waMessageId": "wamid.xxx",
+  "fromPhone": "628111",
+  "customerName": "Andi",
+  "messageType": "text",
+  "text": "Mau reservasi besok 4 orang",
+  "mediaUrl": null,
+  "timestamp": "2026-05-29T10:00:00.000Z"
+}
+```
+
+### `POST /internal/wa/message-status`
+
+Optional MVP.
+
+Request:
+
+```json
+{
+  "businessId": "uuid",
+  "waMessageId": "wamid.xxx",
+  "status": "delivered"
+}
+```
+
+---
+
+## 6.15 Internal API for ai-engine
+
+All internal AI endpoints require internal token.
+
+### `GET /internal/context/:businessId`
+
+Return:
+
+- business profile
+- agent settings
+- active products
+- active knowledge doc summary
+
+### `GET /internal/customers/:customerId`
+
+Return customer profile.
+
+### `GET /internal/conversations/:conversationId/history`
+
+Query:
+
+```txt
+?limit=20
+```
+
+### `POST /internal/knowledge/search`
+
+API can proxy to AI, or AI can search FAISS locally based on its own index. For MVP recommended:
+
+- AI owns FAISS search.
+- API only stores document/chunk metadata.
+
+If needed:
+
+```json
+{
+  "businessId": "uuid",
+  "query": "jam buka",
+  "limit": 5
+}
+```
+
+### `POST /internal/ai/reply`
+
+Request:
+
+```json
+{
+  "businessId": "uuid",
+  "conversationId": "uuid",
+  "customerId": "uuid",
+  "replyText": "Bisa Kak, untuk reservasi besok jam berapa?",
+  "intent": "make_reservation",
+  "agentRun": {
+    "agentType": "whatsapp_customer_agent",
+    "input": "Mau reservasi besok 4 orang",
+    "output": "Bisa Kak...",
+    "status": "success",
+    "tokensInput": 100,
+    "tokensOutput": 40,
+    "latencyMs": 1500
+  },
+  "toolsExecuted": []
+}
+```
+
+---
+
+## 6.16 Internal Tool API for ai-engine
+
+### `POST /internal/tools/reservations`
+
+Request:
+
+```json
+{
+  "businessId": "uuid",
+  "customerId": "uuid",
+  "conversationId": "uuid",
+  "reservationDate": "2026-05-30",
+  "reservationTime": "19:00",
+  "guestCount": 4,
+  "customerName": "Andi",
+  "customerPhone": "628111",
+  "notes": "Meja indoor"
+}
+```
+
+### `POST /internal/tools/orders`
+
+Request:
+
+```json
+{
+  "businessId": "uuid",
+  "customerId": "uuid",
+  "conversationId": "uuid",
+  "fulfillmentType": "takeaway",
+  "items": [
+    {
+      "productId": "uuid",
+      "productName": "Iced Latte",
+      "quantity": 2,
+      "unitPrice": 22000,
+      "notes": "less ice"
+    }
+  ],
+  "notes": "Ambil jam 16.00"
+}
+```
+
+### `POST /internal/tools/handoffs`
+
+Request:
+
+```json
+{
+  "businessId": "uuid",
+  "conversationId": "uuid",
+  "customerId": "uuid",
+  "reason": "customer_requested_admin",
+  "summary": "Customer meminta bicara dengan admin terkait komplain pesanan."
+}
+```
+
+---
+
+# 7. Service Layer Structure untuk `services/api`
+
+Rekomendasi folder agar cepat rapi:
+
+```txt
+services/api/src
+├── app.ts
+├── server.ts
+├── config
+│   ├── env.ts
+│   └── cors.ts
+├── lib
+│   ├── prisma.ts
+│   ├── hash.ts
+│   ├── jwt.ts
+│   ├── response.ts
+│   └── errors.ts
+├── middlewares
+│   ├── auth.middleware.ts
+│   ├── business-context.middleware.ts
+│   ├── internal-auth.middleware.ts
+│   ├── error.middleware.ts
+│   └── validate.middleware.ts
+├── modules
+│   ├── auth
+│   ├── businesses
+│   ├── onboarding
+│   ├── agent-settings
+│   ├── knowledge
+│   ├── products
+│   ├── whatsapp
+│   ├── customers
+│   ├── conversations
+│   ├── reservations
+│   ├── orders
+│   ├── handoffs
+│   ├── notifications
+│   ├── internal-wa
+│   ├── internal-ai
+│   └── audit
+├── integrations
+│   ├── ai-engine.client.ts
+│   └── wa-worker.client.ts
+└── jobs
+    └── reminder.job.ts
+```
+
+Setiap module minimal punya:
+
+```txt
+*.route.ts
+*.controller.ts
+*.service.ts
+*.repo.ts
+*.schema.ts
+*.types.ts
+```
+
+---
+
+# 8. Implementation Priority
+
+## Sprint 1 — Foundation API
+
+Target: auth + workspace siap.
+
+Checklist:
+
+- Prisma connect PostgreSQL.
+- Global error handler.
+- Response wrapper.
+- Auth middleware.
+- Internal token middleware.
+- Register transaction.
+- Login/me.
+- Business current profile.
+- Seed onboarding steps.
+
+Done when:
+
+```txt
+POST /auth/register berhasil membuat user + business + onboarding lengkap.
+GET /auth/me bisa return active business.
+```
+
+---
+
+## Sprint 2 — Onboarding + Agent Settings
+
+Target: owner bisa isi setup bisnis.
+
+Checklist:
+
+- GET onboarding state.
+- POST onboarding answer.
+- Update businesses dari business_profile/location.
+- Update business_onboarding flags dari business_goal.
+- Update agent_settings dari agent_persona/handoff_rule.
+- Check readiness.
+
+Done when:
+
+```txt
+Owner bisa menyelesaikan onboarding sampai menunggu WhatsApp/knowledge readiness.
+```
+
+---
+
+## Sprint 3 — Knowledge + Product/Menu
+
+Target: AI punya sumber jawaban.
+
+Checklist:
+
+- Manual knowledge create.
+- Upload metadata file basic.
+- Internal indexed callback.
+- Product category CRUD.
+- Product CRUD.
+- Knowledge list/detail/delete.
+
+Done when:
+
+```txt
+Minimal 1 knowledge indexed atau menu product tersedia untuk business.
+```
+
+---
+
+## Sprint 4 — WhatsApp Integration Contract
+
+Target: API siap dihubungkan ke `wa-worker`.
+
+Checklist:
+
+- Start session.
+- Session status internal callback.
+- Bot enable/disable.
+- Incoming message endpoint.
+- Idempotency by waMessageId.
+- Customer upsert.
+- Conversation upsert.
+- Message insert.
+
+Done when:
+
+```txt
+wa-worker bisa kirim incoming message dan data masuk customers/conversations/messages.
+```
+
+---
+
+## Sprint 5 — AI Contract + Chat Reply
+
+Target: API siap dihubungkan ke `ai-engine`.
+
+Checklist:
+
+- API call ai-engine `/ai/agent/run` setelah incoming message.
+- Internal context endpoints.
+- Internal AI reply endpoint.
+- Insert agent_runs/tool_executions.
+- Insert outbound AI message.
+- Send reply command to wa-worker.
+
+Done when:
+
+```txt
+Customer kirim chat → API simpan → AI reply → API simpan reply → wa-worker kirim balik.
+```
+
+---
+
+## Sprint 6 — Reservation, Order, Handoff
+
+Target: AI bisa menghasilkan business outcome.
+
+Checklist:
+
+- Internal create reservation tool.
+- Reservation admin list/confirm/cancel.
+- Internal create order tool.
+- Order admin list/status/cancel.
+- Internal human handoff tool.
+- Admin takeover/reply/return-to-ai.
+- Notification basic.
+
+Done when:
+
+```txt
+Customer bisa reservasi/order dari chat dan admin bisa ambil alih chat.
+```
+
+---
+
+# 9. Minimal Validation Rules
+
+## 9.1 Auth
+
+- Email unique.
+- Password minimal 8 char.
+- User inactive/suspended tidak boleh login.
+
+## 9.2 Business
+
+- `businessId` selalu dari auth context, bukan dari body public API.
+- Slug unique.
+
+## 9.3 Internal endpoints
+
+- Wajib `X-Internal-Token`.
+- Tetap validasi `businessId` exists.
+
+## 9.4 WhatsApp message
+
+- `waMessageId` idempotent.
+- `fromPhone` normalized.
+- Skip AI jika `humanTakeover=true`.
+- Skip AI jika bot disabled.
+
+## 9.5 Reservation
+
+- `guestCount > 0`.
+- `reservationDate` tidak boleh masa lalu.
+- `reservationNumber` unique per business.
+
+## 9.6 Order
+
+- Items minimal 1.
+- Quantity > 0.
+- Total dihitung server-side, jangan percaya total dari client/AI.
+
+## 9.7 Knowledge
+
+- `documentType` harus enum valid.
+- `sourceType=manual` wajib ada `content`.
+- `sourceType=pdf/image/spreadsheet` wajib ada file.
+
+---
+
+# 10. Standard Response Format
+
+Semua API response gunakan format konsisten:
+
+```json
+{
+  "success": true,
+  "message": "OK",
+  "data": {},
+  "meta": null
+}
+```
+
+Error:
+
+```json
+{
+  "success": false,
+  "message": "Validation error",
+  "errors": [
+    {
+      "field": "email",
+      "message": "Email is required"
+    }
+  ]
+}
+```
+
+Pagination:
+
+```json
+{
+  "success": true,
+  "message": "OK",
+  "data": [],
+  "meta": {
+    "page": 1,
+    "limit": 20,
+    "total": 100,
+    "totalPages": 5
+  }
+}
+```
+
+---
+
+# 11. Critical Transaction Boundaries
+
+## 11.1 Register transaction
+
+```txt
+users
+businesses
+business_members
+business_onboarding
+onboarding_steps
+agent_settings
+```
+
+## 11.2 Incoming message transaction
+
+```txt
+customers upsert
+conversations upsert
+messages inbound insert
+conversations lastMessage update
+```
+
+## 11.3 AI reply transaction
+
+```txt
+agent_runs insert
+tool_executions insert many
+messages outbound insert
+conversations update
+customers leadStatus update optional
+```
+
+## 11.4 Create reservation transaction
+
+```txt
+reservations insert
+customers update
+notifications insert
+audit_logs insert
+```
+
+## 11.5 Create order transaction
+
+```txt
+orders insert
+order_items insert many
+orders total update
+customers update
+notifications insert
+audit_logs insert
+```
+
+## 11.6 Handoff transaction
+
+```txt
+conversations update
+human_handoffs insert
+notifications insert
+audit_logs insert
+```
+
+---
+
+# 12. MVP Environment Variables
+
+```env
+NODE_ENV=development
+PORT=4000
+DATABASE_URL=postgresql://...
+JWT_SECRET=change-me
+JWT_EXPIRES_IN=7d
+INTERNAL_API_TOKEN=change-me
+AI_ENGINE_BASE_URL=http://localhost:8000
+WA_WORKER_BASE_URL=http://localhost:5000
+FILE_STORAGE_PROVIDER=local
+FILE_UPLOAD_DIR=./uploads
+```
+
+Optional P1:
+
+```env
+ASTRAPAY_CLIENT_ID=
+ASTRAPAY_CLIENT_SECRET=
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+```
+
+---
+
+# 13. MVP API Done Definition
+
+API MVP selesai kalau semua ini bisa diuji:
+
+```txt
+[ ] Register owner membuat workspace dan onboarding seed.
+[ ] Login owner mendapat akses dashboard.
+[ ] Owner update business profile.
+[ ] Owner isi onboarding step.
+[ ] Owner input knowledge manual.
+[ ] AI callback bisa mark knowledge indexed.
+[ ] Owner tambah product/menu.
+[ ] Owner start WhatsApp session dan menerima QR.
+[ ] wa-worker callback connected mengubah session status.
+[ ] Owner enable bot.
+[ ] wa-worker kirim incoming message.
+[ ] API upsert customer/conversation/message.
+[ ] API memanggil AI engine.
+[ ] AI reply callback tersimpan di messages.
+[ ] API mengirim command send message ke wa-worker.
+[ ] AI tool create reservation berhasil.
+[ ] AI tool create order berhasil.
+[ ] AI tool human handoff berhasil.
+[ ] Admin bisa balas manual dari conversation.
+[ ] Admin bisa return conversation to AI.
+[ ] Admin bisa list customers, conversations, reservations, orders, handoffs.
+```
+
+---
+
+# 14. Endpoint Priority Checklist
+
+## P0 endpoint list
+
+```txt
+POST   /auth/register
+POST   /auth/login
+GET    /auth/me
+
+GET    /businesses/current
+PATCH  /businesses/current
+
+GET    /onboarding
+POST   /onboarding/answer
+POST   /onboarding/check-readiness
+
+GET    /agent-settings
+PATCH  /agent-settings
+
+GET    /knowledge/documents
+POST   /knowledge/documents
+POST   /knowledge/documents/upload
+GET    /knowledge/documents/:id
+DELETE /knowledge/documents/:id
+PATCH  /internal/knowledge/documents/:id/indexed
+
+GET    /product-categories
+POST   /product-categories
+PATCH  /product-categories/:id
+DELETE /product-categories/:id
+GET    /products
+POST   /products
+PATCH  /products/:id
+DELETE /products/:id
+
+GET    /whatsapp/session
+POST   /whatsapp/session/start
+POST   /whatsapp/bot/enable
+POST   /whatsapp/bot/disable
+
+GET    /customers
+GET    /customers/:id
+PATCH  /customers/:id
+
+GET    /conversations
+GET    /conversations/:id
+GET    /conversations/:id/messages
+POST   /conversations/:id/messages
+POST   /conversations/:id/takeover
+POST   /conversations/:id/return-to-ai
+
+GET    /reservations
+GET    /reservations/:id
+POST   /reservations
+POST   /reservations/:id/confirm
+POST   /reservations/:id/cancel
+
+GET    /orders
+GET    /orders/:id
+POST   /orders
+PATCH  /orders/:id/status
+POST   /orders/:id/cancel
+
+GET    /handoffs
+GET    /handoffs/:id
+POST   /handoffs/:id/assign
+POST   /handoffs/:id/resolve
+
+GET    /notifications
+POST   /notifications/:id/read
+POST   /notifications/read-all
+
+POST   /internal/wa/session-status
+POST   /internal/wa/incoming-message
+POST   /internal/wa/message-status
+
+GET    /internal/context/:businessId
+GET    /internal/customers/:customerId
+GET    /internal/conversations/:conversationId/history
+POST   /internal/ai/reply
+POST   /internal/tools/reservations
+POST   /internal/tools/orders
+POST   /internal/tools/handoffs
+```
+
+---
+
+# 15. Best Next Build Order
+
+Urutan paling aman agar tidak kebanyakan refactor:
+
+```txt
+1. Setup API foundation
+2. Auth + business transaction
+3. Business context middleware
+4. Onboarding seed + answer
+5. Agent settings
+6. Knowledge manual text
+7. Product/menu CRUD
+8. WhatsApp session contract
+9. Incoming message persistence
+10. AI context endpoints
+11. AI reply callback
+12. Admin inbox reply
+13. Reservation tool + dashboard
+14. Order tool + dashboard
+15. Handoff tool + dashboard
+16. Notification basic
+17. Audit logs basic
+18. Polish validation + test
+```
+
+---
+
+# 16. Catatan Teknis Penting
+
+1. Jangan biarkan `ai-engine` dan `wa-worker` import Prisma.
+2. Jangan kirim `businessId` dari frontend untuk public dashboard API. Ambil dari auth/session membership.
+3. Internal endpoint boleh menerima `businessId`, tapi wajib internal token.
+4. Semua create/update penting tulis `audit_logs`.
+5. Semua AI execution tulis `agent_runs` dan `tool_executions`.
+6. Semua WhatsApp incoming message wajib idempotency by `waMessageId`.
+7. Semua money amount pakai integer rupiah, bukan float.
+8. Untuk MVP payment cukup status manual/mock; jangan kejar AstraPay dulu kalau P0 belum selesai.
+9. Untuk MVP upload file boleh local; yang penting metadata `files` dan `knowledge_documents` benar.
+10. Untuk MVP realtime dashboard boleh polling setiap 3-5 detik.
+
+---
+
+# 17. MVP North Star
+
+Jangan bangun semua fitur enterprise. Fokus ke satu pengalaman utama:
+
+> **Pemilik bisnis bisa setup Ningki, connect WhatsApp, lalu customer bisa chat, tanya menu/FAQ, buat reservasi/order, dan admin bisa ambil alih kalau perlu.**
+
+Kalau flow itu sudah jalan stabil, baru masuk payment, spreadsheet, reminder advanced, analytics, dan permission detail.
+</file>
+
+<file path="prisma/schema.prisma">
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserStatus {
+  active
+  inactive
+  suspended
+}
+
+enum BusinessType {
+  coffee_shop
+  cafe
+  restaurant
+  bakery
+  service
+  other
+}
+
+enum BusinessStatus {
+  onboarding
+  active
+  paused
+  suspended
+}
+
+enum MemberRole {
+  owner
+  manager
+  admin
+  staff
+}
+
+enum MemberStatus {
+  active
+  invited
+  disabled
+}
+
+enum OnboardingStepKey {
+  business_profile
+  business_goal
+  menu_upload
+  opening_hours
+  location
+  reservation_policy
+  order_policy
+  payment_policy
+  promo
+  faq
+  agent_persona
+  human_handoff_rule
+  whatsapp_connect
+  bot_test
+  go_live
+}
+
+enum OnboardingStepStatus {
+  pending
+  in_progress
+  completed
+  skipped
+  needs_review
+}
+
+enum AgentTone {
+  friendly
+  casual
+  professional
+  warm
+  playful
+}
+
+enum WhatsappSessionStatus {
+  not_connected
+  qr_pending
+  connecting
+  connected
+  disconnected
+  expired
+  error
+}
+
+enum LeadStatus {
+  new
+  interested
+  hot_lead
+  reserved
+  ordered
+  inactive
+  complaint
+  need_admin
+}
+
+enum ConversationChannel {
+  whatsapp
+  web
+}
+
+enum ConversationStatus {
+  open
+  pending
+  closed
+  human_takeover
+}
+
+enum MessageSenderType {
+  customer
+  ai
+  admin
+  system
+}
+
+enum MessageType {
+  text
+  image
+  document
+  audio
+  video
+  sticker
+  location
+}
+
+enum MessageDirection {
+  inbound
+  outbound
+}
+
+enum MessageStatus {
+  received
+  processing
+  sent
+  delivered
+  read
+  failed
+}
+
+enum KnowledgeDocumentType {
+  menu
+  price_list
+  opening_hours
+  location
+  reservation_policy
+  order_policy
+  payment_policy
+  promo
+  faq
+  brand_tone
+  admin_policy
+  other
+}
+
+enum KnowledgeSourceType {
+  manual
+  pdf
+  image
+  spreadsheet
+  website
+  chat_history
+}
+
+enum KnowledgeStatus {
+  draft
+  processing
+  indexed
+  needs_review
+  failed
+  archived
+}
+
+enum OrderStatus {
+  draft
+  pending_confirmation
+  confirmed
+  preparing
+  ready
+  completed
+  cancelled
+}
+
+enum FulfillmentType {
+  dine_in
+  takeaway
+  delivery
+}
+
+enum ReservationStatus {
+  pending
+  confirmed
+  cancelled
+  completed
+  no_show
+}
+
+enum ReminderType {
+  follow_up_customer
+  reservation_confirmation
+  payment_follow_up
+  admin_task
+  promo_follow_up
+  manual
+}
+
+enum ReminderStatus {
+  scheduled
+  sent
+  completed
+  cancelled
+  failed
+}
+
+enum ReminderChannel {
+  whatsapp
+  admin_notification
+  email
+}
+
+enum ReminderCreatedBy {
+  ai
+  admin
+  system
+}
+
+enum IntegrationProvider {
+  google_sheets
+  astrapay
+  other
+}
+
+enum IntegrationStatus {
+  connected
+  disconnected
+  expired
+  error
+}
+
+enum SyncStatus {
+  pending
+  success
+  failed
+}
+
+enum HandoffReason {
+  customer_requested_admin
+  complaint
+  refund_request
+  unknown_answer
+  sensitive_request
+  bot_failed
+  other
+}
+
+enum HandoffStatus {
+  open
+  assigned
+  resolved
+  cancelled
+}
+
+enum AgentType {
+  onboarding_agent
+  whatsapp_customer_agent
+  crm_assistant_agent
+  knowledge_agent
+}
+
+enum AgentRunStatus {
+  running
+  success
+  failed
+  interrupted
+}
+
+enum ToolExecutionStatus {
+  running
+  success
+  failed
+}
+
+enum NotificationType {
+  whatsapp_disconnected
+  new_handoff
+  new_reservation
+  new_order
+  reminder_due
+  bot_error
+  system
+}
+
+enum WebhookEventStatus {
+  received
+  processed
+  failed
+  ignored
+}
+
+enum CronJobStatus {
+  running
+  success
+  failed
+}
+
+enum PaymentProvider {
+  manual
+  astrapay
+  other
+}
+
+enum PaymentMethod {
+  manual
+  qris
+  transfer
+  cash
+}
+
+enum PaymentStatus {
+  unpaid
+  waiting_payment
+  paid
+  expired
+  failed
+  cancelled
+  refunded
+}
+
+model User {
+  id                   String         @id @default(uuid()) @db.Uuid
+  name                 String
+  email                String         @unique
+  passwordHash         String         @map("password_hash")
+  avatarUrl            String?        @map("avatar_url")
+  status               UserStatus     @default(active)
+  lastLoginAt          DateTime?      @map("last_login_at")
+  createdAt            DateTime       @default(now()) @map("created_at")
+  updatedAt            DateTime       @updatedAt @map("updated_at")
+  deletedAt            DateTime?      @map("deleted_at")
+
+  ownedBusinesses      Business[]     @relation("BusinessOwner")
+  memberships          BusinessMember[]
+  assignedConversations Conversation[] @relation("AssignedConversations")
+  assignedHandoffs     HumanHandoff[] @relation("AssignedHandoffs")
+  notifications        Notification[]
+  auditLogs            AuditLog[]
+  uploadedFiles        File[]
+
+  @@map("users")
+}
+
+model Business {
+  id               String         @id @default(uuid()) @db.Uuid
+  ownerId          String         @map("owner_id") @db.Uuid
+  name             String
+  slug             String         @unique
+  type             BusinessType   @default(coffee_shop)
+  description      String?
+  phone            String?
+  address          String?
+  googleMapsUrl    String?        @map("google_maps_url")
+  timezone         String         @default("Asia/Jakarta")
+  currency         String         @default("IDR")
+  status           BusinessStatus @default(onboarding)
+  createdAt        DateTime       @default(now()) @map("created_at")
+  updatedAt        DateTime       @updatedAt @map("updated_at")
+  deletedAt        DateTime?      @map("deleted_at")
+
+  owner            User           @relation("BusinessOwner", fields: [ownerId], references: [id])
+  members          BusinessMember[]
+  onboarding       BusinessOnboarding?
+  onboardingSteps  OnboardingStep[]
+  agentSettings    AgentSettings?
+  whatsappSessions WhatsappSession[]
+  customers        Customer[]
+  customerTags     CustomerTag[]
+  customerTagAssignments CustomerTagAssignment[]
+  conversations    Conversation[]
+  messages         Message[]
+  knowledgeDocs    KnowledgeDocument[]
+  knowledgeChunks  KnowledgeChunk[]
+  productCategories ProductCategory[]
+  products         Product[]
+  orders           Order[]
+  orderItems       OrderItem[]
+  reservations     Reservation[]
+  reminders        Reminder[]
+  integrations     Integration[]
+  spreadsheetConfigs SpreadsheetConfig[]
+  spreadsheetSyncLogs SpreadsheetSyncLog[]
+  humanHandoffs    HumanHandoff[]
+  agentRuns        AgentRun[]
+  toolExecutions   ToolExecution[]
+  notifications    Notification[]
+  auditLogs        AuditLog[]
+  files            File[]
+  webhookEvents    WebhookEvent[]
+  payments         Payment[]
+  paymentEvents    PaymentEvent[]
+
+  @@map("businesses")
+}
+
+model BusinessMember {
+  id           String       @id @default(uuid()) @db.Uuid
+  businessId   String       @map("business_id") @db.Uuid
+  userId       String       @map("user_id") @db.Uuid
+  role         MemberRole   @default(owner)
+  status       MemberStatus @default(active)
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedAt    DateTime     @updatedAt @map("updated_at")
+
+  business     Business     @relation(fields: [businessId], references: [id])
+  user         User         @relation(fields: [userId], references: [id])
+
+  @@unique([businessId, userId])
+  @@map("business_members")
+}
+
+model BusinessOnboarding {
+  id                      String    @id @default(uuid()) @db.Uuid
+  businessId              String    @unique @map("business_id") @db.Uuid
+  currentStep             String?   @map("current_step")
+  progressPercent         Int       @default(0) @map("progress_percent")
+  mainGoal                Json      @default("[]") @map("main_goal")
+  needsReservation        Boolean   @default(false) @map("needs_reservation")
+  needsOrder              Boolean   @default(false) @map("needs_order")
+  needsSpreadsheet        Boolean   @default(false) @map("needs_spreadsheet")
+  needsReminder           Boolean   @default(false) @map("needs_reminder")
+  needsHumanTakeover      Boolean   @default(true) @map("needs_human_takeover")
+  readyForWhatsapp        Boolean   @default(false) @map("ready_for_whatsapp")
+  readyForBotActivation   Boolean   @default(false) @map("ready_for_bot_activation")
+  completedAt             DateTime? @map("completed_at")
+  createdAt               DateTime  @default(now()) @map("created_at")
+  updatedAt               DateTime  @updatedAt @map("updated_at")
+
+  business                Business  @relation(fields: [businessId], references: [id])
+
+  @@map("business_onboarding")
+}
+
+model OnboardingStep {
+  id           String               @id @default(uuid()) @db.Uuid
+  businessId   String               @map("business_id") @db.Uuid
+  stepKey      OnboardingStepKey    @map("step_key")
+  title        String
+  description  String?
+  status       OnboardingStepStatus @default(pending)
+  data         Json                 @default("{}")
+  required     Boolean              @default(true)
+  sortOrder    Int                  @default(0) @map("sort_order")
+  completedAt  DateTime?            @map("completed_at")
+  createdAt    DateTime             @default(now()) @map("created_at")
+  updatedAt    DateTime             @updatedAt @map("updated_at")
+
+  business     Business             @relation(fields: [businessId], references: [id])
+
+  @@index([businessId])
+  @@index([businessId, stepKey])
+  @@index([businessId, status])
+  @@map("onboarding_steps")
+}
+
+model AgentSettings {
+  id                   String     @id @default(uuid()) @db.Uuid
+  businessId           String     @unique @map("business_id") @db.Uuid
+  agentName            String     @default("Ningki") @map("agent_name")
+  persona              String?
+  tone                 AgentTone  @default(friendly)
+  language             String     @default("id")
+  autoReplyEnabled     Boolean    @default(false) @map("auto_reply_enabled")
+  humanTakeoverEnabled Boolean    @default(true) @map("human_takeover_enabled")
+  maxUnknownAttempts   Int        @default(2) @map("max_unknown_attempts")
+  businessRules        Json       @default("{}") @map("business_rules")
+  handoffRules         Json       @default("{}") @map("handoff_rules")
+  allowedTools         Json       @default("[]") @map("allowed_tools")
+  createdAt            DateTime   @default(now()) @map("created_at")
+  updatedAt            DateTime   @updatedAt @map("updated_at")
+
+  business             Business   @relation(fields: [businessId], references: [id])
+
+  @@map("agent_settings")
+}
+
+model WhatsappSession {
+  id                    String                @id @default(uuid()) @db.Uuid
+  businessId            String                @map("business_id") @db.Uuid
+  sessionName           String                @map("session_name")
+  phoneNumber           String?               @map("phone_number")
+  status                WhatsappSessionStatus @default(not_connected)
+  qrCode                String?               @map("qr_code")
+  qrExpiresAt           DateTime?             @map("qr_expires_at")
+  sessionDataEncrypted  String?               @map("session_data_encrypted")
+  lastConnectedAt       DateTime?             @map("last_connected_at")
+  lastDisconnectedAt    DateTime?             @map("last_disconnected_at")
+  disconnectReason      String?               @map("disconnect_reason")
+  botEnabled            Boolean               @default(false) @map("bot_enabled")
+  createdAt             DateTime              @default(now()) @map("created_at")
+  updatedAt             DateTime              @updatedAt @map("updated_at")
+
+  business              Business              @relation(fields: [businessId], references: [id])
+
+  @@unique([businessId, sessionName])
+  @@index([businessId])
+  @@index([status])
+  @@index([botEnabled])
+  @@map("whatsapp_sessions")
+}
+
+model Customer {
+  id                 String       @id @default(uuid()) @db.Uuid
+  businessId         String       @map("business_id") @db.Uuid
+  waPhone            String       @map("wa_phone")
+  waName             String?      @map("wa_name")
+  name               String?
+  email              String?
+  leadStatus         LeadStatus   @default(new) @map("lead_status")
+  lastMessageAt      DateTime?    @map("last_message_at")
+  totalInteractions  Int          @default(0) @map("total_interactions")
+  totalOrders        Int          @default(0) @map("total_orders")
+  totalReservations  Int          @default(0) @map("total_reservations")
+  notes              String?
+  metadata           Json         @default("{}")
+  createdAt          DateTime     @default(now()) @map("created_at")
+  updatedAt          DateTime     @updatedAt @map("updated_at")
+  deletedAt          DateTime?    @map("deleted_at")
+
+  business           Business     @relation(fields: [businessId], references: [id])
+  tagAssignments     CustomerTagAssignment[]
+  conversations      Conversation[]
+  messages           Message[]
+  orders             Order[]
+  reservations       Reservation[]
+  reminders          Reminder[]
+  humanHandoffs      HumanHandoff[]
+  agentRuns          AgentRun[]
+  payments           Payment[]
+
+  @@unique([businessId, waPhone])
+  @@index([businessId])
+  @@index([businessId, leadStatus])
+  @@index([businessId, lastMessageAt])
+  @@map("customers")
+}
+
+model CustomerTag {
+  id           String    @id @default(uuid()) @db.Uuid
+  businessId   String    @map("business_id") @db.Uuid
+  name         String
+  color        String?
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  business     Business  @relation(fields: [businessId], references: [id])
+  assignments  CustomerTagAssignment[]
+
+  @@unique([businessId, name])
+  @@map("customer_tags")
+}
+
+model CustomerTagAssignment {
+  id           String      @id @default(uuid()) @db.Uuid
+  businessId   String      @map("business_id") @db.Uuid
+  customerId   String      @map("customer_id") @db.Uuid
+  tagId        String      @map("tag_id") @db.Uuid
+  createdAt    DateTime    @default(now()) @map("created_at")
+
+  business     Business    @relation(fields: [businessId], references: [id])
+  customer     Customer    @relation(fields: [customerId], references: [id])
+  tag          CustomerTag @relation(fields: [tagId], references: [id])
+
+  @@unique([customerId, tagId])
+  @@map("customer_tag_assignments")
+}
+
+model Conversation {
+  id                String              @id @default(uuid()) @db.Uuid
+  businessId        String              @map("business_id") @db.Uuid
+  customerId        String              @map("customer_id") @db.Uuid
+  channel           ConversationChannel @default(whatsapp)
+  status            ConversationStatus  @default(open)
+  aiEnabled         Boolean             @default(true) @map("ai_enabled")
+  humanTakeover     Boolean             @default(false) @map("human_takeover")
+  assignedUserId    String?             @map("assigned_user_id") @db.Uuid
+  lastMessage       String?             @map("last_message")
+  lastMessageAt     DateTime?           @map("last_message_at")
+  lastAiReplyAt     DateTime?           @map("last_ai_reply_at")
+  lastAdminReplyAt  DateTime?           @map("last_admin_reply_at")
+  summary           String?
+  metadata          Json                @default("{}")
+  createdAt         DateTime            @default(now()) @map("created_at")
+  updatedAt         DateTime            @updatedAt @map("updated_at")
+  closedAt          DateTime?           @map("closed_at")
+
+  business          Business            @relation(fields: [businessId], references: [id])
+  customer          Customer            @relation(fields: [customerId], references: [id])
+  assignedUser      User?               @relation("AssignedConversations", fields: [assignedUserId], references: [id])
+  messages          Message[]
+  orders            Order[]
+  reservations      Reservation[]
+  reminders         Reminder[]
+  humanHandoffs     HumanHandoff[]
+  agentRuns         AgentRun[]
+  toolExecutions    ToolExecution[]
+  payments          Payment[]
+
+  @@index([businessId])
+  @@index([businessId, status])
+  @@index([businessId, customerId])
+  @@index([businessId, lastMessageAt])
+  @@index([humanTakeover])
+  @@map("conversations")
+}
+
+model Message {
+  id              String            @id @default(uuid()) @db.Uuid
+  businessId      String            @map("business_id") @db.Uuid
+  conversationId  String            @map("conversation_id") @db.Uuid
+  customerId      String?           @map("customer_id") @db.Uuid
+  senderType      MessageSenderType @map("sender_type")
+  messageType     MessageType       @default(text) @map("message_type")
+  content         String?
+  mediaUrl        String?           @map("media_url")
+  waMessageId     String?           @map("wa_message_id")
+  direction       MessageDirection
+  status          MessageStatus     @default(sent)
+  metadata        Json              @default("{}")
+  createdAt       DateTime          @default(now()) @map("created_at")
+
+  business        Business          @relation(fields: [businessId], references: [id])
+  conversation    Conversation      @relation(fields: [conversationId], references: [id])
+  customer        Customer?         @relation(fields: [customerId], references: [id])
+
+  @@index([businessId])
+  @@index([conversationId])
+  @@index([customerId])
+  @@index([createdAt])
+  @@index([senderType])
+  @@map("messages")
+}
+
+model KnowledgeDocument {
+  id             String                @id @default(uuid()) @db.Uuid
+  businessId     String                @map("business_id") @db.Uuid
+  title          String
+  documentType   KnowledgeDocumentType @map("document_type")
+  sourceType     KnowledgeSourceType   @map("source_type")
+  content        String?
+  fileId         String?               @map("file_id") @db.Uuid
+  fileUrl        String?               @map("file_url")
+  status         KnowledgeStatus       @default(draft)
+  extractedText  String?               @map("extracted_text")
+  metadata       Json                  @default("{}")
+  createdAt      DateTime              @default(now()) @map("created_at")
+  updatedAt      DateTime              @updatedAt @map("updated_at")
+  deletedAt      DateTime?             @map("deleted_at")
+
+  business       Business              @relation(fields: [businessId], references: [id])
+  file           File?                 @relation(fields: [fileId], references: [id])
+  chunks         KnowledgeChunk[]
+
+  @@index([businessId])
+  @@index([businessId, documentType])
+  @@index([businessId, status])
+  @@map("knowledge_documents")
+}
+
+model KnowledgeChunk {
+  id           String            @id @default(uuid()) @db.Uuid
+  businessId   String            @map("business_id") @db.Uuid
+  documentId   String            @map("document_id") @db.Uuid
+  chunkText    String            @map("chunk_text")
+  chunkIndex   Int               @default(0) @map("chunk_index")
+  embeddingRef String?           @map("embedding_ref")
+  vectorStore  String            @default("faiss") @map("vector_store")
+  metadata     Json              @default("{}")
+  createdAt    DateTime          @default(now()) @map("created_at")
+  updatedAt    DateTime          @updatedAt @map("updated_at")
+
+  business     Business          @relation(fields: [businessId], references: [id])
+  document     KnowledgeDocument @relation(fields: [documentId], references: [id])
+
+  @@index([businessId])
+  @@index([documentId])
+  @@index([businessId, documentId])
+  @@map("knowledge_chunks")
+}
+
+model ProductCategory {
+  id           String    @id @default(uuid()) @db.Uuid
+  businessId   String    @map("business_id") @db.Uuid
+  name         String
+  description  String?
+  sortOrder    Int       @default(0) @map("sort_order")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  business     Business  @relation(fields: [businessId], references: [id])
+  products     Product[]
+
+  @@unique([businessId, name])
+  @@map("product_categories")
+}
+
+model Product {
+  id           String           @id @default(uuid()) @db.Uuid
+  businessId   String           @map("business_id") @db.Uuid
+  categoryId   String?          @map("category_id") @db.Uuid
+  name         String
+  description  String?
+  price        Int              @default(0)
+  currency     String           @default("IDR")
+  isAvailable  Boolean          @default(true) @map("is_available")
+  imageUrl     String?          @map("image_url")
+  metadata     Json             @default("{}")
+  createdAt    DateTime         @default(now()) @map("created_at")
+  updatedAt    DateTime         @updatedAt @map("updated_at")
+  deletedAt    DateTime?        @map("deleted_at")
+
+  business     Business         @relation(fields: [businessId], references: [id])
+  category     ProductCategory? @relation(fields: [categoryId], references: [id])
+  orderItems   OrderItem[]
+
+  @@index([businessId])
+  @@index([businessId, isAvailable])
+  @@index([businessId, categoryId])
+  @@map("products")
+}
+
+model Order {
+  id              String         @id @default(uuid()) @db.Uuid
+  businessId      String         @map("business_id") @db.Uuid
+  customerId      String         @map("customer_id") @db.Uuid
+  conversationId  String?        @map("conversation_id") @db.Uuid
+  orderNumber     String         @map("order_number")
+  status          OrderStatus    @default(draft)
+  fulfillmentType FulfillmentType @default(takeaway) @map("fulfillment_type")
+  totalAmount     Int            @default(0) @map("total_amount")
+  currency        String         @default("IDR")
+  paymentStatus   PaymentStatus  @default(unpaid) @map("payment_status")
+  pickupTime      DateTime?      @map("pickup_time")
+  deliveryAddress String?        @map("delivery_address")
+  notes           String?
+  metadata        Json           @default("{}")
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+  cancelledAt     DateTime?      @map("cancelled_at")
+  completedAt     DateTime?      @map("completed_at")
+
+  business        Business       @relation(fields: [businessId], references: [id])
+  customer        Customer       @relation(fields: [customerId], references: [id])
+  conversation    Conversation?  @relation(fields: [conversationId], references: [id])
+  items           OrderItem[]
+  reminders       Reminder[]
+  payments        Payment[]
+
+  @@unique([businessId, orderNumber])
+  @@index([businessId])
+  @@index([businessId, status])
+  @@index([customerId])
+  @@map("orders")
+}
+
+model OrderItem {
+  id           String   @id @default(uuid()) @db.Uuid
+  businessId   String   @map("business_id") @db.Uuid
+  orderId      String   @map("order_id") @db.Uuid
+  productId    String?  @map("product_id") @db.Uuid
+  productName  String   @map("product_name")
+  quantity     Int      @default(1)
+  unitPrice    Int      @default(0) @map("unit_price")
+  subtotal     Int      @default(0)
+  notes        String?
+  metadata     Json     @default("{}")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  business     Business @relation(fields: [businessId], references: [id])
+  order        Order    @relation(fields: [orderId], references: [id])
+  product      Product? @relation(fields: [productId], references: [id])
+
+  @@index([businessId])
+  @@index([orderId])
+  @@index([productId])
+  @@map("order_items")
+}
+
+model Reservation {
+  id                 String            @id @default(uuid()) @db.Uuid
+  businessId         String            @map("business_id") @db.Uuid
+  customerId         String            @map("customer_id") @db.Uuid
+  conversationId     String?           @map("conversation_id") @db.Uuid
+  reservationNumber  String            @map("reservation_number")
+  reservationDate    DateTime          @map("reservation_date") @db.Date
+  reservationTime    DateTime          @map("reservation_time") @db.Time()
+  guestCount         Int               @default(1) @map("guest_count")
+  customerName       String?           @map("customer_name")
+  customerPhone      String?           @map("customer_phone")
+  status             ReservationStatus @default(pending)
+  notes              String?
+  reminderSentAt     DateTime?         @map("reminder_sent_at")
+  metadata           Json              @default("{}")
+  createdAt          DateTime          @default(now()) @map("created_at")
+  updatedAt          DateTime          @updatedAt @map("updated_at")
+  cancelledAt        DateTime?         @map("cancelled_at")
+  completedAt        DateTime?         @map("completed_at")
+
+  business           Business          @relation(fields: [businessId], references: [id])
+  customer           Customer          @relation(fields: [customerId], references: [id])
+  conversation       Conversation?     @relation(fields: [conversationId], references: [id])
+  reminders          Reminder[]
+  payments           Payment[]
+
+  @@unique([businessId, reservationNumber])
+  @@index([businessId])
+  @@index([businessId, reservationDate])
+  @@index([businessId, status])
+  @@index([customerId])
+  @@index([conversationId])
+  @@map("reservations")
+}
+
+model Reminder {
+  id              String            @id @default(uuid()) @db.Uuid
+  businessId      String            @map("business_id") @db.Uuid
+  customerId      String?           @map("customer_id") @db.Uuid
+  conversationId  String?           @map("conversation_id") @db.Uuid
+  reservationId   String?           @map("reservation_id") @db.Uuid
+  orderId         String?           @map("order_id") @db.Uuid
+  type            ReminderType
+  title           String
+  description     String?
+  scheduledAt     DateTime          @map("scheduled_at")
+  status          ReminderStatus    @default(scheduled)
+  channel         ReminderChannel   @default(admin_notification)
+  createdBy       ReminderCreatedBy @default(system) @map("created_by")
+  sentAt          DateTime?         @map("sent_at")
+  completedAt     DateTime?         @map("completed_at")
+  metadata        Json              @default("{}")
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
+
+  business        Business          @relation(fields: [businessId], references: [id])
+  customer        Customer?         @relation(fields: [customerId], references: [id])
+  conversation    Conversation?     @relation(fields: [conversationId], references: [id])
+  reservation     Reservation?      @relation(fields: [reservationId], references: [id])
+  order           Order?            @relation(fields: [orderId], references: [id])
+
+  @@index([businessId])
+  @@index([businessId, scheduledAt])
+  @@index([businessId, status])
+  @@index([customerId])
+  @@index([reservationId])
+  @@index([orderId])
+  @@map("reminders")
+}
+
+model Integration {
+  id                    String              @id @default(uuid()) @db.Uuid
+  businessId            String              @map("business_id") @db.Uuid
+  provider              IntegrationProvider
+  status                IntegrationStatus   @default(disconnected)
+  accessTokenEncrypted  String?             @map("access_token_encrypted")
+  refreshTokenEncrypted String?             @map("refresh_token_encrypted")
+  expiresAt             DateTime?           @map("expires_at")
+  metadata              Json                @default("{}")
+  createdAt             DateTime            @default(now()) @map("created_at")
+  updatedAt             DateTime            @updatedAt @map("updated_at")
+
+  business              Business            @relation(fields: [businessId], references: [id])
+  spreadsheetConfigs    SpreadsheetConfig[]
+
+  @@index([businessId])
+  @@index([businessId, provider])
+  @@map("integrations")
+}
+
+model SpreadsheetConfig {
+  id                     String      @id @default(uuid()) @db.Uuid
+  businessId             String      @map("business_id") @db.Uuid
+  integrationId          String      @map("integration_id") @db.Uuid
+  spreadsheetId          String      @map("spreadsheet_id")
+  spreadsheetUrl         String?     @map("spreadsheet_url")
+  customersSheetName     String      @default("Customers") @map("customers_sheet_name")
+  reservationsSheetName  String      @default("Reservations") @map("reservations_sheet_name")
+  ordersSheetName        String      @default("Orders") @map("orders_sheet_name")
+  remindersSheetName     String      @default("Reminders") @map("reminders_sheet_name")
+  syncCustomers          Boolean     @default(true) @map("sync_customers")
+  syncOrders             Boolean     @default(true) @map("sync_orders")
+  syncReservations       Boolean     @default(true) @map("sync_reservations")
+  syncReminders          Boolean     @default(false) @map("sync_reminders")
+  autoSyncEnabled        Boolean     @default(false) @map("auto_sync_enabled")
+  createdAt              DateTime    @default(now()) @map("created_at")
+  updatedAt              DateTime    @updatedAt @map("updated_at")
+
+  business               Business    @relation(fields: [businessId], references: [id])
+  integration            Integration @relation(fields: [integrationId], references: [id])
+  syncLogs               SpreadsheetSyncLog[]
+
+  @@map("spreadsheet_configs")
+}
+
+model SpreadsheetSyncLog {
+  id                   String            @id @default(uuid()) @db.Uuid
+  businessId           String            @map("business_id") @db.Uuid
+  spreadsheetConfigId  String            @map("spreadsheet_config_id") @db.Uuid
+  entityType           String            @map("entity_type")
+  entityId             String?           @map("entity_id") @db.Uuid
+  status               SyncStatus        @default(pending)
+  errorMessage         String?           @map("error_message")
+  syncedAt             DateTime?         @map("synced_at")
+  createdAt            DateTime          @default(now()) @map("created_at")
+
+  business             Business          @relation(fields: [businessId], references: [id])
+  spreadsheetConfig    SpreadsheetConfig @relation(fields: [spreadsheetConfigId], references: [id])
+
+  @@map("spreadsheet_sync_logs")
+}
+
+model HumanHandoff {
+  id               String        @id @default(uuid()) @db.Uuid
+  businessId       String        @map("business_id") @db.Uuid
+  conversationId   String        @map("conversation_id") @db.Uuid
+  customerId       String        @map("customer_id") @db.Uuid
+  reason           HandoffReason
+  summary          String?
+  status           HandoffStatus @default(open)
+  assignedUserId   String?       @map("assigned_user_id") @db.Uuid
+  resolvedAt       DateTime?     @map("resolved_at")
+  createdAt        DateTime      @default(now()) @map("created_at")
+  updatedAt        DateTime      @updatedAt @map("updated_at")
+
+  business         Business      @relation(fields: [businessId], references: [id])
+  conversation     Conversation  @relation(fields: [conversationId], references: [id])
+  customer         Customer      @relation(fields: [customerId], references: [id])
+  assignedUser     User?         @relation("AssignedHandoffs", fields: [assignedUserId], references: [id])
+
+  @@map("human_handoffs")
+}
+
+model AgentRun {
+  id              String         @id @default(uuid()) @db.Uuid
+  businessId      String         @map("business_id") @db.Uuid
+  conversationId  String?        @map("conversation_id") @db.Uuid
+  customerId      String?        @map("customer_id") @db.Uuid
+  agentType       AgentType      @map("agent_type")
+  input           String?
+  output          String?
+  intent          String?
+  status          AgentRunStatus @default(running)
+  errorMessage    String?        @map("error_message")
+  tokensInput     Int            @default(0) @map("tokens_input")
+  tokensOutput    Int            @default(0) @map("tokens_output")
+  latencyMs       Int?           @map("latency_ms")
+  metadata        Json           @default("{}")
+  createdAt       DateTime       @default(now()) @map("created_at")
+  completedAt     DateTime?      @map("completed_at")
+
+  business        Business       @relation(fields: [businessId], references: [id])
+  conversation    Conversation?  @relation(fields: [conversationId], references: [id])
+  customer        Customer?      @relation(fields: [customerId], references: [id])
+  toolExecutions  ToolExecution[]
+
+  @@index([businessId])
+  @@index([conversationId])
+  @@index([customerId])
+  @@index([agentType])
+  @@index([createdAt])
+  @@map("agent_runs")
+}
+
+model ToolExecution {
+  id              String               @id @default(uuid()) @db.Uuid
+  businessId      String               @map("business_id") @db.Uuid
+  agentRunId      String?              @map("agent_run_id") @db.Uuid
+  conversationId  String?              @map("conversation_id") @db.Uuid
+  toolName        String               @map("tool_name")
+  input           Json                 @default("{}")
+  output          Json                 @default("{}")
+  status          ToolExecutionStatus  @default(running)
+  errorMessage    String?              @map("error_message")
+  latencyMs       Int?                 @map("latency_ms")
+  createdAt       DateTime             @default(now()) @map("created_at")
+  completedAt     DateTime?            @map("completed_at")
+
+  business        Business             @relation(fields: [businessId], references: [id])
+  agentRun        AgentRun?            @relation(fields: [agentRunId], references: [id])
+  conversation    Conversation?        @relation(fields: [conversationId], references: [id])
+
+  @@map("tool_executions")
+}
+
+model Notification {
+  id           String           @id @default(uuid()) @db.Uuid
+  businessId   String           @map("business_id") @db.Uuid
+  userId       String?          @map("user_id") @db.Uuid
+  type         NotificationType
+  title        String
+  message      String?
+  isRead       Boolean          @default(false) @map("is_read")
+  metadata     Json             @default("{}")
+  createdAt    DateTime         @default(now()) @map("created_at")
+  readAt       DateTime?        @map("read_at")
+
+  business     Business         @relation(fields: [businessId], references: [id])
+  user         User?            @relation(fields: [userId], references: [id])
+
+  @@map("notifications")
+}
+
+model AuditLog {
+  id           String    @id @default(uuid()) @db.Uuid
+  businessId   String?   @map("business_id") @db.Uuid
+  userId       String?   @map("user_id") @db.Uuid
+  action       String
+  entityType   String    @map("entity_type")
+  entityId     String?   @map("entity_id") @db.Uuid
+  oldData      Json?     @map("old_data")
+  newData      Json?     @map("new_data")
+  ipAddress    String?   @map("ip_address")
+  userAgent    String?   @map("user_agent")
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  business     Business? @relation(fields: [businessId], references: [id])
+  user         User?     @relation(fields: [userId], references: [id])
+
+  @@index([businessId])
+  @@index([userId])
+  @@index([entityType])
+  @@index([entityId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+model File {
+  id               String    @id @default(uuid()) @db.Uuid
+  businessId       String    @map("business_id") @db.Uuid
+  uploadedBy       String?   @map("uploaded_by") @db.Uuid
+  filename         String
+  originalName     String    @map("original_name")
+  mimeType         String    @map("mime_type")
+  sizeBytes        Int       @map("size_bytes")
+  storageProvider  String    @default("local") @map("storage_provider")
+  storagePath      String    @map("storage_path")
+  publicUrl        String?   @map("public_url")
+  metadata         Json      @default("{}")
+  createdAt        DateTime  @default(now()) @map("created_at")
+
+  business         Business  @relation(fields: [businessId], references: [id])
+  uploader         User?     @relation(fields: [uploadedBy], references: [id])
+  knowledgeDocs    KnowledgeDocument[]
+
+  @@map("files")
+}
+
+model WebhookEvent {
+  id           String             @id @default(uuid()) @db.Uuid
+  businessId   String?            @map("business_id") @db.Uuid
+  provider     String
+  eventType    String             @map("event_type")
+  externalId   String?            @map("external_id")
+  payload      Json
+  status       WebhookEventStatus @default(received)
+  processedAt  DateTime?          @map("processed_at")
+  errorMessage String?            @map("error_message")
+  createdAt    DateTime           @default(now()) @map("created_at")
+
+  business     Business?          @relation(fields: [businessId], references: [id])
+
+  @@index([provider, externalId])
+  @@map("webhook_events")
+}
+
+model CronJob {
+  id           String        @id @default(uuid()) @db.Uuid
+  jobName      String        @map("job_name")
+  status       CronJobStatus @default(running)
+  startedAt    DateTime      @map("started_at")
+  finishedAt   DateTime?     @map("finished_at")
+  result       Json          @default("{}")
+  errorMessage String?       @map("error_message")
+  createdAt    DateTime      @default(now()) @map("created_at")
+
+  @@map("cron_jobs")
+}
+
+model Payment {
+  id                   String          @id @default(uuid()) @db.Uuid
+  businessId           String          @map("business_id") @db.Uuid
+  orderId              String?         @map("order_id") @db.Uuid
+  reservationId        String?         @map("reservation_id") @db.Uuid
+  customerId           String?         @map("customer_id") @db.Uuid
+  conversationId       String?         @map("conversation_id") @db.Uuid
+  provider             PaymentProvider @default(manual)
+  method               PaymentMethod   @default(manual)
+  status               PaymentStatus   @default(unpaid)
+  amount               Int
+  currency             String          @default("IDR")
+  merchantReferenceNo  String          @unique @map("merchant_reference_no")
+  providerReferenceNo  String?         @map("provider_reference_no")
+  qrContent            String?         @map("qr_content")
+  qrImageUrl           String?         @map("qr_image_url")
+  expiresAt            DateTime?       @map("expires_at")
+  paidAt               DateTime?       @map("paid_at")
+  rawRequest           Json?           @map("raw_request")
+  rawResponse          Json?           @map("raw_response")
+  rawCallback          Json?           @map("raw_callback")
+  createdAt            DateTime        @default(now()) @map("created_at")
+  updatedAt            DateTime        @updatedAt @map("updated_at")
+
+  business             Business        @relation(fields: [businessId], references: [id])
+  order                Order?          @relation(fields: [orderId], references: [id])
+  reservation          Reservation?    @relation(fields: [reservationId], references: [id])
+  customer             Customer?       @relation(fields: [customerId], references: [id])
+  conversation         Conversation?   @relation(fields: [conversationId], references: [id])
+  events               PaymentEvent[]
+
+  @@index([businessId])
+  @@index([businessId, status])
+  @@index([orderId])
+  @@index([reservationId])
+  @@index([merchantReferenceNo])
+  @@map("payments")
+}
+
+model PaymentEvent {
+  id          String   @id @default(uuid()) @db.Uuid
+  businessId  String   @map("business_id") @db.Uuid
+  paymentId   String   @map("payment_id") @db.Uuid
+  eventType   String   @map("event_type")
+  payload     Json     @default("{}")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  business    Business @relation(fields: [businessId], references: [id])
+  payment     Payment  @relation(fields: [paymentId], references: [id])
+
+  @@index([paymentId])
+  @@index([businessId])
+  @@map("payment_events")
+}
+</file>
+
+<file path="src/clients/ai-engine.client.ts">
+// AI Engine client
+</file>
+
+<file path="src/clients/google-sheets.client.ts">
+// Google Sheets client
+</file>
+
+<file path="src/clients/payment.client.ts">
+// Payment provider client
+</file>
+
+<file path="src/clients/wa-worker.client.ts">
+// WhatsApp Worker client
+</file>
+
+<file path="src/config/env.ts">
+
+</file>
+
+<file path="src/jobs/cleanup.job.ts">
+// Periodic cleanup job
+</file>
+
+<file path="src/jobs/queues.ts">
+// Queue definitions
+</file>
+
+<file path="src/jobs/reminder.job.ts">
+// Reminder background job
+</file>
+
+<file path="src/jobs/spreadsheet-sync.job.ts">
+// Spreadsheet synchronization job
+</file>
+
+<file path="src/jobs/webhook-retry.job.ts">
+// Webhook retry logic
+</file>
+
+<file path="src/lib/crypto.ts">
+// Utility for crypto
+</file>
+
+<file path="src/lib/date.ts">
+// Utility for date
+</file>
+
+<file path="src/lib/errors.ts">
+// Utility for errors
+</file>
+
+<file path="src/lib/id.ts">
+// Utility for id
+</file>
+
+<file path="src/lib/logger.ts">
+
+</file>
+
+<file path="src/lib/pagination.ts">
+// Utility for pagination
+</file>
+
+<file path="src/lib/prisma.ts">
+
+</file>
+
+<file path="src/lib/response.ts">
+
+</file>
+
+<file path="src/lib/slug.ts">
+// Utility for slug
+</file>
+
+<file path="src/lib/tenant.ts">
+// Utility for tenant
+</file>
+
+<file path="src/middlewares/auth.middleware.ts">
+// Authentication middleware
+</file>
+
+<file path="src/middlewares/business-context.middleware.ts">
+// Business context and multi-tenancy middleware
+</file>
+
+<file path="src/middlewares/error.middleware.ts">
+// Global error handling middleware
+</file>
+
+<file path="src/middlewares/internal-token.middleware.ts">
+// Internal service token validation
+</file>
+
+<file path="src/middlewares/rate-limit.middleware.ts">
+// Rate limiting middleware
+</file>
+
+<file path="src/modules/agent-runs/agent-runs.controller.ts">
+// Handles request/response and calls services.
+</file>
+
+<file path="src/modules/agent-runs/agent-runs.repository.ts">
+// Handles Prisma queries with tenant isolation.
+</file>
+
+<file path="src/modules/agent-runs/agent-runs.route.ts">
+// Registers endpoints and maps to controller.
+</file>
+
+<file path="src/modules/agent-runs/agent-runs.schema.ts">
+// Zod schemas for validation.
+</file>
+
+<file path="src/modules/agent-runs/agent-runs.service.ts">
+// Contains business logic.
+</file>
+
+<file path="src/modules/agent-runs/agent-runs.types.ts">
+// DTOs and TypeScript types.
+</file>
+
+<file path="src/modules/agent-settings/agent-settings.controller.ts">
+// Handles request/response and calls services.
+</file>
+
+<file path="src/modules/agent-settings/agent-settings.repository.ts">
+// Handles Prisma queries with tenant isolation.
+</file>
+
+<file path="src/modules/agent-settings/agent-settings.route.ts">
+// Registers endpoints and maps to controller.
+</file>
+
+<file path="src/modules/agent-settings/agent-settings.schema.ts">
+// Zod schemas for validation.
+</file>
+
+<file path="src/modules/agent-settings/agent-settings.service.ts">
+// Contains business logic.
+</file>
+
+<file path="src/modules/agent-settings/agent-settings.types.ts">
+// DTOs and TypeScript types.
+</file>
+
+<file path="src/modules/auth/auth.controller.ts">
+
+</file>
+
+<file path="src/modules/auth/auth.repository.ts">
+// Handles Prisma queries with tenant isolation.
+</file>
+
+<file path="src/modules/auth/auth.route.ts">
+
+</file>
+
+<file path="src/modules/auth/auth.schema.ts">
+
+</file>
+
+<file path="src/modules/auth/auth.service.ts">
+
+</file>
+
+<file path="src/modules/auth/auth.types.ts">
+
+</file>
+
+<file path="src/modules/businesses/businesses.controller.ts">
+// Handles request/response and calls services.
+</file>
+
+<file path="src/modules/businesses/businesses.repository.ts">
+// Handles Prisma queries with tenant isolation.
+</file>
+
+<file path="src/modules/businesses/businesses.route.ts">
+// Registers endpoints and maps to controller.
+</file>
+
+<file path="src/modules/businesses/businesses.schema.ts">
+// Zod schemas for validation.
+</file>
+
+<file path="src/modules/businesses/businesses.service.ts">
+// Contains business logic.
+</file>
+
+<file path="src/modules/businesses/businesses.types.ts">
+// DTOs and TypeScript types.
+</file>
+
+<file path="src/modules/conversations/conversations.controller.ts">
+// Handles request/response and calls services.
+</file>
+
+<file path="src/modules/conversations/conversations.repository.ts">
+// Handles Prisma queries with tenant isolation.
+</file>
+
+<file path="src/modules/conversations/conversations.route.ts">
+// Registers endpoints and maps to controller.
+</file>
+
+<file path="src/modules/conversations/conversations.schema.ts">
+// Zod schemas for validation.
+</file>
+
+<file path="src/modules/conversations/conversations.service.ts">
+// Contains business logic.
+</file>
+
+<file path="src/modules/conversations/conversations.types.ts">
+// DTOs and TypeScript types.
+</file>
+
+<file path="src/modules/cron/cron.controller.ts">
+// Handles request/response and calls services.
+</file>
+
+<file path="src/modules/cron/cron.repository.ts">
+// Handles Prisma queries with tenant isolation.
+</file>
+
+<file path="src/modules/cron/cron.route.ts">
+// Registers endpoints and maps to controller.
+</file>
+
+<file path="src/modules/cron/cron.schema.ts">
+// Zod schemas for validation.
+</file>
+
+<file path="src/modules/cron/cron.service.ts">
+// Contains business logic.
+</file>
+
+<file path="src/modules/cron/cron.types.ts">
+// DTOs and TypeScript types.
+</file>
+
+<file path="src/modules/customer-tags/customer-tags.controller.ts">
+// Handles request/response and calls services.
+</file>
+
+<file path="src/modules/customer-tags/customer-tags.repository.ts">
+// Handles Prisma queries with tenant isolation.
+</file>
+
+<file path="src/modules/customer-tags/customer-tags.route.ts">
+// Registers endpoints and maps to controller.
+</file>
+
+<file path="src/modules/customer-tags/customer-tags.schema.ts">
+// Zod schemas for validation.
+</file>
+
+<file path="src/modules/customer-tags/customer-tags.service.ts">
+// Contains business logic.
+</file>
+
+<file path="src/modules/customer-tags/customer-tags.types.ts">
+// DTOs and TypeScript types.
+</file>
+
+<file path="src/modules/customers/customers.controller.ts">
+// Handles request/response and calls services.
+</file>
+
+<file path="src/modules/customers/customers.repository.ts">
+// Handles Prisma queries with tenant isolation.
+</file>
+
+<file path="src/modules/customers/customers.route.ts">
+// Registers endpoints and maps to controller.
+</file>
+
+<file path="src/modules/customers/customers.schema.ts">
+// Zod schemas for validation.
+</file>
+
+<file path="src/modules/customers/customers.service.ts">
+// Contains business logic.
+</file>
+
+<file path="src/modules/customers/customers.types.ts">
+// DTOs and TypeScript types.
+</file>
+
+<file path="src/modules/files/files.controller.ts">
+// Handles request/response and calls services.
+</file>
+
+<file path="src/modules/files/files.repository.ts">
+// Handles Prisma queries with tenant isolation.
+</file>
+
+<file path="src/modules/files/files.route.ts">
+// Registers endpoints and maps to controller.
+</file>
+
+<file path="src/modules/files/files.schema.ts">
+// Zod schemas for validation.
+</file>
+
+<file path="src/modules/files/files.service.ts">
+// Contains business logic.
+</file>
+
+<file path="src/modules/files/files.types.ts">
+// DTOs and TypeScript types.
+</file>
+
+<file path="src/modules/human-handoffs/human-handoffs.controller.ts">
+// Handles request/response and calls services.
+</file>
+
+<file path="src/modules/human-handoffs/human-handoffs.repository.ts">
+// Handles Prisma queries with tenant isolation.
+</file>
+
+<file path="src/modules/human-handoffs/human-handoffs.route.ts">
+// Registers endpoints and maps to controller.
+</file>
+
+<file path="src/modules/human-handoffs/human-handoffs.schema.ts">
+// Zod schemas for validation.
+</file>
+
+<file path="src/modules/human-handoffs/human-handoffs.service.ts">
+// Contains business logic.
+</file>
+
+<file path="src/modules/human-handoffs/human-handoffs.types.ts">
+// DTOs and TypeScript types.
+</file>
+
+<file path="src/modules/integrations/integrations.controller.ts">
+// Handles request/response and calls services.
+</file>
+
+<file path="src/modules/integrations/integrations.repository.ts">
+// Handles Prisma queries with tenant isolation.
+</file>
+
+<file path="src/modules/integrations/integrations.route.ts">
+// Registers endpoints and maps to controller.
+</file>
+
+<file path="src/modules/integrations/integrations.schema.ts">
+// Zod schemas for validation.
+</file>
+
+<file path="src/modules/integrations/integrations.service.ts">
+// Contains business logic.
+</file>
+
+<file path="src/modules/integrations/integrations.types.ts">
+// DTOs and TypeScript types.
+</file>
+
+<file path="src/modules/internal/internal.controller.ts">
+// Handles request/response and calls services.
+</file>
+
+<file path="src/modules/internal/internal.repository.ts">
+// Handles Prisma queries with tenant isolation.
+</file>
+
+<file path="src/modules/internal/internal.route.ts">
+// Registers endpoints and maps to controller.
+</file>
+
+<file path="src/modules/internal/internal.schema.ts">
+// Zod schemas for validation.
+</file>
+
+<file path="src/modules/internal/internal.service.ts">
+// Contains business logic.
+</file>
+
+<file path="src/modules/internal/internal.types.ts">
+// DTOs and TypeScript types.
+</file>
+
+<file path="src/modules/knowledge/knowledge.controller.ts">
+// Handles request/response and calls services.
+</file>
+
+<file path="src/modules/knowledge/knowledge.repository.ts">
+// Handles Prisma queries with tenant isolation.
+</file>
+
+<file path="src/modules/knowledge/knowledge.route.ts">
+// Registers endpoints and maps to controller.
+</file>
+
+<file path="src/modules/knowledge/knowledge.schema.ts">
+// Zod schemas for validation.
+</file>
+
+<file path="src/modules/knowledge/knowledge.service.ts">
+// Contains business logic.
+</file>
+
+<file path="src/modules/knowledge/knowledge.types.ts">
+// DTOs and TypeScript types.
+</file>
+
+<file path="src/modules/members/members.controller.ts">
+// Handles request/response and calls services.
+</file>
+
+<file path="src/modules/members/members.repository.ts">
+// Handles Prisma queries with tenant isolation.
+</file>
+
+<file path="src/modules/members/members.route.ts">
+// Registers endpoints and maps to controller.
+</file>
+
+<file path="src/modules/members/members.schema.ts">
+// Zod schemas for validation.
+</file>
+
+<file path="src/modules/members/members.service.ts">
+// Contains business logic.
+</file>
+
+<file path="src/modules/members/members.types.ts">
+// DTOs and TypeScript types.
+</file>
+
+<file path="src/modules/messages/messages.controller.ts">
+// Handles request/response and calls services.
+</file>
+
+<file path="src/modules/messages/messages.repository.ts">
+// Handles Prisma queries with tenant isolation.
+</file>
+
+<file path="src/modules/messages/messages.route.ts">
+// Registers endpoints and maps to controller.
+</file>
+
+<file path="src/modules/messages/messages.schema.ts">
+// Zod schemas for validation.
+</file>
+
+<file path="src/modules/messages/messages.service.ts">
+// Contains business logic.
+</file>
+
+<file path="src/modules/messages/messages.types.ts">
+// DTOs and TypeScript types.
+</file>
+
+<file path="src/modules/notifications/notifications.controller.ts">
+// Handles request/response and calls services.
+</file>
+
+<file path="src/modules/notifications/notifications.repository.ts">
+// Handles Prisma queries with tenant isolation.
+</file>
+
+<file path="src/modules/notifications/notifications.route.ts">
+// Registers endpoints and maps to controller.
+</file>
+
+<file path="src/modules/notifications/notifications.schema.ts">
+// Zod schemas for validation.
+</file>
+
+<file path="src/modules/notifications/notifications.service.ts">
+// Contains business logic.
+</file>
+
+<file path="src/modules/notifications/notifications.types.ts">
+// DTOs and TypeScript types.
+</file>
+
+<file path="src/modules/onboarding/onboarding.controller.ts">
+// Handles request/response and calls services.
+</file>
+
+<file path="src/modules/onboarding/onboarding.repository.ts">
+// Handles Prisma queries with tenant isolation.
+</file>
+
+<file path="src/modules/onboarding/onboarding.route.ts">
+// Registers endpoints and maps to controller.
+</file>
+
+<file path="src/modules/onboarding/onboarding.schema.ts">
+// Zod schemas for validation.
+</file>
+
+<file path="src/modules/onboarding/onboarding.service.ts">
+// Contains business logic.
+</file>
+
+<file path="src/modules/onboarding/onboarding.types.ts">
+// DTOs and TypeScript types.
+</file>
+
+<file path="src/modules/orders/orders.controller.ts">
+// Handles request/response and calls services.
+</file>
+
+<file path="src/modules/orders/orders.repository.ts">
+// Handles Prisma queries with tenant isolation.
+</file>
+
+<file path="src/modules/orders/orders.route.ts">
+// Registers endpoints and maps to controller.
+</file>
+
+<file path="src/modules/orders/orders.schema.ts">
+// Zod schemas for validation.
+</file>
+
+<file path="src/modules/orders/orders.service.ts">
+// Contains business logic.
+</file>
+
+<file path="src/modules/orders/orders.types.ts">
+// DTOs and TypeScript types.
+</file>
+
+<file path="src/modules/payment/providers/astrapay.provider.ts">
+
+</file>
+
+<file path="src/modules/payment/payment.controller.ts">
+
+</file>
+
+<file path="src/modules/payment/payment.repository.ts">
+// Handles Prisma queries with tenant isolation.
+</file>
+
+<file path="src/modules/payment/payment.route.ts">
+
+</file>
+
+<file path="src/modules/payment/payment.schema.ts">
+// Zod schemas for validation.
+</file>
+
+<file path="src/modules/payment/payment.service.ts">
+
+</file>
+
+<file path="src/modules/payment/payment.types.ts">
+// DTOs and TypeScript types.
+</file>
+
+<file path="src/modules/payments/payments.controller.ts">
+// Handles request/response and calls services.
+</file>
+
+<file path="src/modules/payments/payments.repository.ts">
+// Handles Prisma queries with tenant isolation.
+</file>
+
+<file path="src/modules/payments/payments.route.ts">
+// Registers endpoints and maps to controller.
+</file>
+
+<file path="src/modules/payments/payments.schema.ts">
+// Zod schemas for validation.
+</file>
+
+<file path="src/modules/payments/payments.service.ts">
+// Contains business logic.
+</file>
+
+<file path="src/modules/payments/payments.types.ts">
+// DTOs and TypeScript types.
+</file>
+
+<file path="src/modules/products/products.controller.ts">
+// Handles request/response and calls services.
+</file>
+
+<file path="src/modules/products/products.repository.ts">
+// Handles Prisma queries with tenant isolation.
+</file>
+
+<file path="src/modules/products/products.route.ts">
+// Registers endpoints and maps to controller.
+</file>
+
+<file path="src/modules/products/products.schema.ts">
+// Zod schemas for validation.
+</file>
+
+<file path="src/modules/products/products.service.ts">
+// Contains business logic.
+</file>
+
+<file path="src/modules/products/products.types.ts">
+// DTOs and TypeScript types.
+</file>
+
+<file path="src/modules/reminders/reminders.controller.ts">
+// Handles request/response and calls services.
+</file>
+
+<file path="src/modules/reminders/reminders.repository.ts">
+// Handles Prisma queries with tenant isolation.
+</file>
+
+<file path="src/modules/reminders/reminders.route.ts">
+// Registers endpoints and maps to controller.
+</file>
+
+<file path="src/modules/reminders/reminders.schema.ts">
+// Zod schemas for validation.
+</file>
+
+<file path="src/modules/reminders/reminders.service.ts">
+// Contains business logic.
+</file>
+
+<file path="src/modules/reminders/reminders.types.ts">
+// DTOs and TypeScript types.
+</file>
+
+<file path="src/modules/reservations/reservations.controller.ts">
+// Handles request/response and calls services.
+</file>
+
+<file path="src/modules/reservations/reservations.repository.ts">
+// Handles Prisma queries with tenant isolation.
+</file>
+
+<file path="src/modules/reservations/reservations.route.ts">
+// Registers endpoints and maps to controller.
+</file>
+
+<file path="src/modules/reservations/reservations.schema.ts">
+// Zod schemas for validation.
+</file>
+
+<file path="src/modules/reservations/reservations.service.ts">
+// Contains business logic.
+</file>
+
+<file path="src/modules/reservations/reservations.types.ts">
+// DTOs and TypeScript types.
+</file>
+
+<file path="src/modules/spreadsheets/spreadsheets.controller.ts">
+// Handles request/response and calls services.
+</file>
+
+<file path="src/modules/spreadsheets/spreadsheets.repository.ts">
+// Handles Prisma queries with tenant isolation.
+</file>
+
+<file path="src/modules/spreadsheets/spreadsheets.route.ts">
+// Registers endpoints and maps to controller.
+</file>
+
+<file path="src/modules/spreadsheets/spreadsheets.schema.ts">
+// Zod schemas for validation.
+</file>
+
+<file path="src/modules/spreadsheets/spreadsheets.service.ts">
+// Contains business logic.
+</file>
+
+<file path="src/modules/spreadsheets/spreadsheets.types.ts">
+// DTOs and TypeScript types.
+</file>
+
+<file path="src/modules/tool-executions/tool-executions.controller.ts">
+// Handles request/response and calls services.
+</file>
+
+<file path="src/modules/tool-executions/tool-executions.repository.ts">
+// Handles Prisma queries with tenant isolation.
+</file>
+
+<file path="src/modules/tool-executions/tool-executions.route.ts">
+// Registers endpoints and maps to controller.
+</file>
+
+<file path="src/modules/tool-executions/tool-executions.schema.ts">
+// Zod schemas for validation.
+</file>
+
+<file path="src/modules/tool-executions/tool-executions.service.ts">
+// Contains business logic.
+</file>
+
+<file path="src/modules/tool-executions/tool-executions.types.ts">
+// DTOs and TypeScript types.
+</file>
+
+<file path="src/modules/user/user.controller.ts">
+
+</file>
+
+<file path="src/modules/user/user.repository.ts">
+// Handles Prisma queries with tenant isolation.
+</file>
+
+<file path="src/modules/user/user.route.ts">
+
+</file>
+
+<file path="src/modules/user/user.schema.ts">
+
+</file>
+
+<file path="src/modules/user/user.service.ts">
+
+</file>
+
+<file path="src/modules/user/user.types.ts">
+// DTOs and TypeScript types.
+</file>
+
+<file path="src/modules/users/users.controller.ts">
+// Handles request/response and calls services.
+</file>
+
+<file path="src/modules/users/users.repository.ts">
+// Handles Prisma queries with tenant isolation.
+</file>
+
+<file path="src/modules/users/users.route.ts">
+// Registers endpoints and maps to controller.
+</file>
+
+<file path="src/modules/users/users.schema.ts">
+// Zod schemas for validation.
+</file>
+
+<file path="src/modules/users/users.service.ts">
+// Contains business logic.
+</file>
+
+<file path="src/modules/users/users.types.ts">
+// DTOs and TypeScript types.
+</file>
+
+<file path="src/modules/webhooks/webhooks.controller.ts">
+// Handles request/response and calls services.
+</file>
+
+<file path="src/modules/webhooks/webhooks.repository.ts">
+// Handles Prisma queries with tenant isolation.
+</file>
+
+<file path="src/modules/webhooks/webhooks.route.ts">
+// Registers endpoints and maps to controller.
+</file>
+
+<file path="src/modules/webhooks/webhooks.schema.ts">
+// Zod schemas for validation.
+</file>
+
+<file path="src/modules/webhooks/webhooks.service.ts">
+// Contains business logic.
+</file>
+
+<file path="src/modules/webhooks/webhooks.types.ts">
+// DTOs and TypeScript types.
+</file>
+
+<file path="src/modules/whatsapp/whatsapp.controller.ts">
+// Handles request/response and calls services.
+</file>
+
+<file path="src/modules/whatsapp/whatsapp.repository.ts">
+// Handles Prisma queries with tenant isolation.
+</file>
+
+<file path="src/modules/whatsapp/whatsapp.route.ts">
+// Registers endpoints and maps to controller.
+</file>
+
+<file path="src/modules/whatsapp/whatsapp.schema.ts">
+// Zod schemas for validation.
+</file>
+
+<file path="src/modules/whatsapp/whatsapp.service.ts">
+// Contains business logic.
+</file>
+
+<file path="src/modules/whatsapp/whatsapp.types.ts">
+// DTOs and TypeScript types.
+</file>
+
+<file path="src/plugins/cors.plugin.ts">
+// CORS configuration plugin
+</file>
+
+<file path="src/plugins/cors.ts">
+
+</file>
+
+<file path="src/plugins/jwt.plugin.ts">
+// JWT authentication plugin
+</file>
+
+<file path="src/plugins/multipart.plugin.ts">
+// Multipart/form-data handling plugin
+</file>
+
+<file path="src/plugins/prisma.plugin.ts">
+// Prisma Fastify plugin
+</file>
+
+<file path="src/plugins/redis.plugin.ts">
+// Redis client plugin
+</file>
+
+<file path="src/plugins/sensible.ts">
+
+</file>
+
+<file path="src/plugins/swagger.ts">
+
+</file>
+
+<file path="src/types/auth.ts">
+// Authentication related types
+</file>
+
+<file path="src/types/common.ts">
+// Common shared types
+</file>
+
+<file path="src/types/fastify.d.ts">
+// Fastify type extensions
+</file>
+
+<file path="src/types/global.d.ts">
+
+</file>
+
+<file path="src/types/internal.ts">
+// Internal API types
+</file>
+
+<file path="src/utils/generate-id.ts">
+
+</file>
+
+<file path="src/app.ts">
+import Fastify from "fastify";
+
+export const app = Fastify({
+  logger: true,
+});
+
+app.get("/health", async () => {
+  return {
+    status: "ok",
+    service: "nongki-api",
+    timestamp: new Date().toISOString(),
+  };
+});
+
+const start = async () => {
+  try {
+    await app.listen({
+      port: 3000,
+      host: "0.0.0.0",
+    });
+
+    console.log("🚀 Server running at http://localhost:3000");
+  } catch (error) {
+    app.log.error(error);
+    process.exit(1);
+  }
+};
+
+start();
+</file>
+
+<file path="src/env.ts">
+import dotenv from 'dotenv';
+import path from 'path';
+import { z } from 'zod';
+
+// Load env from root directory
+dotenv.config({ path: path.join(__dirname, '../../.env') });
+
+const envSchema = z.object({
+  NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+  PORT: z.string().transform(Number).default('3000'),
+  DATABASE_URL: z.string(),
+  JWT_SECRET: z.string(),
+  // Add other env vars here
+});
+
+export const env = envSchema.parse(process.env);
+export type Env = z.infer<typeof envSchema>;
+</file>
+
+<file path="src/routes.ts">
+import { FastifyInstance } from 'fastify';
+
+export async function registerRoutes(app: FastifyInstance) {
+  // Register module routes here
+  // app.register(authRoutes, { prefix: '/v1/auth' });
+}
+</file>
+
+<file path="src/server.ts">
+
+</file>
+
+<file path="tests/health.test.ts">
+import request from "supertest";
+import { describe, it, expect, beforeAll, afterAll } from "vitest";
+import { app } from "../src/app.js";
+
+beforeAll(async () => {
+  await app.ready();
+});
+
+afterAll(async () => {
+  await app.close();
+});
+
+describe("GET /health", () => {
+  it("should return 200 and ok status", async () => {
+    const res = await request(app.server)
+      .get("/health")
+      .expect(200);
+
+    expect(res.body.status).toBe("ok");
+    expect(res.body.service).toBe("nongki-api");
+  });
+});
+</file>
+
+<file path=".dockerignore">
+node_modules
+dist
+.env
+.env.*
+tests
+*.md
+coverage
+*.log
+</file>
+
+<file path=".gitignore">
+.env
+/generated/prisma
+</file>
+
+<file path="Dockerfile">
+# ─────────────────────────────────────────
+# Dev stage (used by docker-compose.dev.yml)
+# ─────────────────────────────────────────
+FROM node:22-alpine AS dev
+WORKDIR /app
+RUN corepack enable && corepack prepare pnpm@latest --activate
+COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
+RUN pnpm install
+COPY . .
+EXPOSE 4000
+CMD ["pnpm", "dev"]
+# package.json harus punya: "dev": "tsx watch src/server.ts"
+
+# ─────────────────────────────────────────
+# Stage 1 — Builder
+# ─────────────────────────────────────────
+FROM node:22-alpine AS builder
+
+WORKDIR /app
+
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Install dependencies
+COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
+RUN pnpm install --frozen-lockfile
+
+# Copy source files
+COPY src/ src/
+COPY tsconfig.json ./
+
+# Build
+RUN pnpm build
+
+# ─────────────────────────────────────────
+# Stage 2 — Runner
+# ─────────────────────────────────────────
+FROM node:22-alpine AS runner
+
+WORKDIR /app
+
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./
+
+ENV NODE_ENV=production
+ENV PORT=4000
+
+EXPOSE 4000
+
+CMD ["node", "dist/server.js"]
+
+# Fastify must have trustProxy: true since traffic comes through nginx.
+# Set it in server initialization: const app = Fastify({ trustProxy: true })
+#
+# All routes must be registered with prefix '/api/v1', e.g.:
+#   app.register(routes, { prefix: '/api/v1' })
+</file>
+
+<file path="package.json">
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "Nongki API Service",
+  "main": "dist/server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest --coverage",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fastify/cors": "^11.2.0",
+    "@fastify/sensible": "^6.0.4",
+    "@fastify/swagger": "^9.7.0",
+    "@fastify/swagger-ui": "^5.2.6",
+    "@prisma/adapter-mariadb": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "dotenv": "^17.4.2",
+    "fastify": "^5.8.5",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "@types/supertest": "^7.2.0",
+    "prisma": "^7.8.0",
+    "supertest": "^7.2.2",
+    "tsx": "^4.22.3",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.7"
+  }
+}
+</file>
+
+<file path="pnpm-workspace.yaml">
+allowBuilds:
+  '@prisma/engines': true
+  esbuild: true
+  prisma: true
+</file>
+
+<file path="prisma.config.ts">
+import { config } from "dotenv";
+import { defineConfig } from "prisma/config";
+
+config({
+  path: "../../.env",
+});
+
+if (!process.env.DATABASE_URL) {
+  throw new Error("DATABASE_URL tidak ditemukan. Pastikan file ../../.env ada dan berisi DATABASE_URL.");
+}
+
+export default defineConfig({
+  schema: "prisma/schema.prisma",
+  migrations: {
+    path: "prisma/migrations",
+  },
+  datasource: {
+    url: process.env.DATABASE_URL,
+  },
+});
+</file>
+
+<file path="README.md">
+# Ningki API Service
+
+Main backend API untuk Ningki WhatsApp AI CRM.
+
+## Responsibilities
+
+- Auth
+- Business workspace
+- Onboarding
+- CRM
+- Conversation inbox
+- Messages
+- Knowledge metadata
+- Products
+- Reservations
+- Orders
+- Reminders
+- Human handoff
+- Notifications
+- Internal API for AI Engine
+- WhatsApp worker bridge
+- Webhook handling
+- Spreadsheet integration future
+- Payment future
+
+## Tech Stack
+
+- Node.js
+- TypeScript
+- Fastify
+- Prisma
+- PostgreSQL
+- Zod
+- JWT
+- Pino
+
+## Env
+
+API membaca root `.env` dari `../../.env`.
+
+## MVP Priority
+
+1. Auth
+2. Business
+3. Onboarding
+4. Knowledge
+5. WhatsApp bridge
+6. Customers
+7. Conversations
+8. Messages
+9. Reservations
+10. Reminders
+11. Human handoff
+12. Internal AI/tool endpoints
+</file>
+
+<file path="tsconfig.json">
+{
+  // Visit https://aka.ms/tsconfig to read more about this file
+  "compilerOptions": {
+
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "target": "ES2023",
+    "strict": true,
+    "esModuleInterop": true,
+    "ignoreDeprecations": "6.0",
+    // File Layout
+    // "rootDir": "./src",
+    // "outDir": "./dist",
+
+    // Environment Settings
+    // See also https://aka.ms/tsconfig/module
+    "types": [],
+    // For nodejs:
+    // "lib": ["esnext"],
+    // "types": ["node"],
+    // and npm install -D @types/node
+
+    // Other Outputs
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+
+    // Stricter Typechecking Options
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+
+    // Style Options
+    // "noImplicitReturns": true,
+    // "noImplicitOverride": true,
+    // "noUnusedLocals": true,
+    // "noUnusedParameters": true,
+    // "noFallthroughCasesInSwitch": true,
+    // "noPropertyAccessFromIndexSignature": true,
+
+    // Recommended Options
+    "jsx": "react-jsx",
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "noUncheckedSideEffectImports": true,
+    "moduleDetection": "force",
+    "skipLibCheck": true,
+  }
+}
+</file>
+
+<file path="vitest.config.ts">
+import { defineConfig } from "vitest/config";
+
+export default defineConfig({
+  test: {
+    globals: true,
+    environment: "node",
+  },
+});
+</file>
+
+</files>

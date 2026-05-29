@@ -4,7 +4,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 enum UserStatus {
@@ -340,6 +339,7 @@ model User {
   updatedAt            DateTime       @updatedAt @map("updated_at")
   deletedAt            DateTime?      @map("deleted_at")
 
+  refreshTokens        RefreshToken[]
   ownedBusinesses      Business[]     @relation("BusinessOwner")
   memberships          BusinessMember[]
   assignedConversations Conversation[] @relation("AssignedConversations")
@@ -349,6 +349,27 @@ model User {
   uploadedFiles        File[]
 
   @@map("users")
+}
+
+model RefreshToken {
+  id          String    @id @default(uuid()) @db.Uuid
+  userId      String    @map("user_id") @db.Uuid
+  tokenHash   String    @unique @map("token_hash")
+  familyId    String    @map("family_id") @db.Uuid
+  userAgent   String?   @map("user_agent")
+  ipAddress   String?   @map("ip_address")
+  expiresAt   DateTime  @map("expires_at")
+  revokedAt   DateTime? @map("revoked_at")
+  replacedBy  String?   @map("replaced_by") @db.Uuid
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([familyId])
+  @@index([expiresAt])
+  @@map("refresh_tokens")
 }
 
 model Business {

@@ -1,29 +1,33 @@
 import Fastify from "fastify";
 
-export const app = Fastify({
-  logger: true,
-});
+import { registerContainer } from "./container";
+import { errorHandler } from "./middlewares/error.middleware";
+import { cookiePlugin } from "./plugins/cookie.plugin";
+import { corsPlugin } from "./plugins/cors.plugin";
+import { registerRoutes } from "./routes";
 
-app.get("/health", async () => {
-  return {
-    status: "ok",
-    service: "nongki-api",
-    timestamp: new Date().toISOString(),
-  };
-});
+export function buildApp() {
+  const app = Fastify({
+    logger: true,
+  });
 
-const start = async () => {
-  try {
-    await app.listen({
-      port: 3000,
-      host: "0.0.0.0",
-    });
+  registerContainer(app);
+  app.setErrorHandler(errorHandler);
 
-    console.log("🚀 Server running at http://localhost:3000");
-  } catch (error) {
-    app.log.error(error);
-    process.exit(1);
-  }
-};
+  app.register(corsPlugin);
+  app.register(cookiePlugin);
 
-start();
+  app.get("/health", async () => {
+    return {
+      status: "ok",
+      service: "nongki-api",
+      timestamp: new Date().toISOString(),
+    };
+  });
+
+  app.register(registerRoutes, { prefix: "/api/v1" });
+
+  return app;
+}
+
+export const app = buildApp();
