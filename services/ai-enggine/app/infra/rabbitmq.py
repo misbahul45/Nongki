@@ -15,18 +15,46 @@ connection: AbstractRobustConnection | None = None
 channel: AbstractRobustChannel | None = None
 
 
+def get_event_exchange_name() -> str:
+    exchange_name = getattr(settings, "event_exchange", None) or "nongki.events"
+
+    if not exchange_name.strip():
+        exchange_name = "nongki.events"
+
+    return exchange_name
+
+
 async def connect() -> None:
     global connection, channel
+
     try:
+        event_exchange = get_event_exchange_name()
+
         connection = await aio_pika.connect_robust(settings.rabbitmq_url)
         channel = await connection.channel(publisher_confirms=True)
+
         exchange = await channel.declare_exchange(
-            settings.event_exchange,
+            event_exchange,
             aio_pika.ExchangeType.TOPIC,
             durable=True,
         )
-        commands = await channel.declare_queue("nongki.ai.commands", durable=True)
-        await commands.bind(exchange, routing_key="ai.command.*")
+
+        commands = await channel.declare_queue(
+            "nongki.ai.commands",
+            durable=True,
+        )
+
+        await commands.bind(
+            exchange,
+            routing_key="ai.command.*",
+        )
+
+        logger.info(
+            "rabbitmq_connected",
+            exchange=event_exchange,
+            queue="nongki.ai.commands",
+        )
+
     except Exception as exc:
         logger.warning("rabbitmq_connect_failed", error=str(exc))
         connection = None
@@ -50,6 +78,8 @@ async def publish_event(
         return
 
     event_id = str(uuid.uuid4())
+    event_exchange = get_event_exchange_name()
+
     envelope = {
         "eventId": event_id,
         "eventName": event_name,
@@ -64,7 +94,8 @@ async def publish_event(
     }
 
     try:
-        exchange = await channel.get_exchange(settings.event_exchange)
+        exchange = await channel.get_exchange(event_exchange)
+
         await exchange.publish(
             aio_pika.Message(
                 body=json.dumps(envelope).encode("utf-8"),
@@ -75,16 +106,23 @@ async def publish_event(
             ),
             routing_key=routing_key,
         )
+
     except Exception as exc:
         logger.warning(
             "rabbitmq_publish_failed",
             event_id=event_id,
             routing_key=routing_key,
             business_id=business_id,
+            exchange=event_exchange,
             error=str(exc),
         )
 
 
 async def close() -> None:
+    global connection, channel
+
     if connection is not None:
         await connection.close()
+
+    connection = None
+    channel = None

@@ -24,11 +24,6 @@ declare module "fastify" {
       eventBus: EventBus;
       rateLimiter: RateLimiter;
     };
-    auth: {
-      repository: AuthRepository;
-      service: AuthService;
-      controller: AuthController;
-    };
   }
 
   interface FastifyRequest {

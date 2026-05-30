@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
 }
 
 enum UserStatus {
@@ -328,7 +328,7 @@ enum PaymentStatus {
 }
 
 model User {
-  id                   String         @id @default(uuid()) @db.Uuid
+  id String @id @default(uuid()) @db.Char(36)
   name                 String
   email                String         @unique
   passwordHash         String         @map("password_hash")
@@ -352,15 +352,15 @@ model User {
 }
 
 model RefreshToken {
-  id          String    @id @default(uuid()) @db.Uuid
-  userId      String    @map("user_id") @db.Uuid
+  id String @id @default(uuid()) @db.Char(36)
+  userId      String    @map("user_id") @db.Char(36)
   tokenHash   String    @unique @map("token_hash")
-  familyId    String    @map("family_id") @db.Uuid
+  familyId    String    @map("family_id") @db.Char(36)
   userAgent   String?   @map("user_agent")
   ipAddress   String?   @map("ip_address")
   expiresAt   DateTime  @map("expires_at")
   revokedAt   DateTime? @map("revoked_at")
-  replacedBy  String?   @map("replaced_by") @db.Uuid
+  replacedBy  String?   @map("replaced_by") @db.Char(36)  
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
 
@@ -373,8 +373,8 @@ model RefreshToken {
 }
 
 model Business {
-  id               String         @id @default(uuid()) @db.Uuid
-  ownerId          String         @map("owner_id") @db.Uuid
+  id String @id @default(uuid()) @db.Char(36)
+  ownerId          String         @map("owner_id") @db.Char(36)
   name             String
   slug             String         @unique
   type             BusinessType   @default(coffee_shop)
@@ -425,9 +425,9 @@ model Business {
 }
 
 model BusinessMember {
-  id           String       @id @default(uuid()) @db.Uuid
-  businessId   String       @map("business_id") @db.Uuid
-  userId       String       @map("user_id") @db.Uuid
+  id           String       @id @default(uuid()) @db.Char(36)
+  businessId   String       @map("business_id") @db.Char(36)
+  userId       String       @map("user_id") @db.Char(36)
   role         MemberRole   @default(owner)
   status       MemberStatus @default(active)
   createdAt    DateTime     @default(now()) @map("created_at")
@@ -441,8 +441,8 @@ model BusinessMember {
 }
 
 model BusinessOnboarding {
-  id                      String    @id @default(uuid()) @db.Uuid
-  businessId              String    @unique @map("business_id") @db.Uuid
+  id                      String    @id @default(uuid()) @db.Char(36)
+  businessId              String    @unique @map("business_id") @db.Char(36)
   currentStep             String?   @map("current_step")
   progressPercent         Int       @default(0) @map("progress_percent")
   mainGoal                Json      @default("[]") @map("main_goal")
@@ -463,8 +463,8 @@ model BusinessOnboarding {
 }
 
 model OnboardingStep {
-  id           String               @id @default(uuid()) @db.Uuid
-  businessId   String               @map("business_id") @db.Uuid
+  id           String               @id @default(uuid()) @db.Char(36)
+  businessId   String               @map("business_id") @db.Char(36)
   stepKey      OnboardingStepKey    @map("step_key")
   title        String
   description  String?
@@ -485,8 +485,8 @@ model OnboardingStep {
 }
 
 model AgentSettings {
-  id                   String     @id @default(uuid()) @db.Uuid
-  businessId           String     @unique @map("business_id") @db.Uuid
+  id                   String     @id @default(uuid()) @db.Char(36)
+  businessId           String     @unique @map("business_id") @db.Char(36)
   agentName            String     @default("Ningki") @map("agent_name")
   persona              String?
   tone                 AgentTone  @default(friendly)
@@ -505,9 +505,9 @@ model AgentSettings {
   @@map("agent_settings")
 }
 
-model WhatsappSession {
-  id                    String                @id @default(uuid()) @db.Uuid
-  businessId            String                @map("business_id") @db.Uuid
+model WhatsappSession {@db.Char(36)Char(36)
+  id                    String                @id @default(uuid()) @db.Char(36)
+  businessId            String                @map("business_id") @db.Char(36)
   sessionName           String                @map("session_name")
   phoneNumber           String?               @map("phone_number")
   status                WhatsappSessionStatus @default(not_connected)
@@ -531,8 +531,8 @@ model WhatsappSession {
 }
 
 model Customer {
-  id                 String       @id @default(uuid()) @db.Uuid
-  businessId         String       @map("business_id") @db.Uuid
+  id                 String       @id @default(uuid()) @db.Char(36)
+  businessId         String       @map("business_id") @db.Char(36)
   waPhone            String       @map("wa_phone")
   waName             String?      @map("wa_name")
   name               String?
@@ -567,8 +567,8 @@ model Customer {
 }
 
 model CustomerTag {
-  id           String    @id @default(uuid()) @db.Uuid
-  businessId   String    @map("business_id") @db.Uuid
+  id           String    @id @default(uuid()) @db.Char(36)
+  businessId   String    @map("business_id") @db.Char(36)
   name         String
   color        String?
   createdAt    DateTime  @default(now()) @map("created_at")
@@ -582,10 +582,10 @@ model CustomerTag {
 }
 
 model CustomerTagAssignment {
-  id           String      @id @default(uuid()) @db.Uuid
-  businessId   String      @map("business_id") @db.Uuid
-  customerId   String      @map("customer_id") @db.Uuid
-  tagId        String      @map("tag_id") @db.Uuid
+  id           String      @id @default(uuid()) @db.Char(36)
+  businessId   String      @map("business_id") @db.Char(36)
+  customerId   String      @map("customer_id") @db.Char(36)
+  tagId        String      @map("tag_id") @db.Char(36)
   createdAt    DateTime    @default(now()) @map("created_at")
 
   business     Business    @relation(fields: [businessId], references: [id])
@@ -597,14 +597,14 @@ model CustomerTagAssignment {
 }
 
 model Conversation {
-  id                String              @id @default(uuid()) @db.Uuid
-  businessId        String              @map("business_id") @db.Uuid
-  customerId        String              @map("customer_id") @db.Uuid
+  id                String              @id @default(uuid()) @db.Char(36)
+  businessId        String              @map("business_id") @db.Char(36)
+  customerId        String              @map("customer_id") @db.Char(36)
   channel           ConversationChannel @default(whatsapp)
   status            ConversationStatus  @default(open)
   aiEnabled         Boolean             @default(true) @map("ai_enabled")
   humanTakeover     Boolean             @default(false) @map("human_takeover")
-  assignedUserId    String?             @map("assigned_user_id") @db.Uuid
+  assignedUserId    String?             @map("assigned_user_id") @db.Char(36)
   lastMessage       String?             @map("last_message")
   lastMessageAt     DateTime?           @map("last_message_at")
   lastAiReplyAt     DateTime?           @map("last_ai_reply_at")
@@ -636,10 +636,10 @@ model Conversation {
 }
 
 model Message {
-  id              String            @id @default(uuid()) @db.Uuid
-  businessId      String            @map("business_id") @db.Uuid
-  conversationId  String            @map("conversation_id") @db.Uuid
-  customerId      String?           @map("customer_id") @db.Uuid
+  id              String            @id @default(uuid()) @db.Char(36)
+  businessId      String            @map("business_id") @db.Char(36)
+  conversationId  String            @map("conversation_id") @db.Char(36)
+  customerId      String?           @map("customer_id") @db.Char(36)
   senderType      MessageSenderType @map("sender_type")
   messageType     MessageType       @default(text) @map("message_type")
   content         String?
@@ -663,13 +663,13 @@ model Message {
 }
 
 model KnowledgeDocument {
-  id             String                @id @default(uuid()) @db.Uuid
-  businessId     String                @map("business_id") @db.Uuid
+  id             String                @id @default(uuid()) @db.Char(36)
+  businessId     String                @map("business_id") @db.Char(36)
   title          String
   documentType   KnowledgeDocumentType @map("document_type")
   sourceType     KnowledgeSourceType   @map("source_type")
   content        String?
-  fileId         String?               @map("file_id") @db.Uuid
+  fileId         String?               @map("file_id") @db.Char(36)
   fileUrl        String?               @map("file_url")
   status         KnowledgeStatus       @default(draft)
   extractedText  String?               @map("extracted_text")
@@ -689,9 +689,9 @@ model KnowledgeDocument {
 }
 
 model KnowledgeChunk {
-  id           String            @id @default(uuid()) @db.Uuid
-  businessId   String            @map("business_id") @db.Uuid
-  documentId   String            @map("document_id") @db.Uuid
+  id           String            @id @default(uuid()) @db.Char(36)
+  businessId   String            @map("business_id") @db.Char(36)
+  documentId   String            @map("document_id") @db.Char(36)
   chunkText    String            @map("chunk_text")
   chunkIndex   Int               @default(0) @map("chunk_index")
   embeddingRef String?           @map("embedding_ref")
@@ -710,8 +710,8 @@ model KnowledgeChunk {
 }
 
 model ProductCategory {
-  id           String    @id @default(uuid()) @db.Uuid
-  businessId   String    @map("business_id") @db.Uuid
+  id           String    @id @default(uuid()) @db.Char(36)
+  businessId   String    @map("business_id") @db.Char(36)
   name         String
   description  String?
   sortOrder    Int       @default(0) @map("sort_order")
@@ -726,9 +726,9 @@ model ProductCategory {
 }
 
 model Product {
-  id           String           @id @default(uuid()) @db.Uuid
-  businessId   String           @map("business_id") @db.Uuid
-  categoryId   String?          @map("category_id") @db.Uuid
+  id           String           @id @default(uuid()) @db.Char(36)
+  businessId   String           @map("business_id") @db.Char(36)
+  categoryId   String?          @map("category_id") @db.Char(36)
   name         String
   description  String?
   price        Int              @default(0)
@@ -751,10 +751,10 @@ model Product {
 }
 
 model Order {
-  id              String         @id @default(uuid()) @db.Uuid
-  businessId      String         @map("business_id") @db.Uuid
-  customerId      String         @map("customer_id") @db.Uuid
-  conversationId  String?        @map("conversation_id") @db.Uuid
+  id              String         @id @default(uuid()) @db.Char(36)
+  businessId      String         @map("business_id") @db.Char(36)
+  customerId      String         @map("customer_id") @db.Char(36)
+  conversationId  String?        @map("conversation_id") @db.Char(36)
   orderNumber     String         @map("order_number")
   status          OrderStatus    @default(draft)
   fulfillmentType FulfillmentType @default(takeaway) @map("fulfillment_type")
@@ -785,10 +785,10 @@ model Order {
 }
 
 model OrderItem {
-  id           String   @id @default(uuid()) @db.Uuid
-  businessId   String   @map("business_id") @db.Uuid
-  orderId      String   @map("order_id") @db.Uuid
-  productId    String?  @map("product_id") @db.Uuid
+  id           String   @id @default(uuid()) @db.Char(36)
+  businessId   String   @map("business_id") @db.Char(36)
+  orderId      String   @map("order_id") @db.Char(36)
+  productId    String?  @map("product_id") @db.Char(36)
   productName  String   @map("product_name")
   quantity     Int      @default(1)
   unitPrice    Int      @default(0) @map("unit_price")
@@ -809,10 +809,10 @@ model OrderItem {
 }
 
 model Reservation {
-  id                 String            @id @default(uuid()) @db.Uuid
-  businessId         String            @map("business_id") @db.Uuid
-  customerId         String            @map("customer_id") @db.Uuid
-  conversationId     String?           @map("conversation_id") @db.Uuid
+  id                 String            @id @default(uuid()) @db.Char(36)
+  businessId         String            @map("business_id") @db.Char(36)
+  customerId         String            @map("customer_id") @db.Char(36)
+  conversationId     String?           @map("conversation_id") @db.Char(36)
   reservationNumber  String            @map("reservation_number")
   reservationDate    DateTime          @map("reservation_date") @db.Date
   reservationTime    DateTime          @map("reservation_time") @db.Time()
@@ -844,12 +844,12 @@ model Reservation {
 }
 
 model Reminder {
-  id              String            @id @default(uuid()) @db.Uuid
-  businessId      String            @map("business_id") @db.Uuid
-  customerId      String?           @map("customer_id") @db.Uuid
-  conversationId  String?           @map("conversation_id") @db.Uuid
-  reservationId   String?           @map("reservation_id") @db.Uuid
-  orderId         String?           @map("order_id") @db.Uuid
+  id              String            @id @default(uuid()) @db.Char(36)
+  businessId      String            @map("business_id") @db.Char(36)
+  customerId      String?           @map("customer_id") @db.Char(36)
+  conversationId  String?           @map("conversation_id") @db.Char(36)
+  reservationId   String?           @map("reservation_id") @db.Char(36)
+  orderId         String?           @map("order_id") @db.Char(36)
   type            ReminderType
   title           String
   description     String?
@@ -879,8 +879,8 @@ model Reminder {
 }
 
 model Integration {
-  id                    String              @id @default(uuid()) @db.Uuid
-  businessId            String              @map("business_id") @db.Uuid
+  id                    String              @id @default(uuid()) @db.Char(36)
+  businessId            String              @map("business_id") @db.Char(36)
   provider              IntegrationProvider
   status                IntegrationStatus   @default(disconnected)
   accessTokenEncrypted  String?             @map("access_token_encrypted")
@@ -899,9 +899,9 @@ model Integration {
 }
 
 model SpreadsheetConfig {
-  id                     String      @id @default(uuid()) @db.Uuid
-  businessId             String      @map("business_id") @db.Uuid
-  integrationId          String      @map("integration_id") @db.Uuid
+  id                     String      @id @default(uuid()) @db.Char(36)
+  businessId             String      @map("business_id") @db.Char(36)
+  integrationId          String      @map("integration_id") @db.Char(36)
   spreadsheetId          String      @map("spreadsheet_id")
   spreadsheetUrl         String?     @map("spreadsheet_url")
   customersSheetName     String      @default("Customers") @map("customers_sheet_name")
@@ -924,11 +924,11 @@ model SpreadsheetConfig {
 }
 
 model SpreadsheetSyncLog {
-  id                   String            @id @default(uuid()) @db.Uuid
-  businessId           String            @map("business_id") @db.Uuid
-  spreadsheetConfigId  String            @map("spreadsheet_config_id") @db.Uuid
+  id                   String            @id @default(uuid()) @db.Char(36)
+  businessId           String            @map("business_id") @db.Char(36)
+  spreadsheetConfigId  String            @map("spreadsheet_config_id") @db.Char(36)
   entityType           String            @map("entity_type")
-  entityId             String?           @map("entity_id") @db.Uuid
+  entityId             String?           @map("entity_id") @db.Char(36)
   status               SyncStatus        @default(pending)
   errorMessage         String?           @map("error_message")
   syncedAt             DateTime?         @map("synced_at")
@@ -941,14 +941,14 @@ model SpreadsheetSyncLog {
 }
 
 model HumanHandoff {
-  id               String        @id @default(uuid()) @db.Uuid
-  businessId       String        @map("business_id") @db.Uuid
-  conversationId   String        @map("conversation_id") @db.Uuid
-  customerId       String        @map("customer_id") @db.Uuid
+  id               String        @id @default(uuid()) @db.Char(36)
+  businessId       String        @map("business_id") @db.Char(36)
+  conversationId   String        @map("conversation_id") @db.Char(36)
+  customerId       String        @map("customer_id") @db.Char(36)
   reason           HandoffReason
   summary          String?
   status           HandoffStatus @default(open)
-  assignedUserId   String?       @map("assigned_user_id") @db.Uuid
+  assignedUserId   String?       @map("assigned_user_id") @db.Char(36)
   resolvedAt       DateTime?     @map("resolved_at")
   createdAt        DateTime      @default(now()) @map("created_at")
   updatedAt        DateTime      @updatedAt @map("updated_at")
@@ -962,10 +962,10 @@ model HumanHandoff {
 }
 
 model AgentRun {
-  id              String         @id @default(uuid()) @db.Uuid
-  businessId      String         @map("business_id") @db.Uuid
-  conversationId  String?        @map("conversation_id") @db.Uuid
-  customerId      String?        @map("customer_id") @db.Uuid
+  id              String         @id @default(uuid()) @db.Char(36)
+  businessId      String         @map("business_id") @db.Char(36)
+  conversationId  String?        @map("conversation_id") @db.Char(36)
+  customerId      String?        @map("customer_id") @db.Char(36)
   agentType       AgentType      @map("agent_type")
   input           String?
   output          String?
@@ -993,10 +993,10 @@ model AgentRun {
 }
 
 model ToolExecution {
-  id              String               @id @default(uuid()) @db.Uuid
-  businessId      String               @map("business_id") @db.Uuid
-  agentRunId      String?              @map("agent_run_id") @db.Uuid
-  conversationId  String?              @map("conversation_id") @db.Uuid
+  id              String               @id @default(uuid()) @db.Char(36)
+  businessId      String               @map("business_id") @db.Char(36)
+  agentRunId      String?              @map("agent_run_id") @db.Char(36)
+  conversationId  String?              @map("conversation_id") @db.Char(36)
   toolName        String               @map("tool_name")
   input           Json                 @default("{}")
   output          Json                 @default("{}")
@@ -1014,9 +1014,9 @@ model ToolExecution {
 }
 
 model Notification {
-  id           String           @id @default(uuid()) @db.Uuid
-  businessId   String           @map("business_id") @db.Uuid
-  userId       String?          @map("user_id") @db.Uuid
+  id           String           @id @default(uuid()) @db.Char(36)
+  businessId   String           @map("business_id") @db.Char(36)
+  userId       String?          @map("user_id") @db.Char(36)
   type         NotificationType
   title        String
   message      String?
@@ -1032,12 +1032,12 @@ model Notification {
 }
 
 model AuditLog {
-  id           String    @id @default(uuid()) @db.Uuid
-  businessId   String?   @map("business_id") @db.Uuid
-  userId       String?   @map("user_id") @db.Uuid
+  id           String    @id @default(uuid()) @db.Char(36)
+  businessId   String?   @map("business_id") @db.Char(36)
+  userId       String?   @map("user_id") @db.Char(36)
   action       String
   entityType   String    @map("entity_type")
-  entityId     String?   @map("entity_id") @db.Uuid
+  entityId     String?   @map("entity_id") @db.Char(36)
   oldData      Json?     @map("old_data")
   newData      Json?     @map("new_data")
   ipAddress    String?   @map("ip_address")
@@ -1056,9 +1056,9 @@ model AuditLog {
 }
 
 model File {
-  id               String    @id @default(uuid()) @db.Uuid
-  businessId       String    @map("business_id") @db.Uuid
-  uploadedBy       String?   @map("uploaded_by") @db.Uuid
+  id               String    @id @default(uuid()) @db.Char(36)
+  businessId       String    @map("business_id") @db.Char(36)
+  uploadedBy       String?   @map("uploaded_by") @db.Char(36)
   filename         String
   originalName     String    @map("original_name")
   mimeType         String    @map("mime_type")
@@ -1077,8 +1077,8 @@ model File {
 }
 
 model WebhookEvent {
-  id           String             @id @default(uuid()) @db.Uuid
-  businessId   String?            @map("business_id") @db.Uuid
+  id           String             @id @default(uuid()) @db.Char(36)
+  businessId   String?            @map("business_id") @db.Char(36)
   provider     String
   eventType    String             @map("event_type")
   externalId   String?            @map("external_id")
@@ -1095,7 +1095,7 @@ model WebhookEvent {
 }
 
 model CronJob {
-  id           String        @id @default(uuid()) @db.Uuid
+  id           String        @id @default(uuid()) @db.Char(36)
   jobName      String        @map("job_name")
   status       CronJobStatus @default(running)
   startedAt    DateTime      @map("started_at")
@@ -1108,12 +1108,12 @@ model CronJob {
 }
 
 model Payment {
-  id                   String          @id @default(uuid()) @db.Uuid
-  businessId           String          @map("business_id") @db.Uuid
-  orderId              String?         @map("order_id") @db.Uuid
-  reservationId        String?         @map("reservation_id") @db.Uuid
-  customerId           String?         @map("customer_id") @db.Uuid
-  conversationId       String?         @map("conversation_id") @db.Uuid
+  id                   String          @id @default(uuid()) @db.Char(36)
+  businessId           String          @map("business_id") @db.Char(36)
+  orderId              String?         @map("order_id") @db.Char(36)
+  reservationId        String?         @map("reservation_id") @db.Char(36)
+  customerId           String?         @map("customer_id") @db.Char(36)
+  conversationId       String?         @map("conversation_id") @db.Char(36)
   provider             PaymentProvider @default(manual)
   method               PaymentMethod   @default(manual)
   status               PaymentStatus   @default(unpaid)
@@ -1147,9 +1147,9 @@ model Payment {
 }
 
 model PaymentEvent {
-  id          String   @id @default(uuid()) @db.Uuid
-  businessId  String   @map("business_id") @db.Uuid
-  paymentId   String   @map("payment_id") @db.Uuid
+  id          String   @id @default(uuid()) @db.Char(36)
+  businessId  String   @map("business_id") @db.Char(36)
+  paymentId   String   @map("payment_id") @db.Char(36)
   eventType   String   @map("event_type")
   payload     Json     @default("{}")
   createdAt   DateTime @default(now()) @map("created_at")

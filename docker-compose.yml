@@ -181,7 +181,7 @@ services:
       PYTHONDONTWRITEBYTECODE: "1"
       PYTHONUNBUFFERED: "1"
     ports:
-      - "8000:8000"
+      - "${AI_ENGINE_PORT:-8001}:8000"
     volumes:
       - faiss_data:/app/vector_store
       - sqlite_data:/app/db
