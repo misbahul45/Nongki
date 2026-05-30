@@ -1,0 +1,27 @@
+sequenceDiagram
+  autonumber
+  actor Owner
+  participant Web as apps/web
+  participant API as services/api
+  participant AI as services/ai-engine
+  participant DB as PostgreSQL
+  participant Store as File Storage
+  participant FAISS as FAISS Index
+
+  Owner->>Web: Upload menu / FAQ / promo file
+  Web->>API: POST /knowledge/documents/upload
+  API->>Store: Save file
+  API->>DB: INSERT files
+  API->>DB: INSERT knowledge_documents status=draft
+  API->>AI: POST /ai/knowledge/process {businessId, documentId}
+  AI->>API: GET /internal/knowledge/{documentId}
+  API-->>AI: fileUrl + metadata
+  AI->>AI: Extract text
+  AI->>AI: Classify documentType
+  AI->>AI: Chunk text
+  AI->>FAISS: Store embeddings namespaced by businessId
+  AI-->>API: extractedText + chunks + embeddingRefs
+  API->>DB: UPDATE knowledge_documents status=indexed
+  API->>DB: INSERT knowledge_chunks
+  API->>DB: INSERT audit_logs action=KNOWLEDGE_INDEXED
+  API-->>Web: document indexed

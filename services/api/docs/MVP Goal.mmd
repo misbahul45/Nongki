@@ -1,0 +1,28 @@
+flowchart TD
+  A["User Register"] --> B["Create User"]
+  B --> C["Create Business Workspace"]
+  C --> D["Seed Business Member"]
+  D --> E["Create Business Onboarding"]
+  E --> F["Seed Onboarding Steps"]
+  F --> G["Create Default Agent Settings"]
+
+  G --> H["User completes onboarding"]
+  H --> I["Upload knowledge docs<br/>menu / FAQ / promo"]
+  I --> J["API stores File + KnowledgeDocument"]
+  J --> K["AI Engine extracts, chunks, embeds"]
+  K --> L["API stores KnowledgeChunks<br/>status=indexed"]
+
+  L --> M["Connect WhatsApp"]
+  M --> N["WA Worker returns QR"]
+  N --> O["User scans QR"]
+  O --> P["WhatsappSession connected"]
+
+  P --> Q["Check Readiness"]
+  Q --> R{"Ready?"}
+  R -->|"No"| H
+  R -->|"Yes"| S["Business active<br/>Bot activation allowed"]
+
+  S --> T["Enable Bot"]
+  T --> U["Customer sends WhatsApp message"]
+  U --> V["AI replies using business knowledge"]
+  V --> W["MVP Success:<br/>AI can answer, reserve, order, handoff"]

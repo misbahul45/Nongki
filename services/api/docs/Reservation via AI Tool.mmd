@@ -1,0 +1,32 @@
+sequenceDiagram
+  autonumber
+  actor Customer
+  participant API as services/api
+  participant AI as services/ai-engine
+  participant DB as PostgreSQL
+  participant WA as services/wa-worker
+
+  Customer->>API: Message: "reservasi besok 4 orang"
+  API->>AI: POST /ai/agent/run
+  AI->>AI: Detect intent make_reservation
+  AI->>AI: Slot filling date/time/guestCount/name
+
+  alt slot incomplete
+    AI-->>API: ask missing information
+    API->>DB: INSERT outbound AI message
+    API->>WA: send question
+  else slot complete
+    AI->>API: POST /internal/tools/reservations
+    API->>DB: BEGIN TRANSACTION
+    API->>DB: INSERT reservations status=pending
+    API->>DB: UPDATE customers leadStatus=reserved totalReservations++
+    API->>DB: INSERT reminders H-1 confirmation
+    API->>DB: INSERT reminders admin task
+    API->>DB: INSERT audit_logs RESERVATION_CREATED
+    API->>DB: COMMIT
+    API-->>AI: reservationNumber + status
+    AI-->>API: confirmation reply
+    API->>DB: INSERT agent_runs + tool_executions
+    API->>DB: INSERT messages outbound ai
+    API->>WA: send confirmation
+  end

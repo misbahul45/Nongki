@@ -1,0 +1,38 @@
+sequenceDiagram
+  autonumber
+  actor Customer
+  participant API as services/api
+  participant AI as services/ai-engine
+  participant DB as PostgreSQL
+  participant WA as services/wa-worker
+
+  Customer->>API: Message: "pesan 2 iced latte takeaway"
+  API->>AI: POST /ai/agent/run
+  AI->>API: GET /internal/products/{businessId}
+  AI->>AI: Detect intent create_order
+  AI->>AI: Match item + quantity + fulfillmentType
+
+  alt item unclear
+    AI-->>API: ask clarification
+    API->>WA: send clarification
+  else order clear
+    AI->>API: POST /internal/tools/orders
+    API->>DB: BEGIN TRANSACTION
+    API->>DB: INSERT orders status=draft paymentStatus=unpaid
+    API->>DB: INSERT order_items
+    API->>DB: UPDATE orders totalAmount
+    API->>DB: UPDATE customers totalOrders++
+    API->>DB: COMMIT
+    API-->>AI: orderNumber + totalAmount
+    AI-->>API: order summary + ask confirmation
+    API->>DB: INSERT messages outbound ai
+    API->>WA: send order summary
+  end
+
+  Customer->>API: Message: "iya confirm"
+  API->>AI: POST /ai/agent/run
+  AI->>API: POST /internal/tools/orders/{id}/confirm
+  API->>DB: UPDATE orders status=pending_confirmation
+  API->>DB: INSERT reminders payment_follow_up
+  AI-->>API: confirmation reply
+  API->>WA: send confirmation

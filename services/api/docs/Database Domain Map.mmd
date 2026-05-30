@@ -1,0 +1,46 @@
+erDiagram
+  User ||--o{ Business : owns
+  User ||--o{ BusinessMember : joins
+  Business ||--o{ BusinessMember : has
+  Business ||--|| BusinessOnboarding : has
+  Business ||--o{ OnboardingStep : has
+  Business ||--|| AgentSettings : configures
+  Business ||--o{ WhatsappSession : connects
+
+  Business ||--o{ Customer : has
+  Customer ||--o{ Conversation : starts
+  Conversation ||--o{ Message : contains
+  Customer ||--o{ Message : sends
+
+  Business ||--o{ KnowledgeDocument : owns
+  KnowledgeDocument ||--o{ KnowledgeChunk : chunks
+  Business ||--o{ ProductCategory : has
+  ProductCategory ||--o{ Product : contains
+  Product ||--o{ OrderItem : selected
+
+  Customer ||--o{ Order : creates
+  Order ||--o{ OrderItem : contains
+  Customer ||--o{ Reservation : books
+  Conversation ||--o{ Order : may_create
+  Conversation ||--o{ Reservation : may_create
+
+  Order ||--o{ Payment : paid_by
+  Reservation ||--o{ Payment : paid_by
+  Payment ||--o{ PaymentEvent : logs
+
+  Customer ||--o{ Reminder : receives
+  Order ||--o{ Reminder : schedules
+  Reservation ||--o{ Reminder : schedules
+
+  Conversation ||--o{ HumanHandoff : escalates
+  Customer ||--o{ HumanHandoff : needs_help
+
+  Business ||--o{ AgentRun : logs
+  AgentRun ||--o{ ToolExecution : executes
+  Conversation ||--o{ AgentRun : triggers
+  Conversation ||--o{ ToolExecution : relates
+
+  Business ||--o{ Notification : emits
+  Business ||--o{ AuditLog : records
+  Business ||--o{ WebhookEvent : receives
+  Business ||--o{ File : stores

@@ -1,0 +1,43 @@
+flowchart TD
+  AUTH["auth module"] --> BUSINESS["business module"]
+  BUSINESS --> MEMBER["business-member module"]
+  BUSINESS --> ONBOARD["onboarding module"]
+  BUSINESS --> AGENT["agent-settings module"]
+
+  BUSINESS --> WHATSAPP["whatsapp module"]
+  BUSINESS --> KNOWLEDGE["knowledge module"]
+  BUSINESS --> CUSTOMER["customer/crm module"]
+  BUSINESS --> PRODUCT["product module"]
+
+  CUSTOMER --> CONV["conversation module"]
+  CONV --> MESSAGE["message module"]
+  CONV --> HANDOFF["human-handoff module"]
+
+  PRODUCT --> ORDER["order module"]
+  CUSTOMER --> ORDER
+  CUSTOMER --> RESERVATION["reservation module"]
+  CONV --> ORDER
+  CONV --> RESERVATION
+
+  ORDER --> PAYMENT["payment module"]
+  RESERVATION --> PAYMENT
+
+  ORDER --> REMINDER["reminder module"]
+  RESERVATION --> REMINDER
+  CUSTOMER --> REMINDER
+
+  BUSINESS --> INTEGRATION["integration module"]
+  INTEGRATION --> SHEET["spreadsheet-sync module"]
+
+  BUSINESS --> NOTIF["notification module"]
+  BUSINESS --> AUDIT["audit-log module"]
+  BUSINESS --> INTERNAL["internal-api module"]
+
+  INTERNAL --> AIHOOK["ai-engine contract"]
+  INTERNAL --> WAHOOK["wa-worker contract"]
+
+  AIHOOK --> AGENTRUN["agent-run module"]
+  AIHOOK --> TOOLLOG["tool-execution module"]
+
+  classDef p0 fill:#f4f4f4,stroke:#111,stroke-width:2px;
+  class AUTH,BUSINESS,ONBOARD,AGENT,WHATSAPP,KNOWLEDGE,CUSTOMER,CONV,MESSAGE,PRODUCT,ORDER,RESERVATION,HANDOFF,INTERNAL p0;

@@ -1,0 +1,30 @@
+sequenceDiagram
+  autonumber
+  actor Owner
+  participant Web as apps/web
+  participant API as services/api
+  participant WA as services/wa-worker
+  participant DB as PostgreSQL
+
+  Owner->>Web: Click connect WhatsApp
+  Web->>API: POST /whatsapp/session/start
+  API->>DB: INSERT whatsapp_sessions status=qr_pending
+  API->>WA: POST /sessions/{businessId}/start
+  WA-->>API: qrCode + qrExpiresAt
+  API->>DB: UPDATE whatsapp_sessions qrCode
+  API->>DB: INSERT notifications QR ready
+  API-->>Web: QR code
+
+  Owner->>Web: Scan QR from WhatsApp app
+  WA->>API: POST /internal/wa/session-status connected
+  API->>DB: UPDATE whatsapp_sessions status=connected
+  API->>DB: UPDATE business_onboarding readyForWhatsapp=true
+  API->>DB: UPDATE onboarding_steps whatsapp_connect=completed
+  API->>DB: INSERT audit_logs WHATSAPP_CONNECTED
+
+  Owner->>Web: Enable bot
+  Web->>API: POST /whatsapp/bot/enable
+  API->>DB: Check readyForBotActivation=true
+  API->>DB: UPDATE whatsapp_sessions botEnabled=true
+  API->>DB: UPDATE agent_settings autoReplyEnabled=true
+  API-->>Web: bot enabled

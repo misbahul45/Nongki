@@ -1,0 +1,47 @@
+gantt
+  title Ningki/Nongki MVP API Build Order
+  dateFormat  YYYY-MM-DD
+  axisFormat  %d %b
+
+  section Foundation
+  Project setup + env + Prisma wiring        :a1, 2026-05-29, 2d
+  Auth + business workspace transaction      :a2, after a1, 3d
+  Business tenant guard + middleware         :a3, after a1, 3d
+
+  section Onboarding
+  Onboarding steps API                       :b1, after a2, 3d
+  Agent settings API                         :b2, after b1, 2d
+  Readiness checker                          :b3, after b2, 2d
+
+  section Knowledge
+  File upload + KnowledgeDocument            :c1, after b1, 3d
+  Internal AI knowledge callback             :c2, after c1, 2d
+  Knowledge list/reindex/delete              :c3, after c2, 2d
+
+  section WhatsApp
+  WhatsApp session API                       :d1, after b3, 3d
+  Internal WA session-status webhook         :d2, after d1, 2d
+  Bot enable/disable                         :d3, after d2, 1d
+
+  section Conversation Core
+  Customer upsert                            :e1, after d2, 2d
+  Conversation upsert                        :e2, after e1, 2d
+  Message inbound/outbound                   :e3, after e2, 2d
+  Internal incoming-message endpoint         :e4, after e3, 2d
+
+  section AI Contract
+  Internal context endpoints                 :f1, after e2, 3d
+  AI reply callback                          :f2, after f1, 2d
+  Agent run + tool execution logs            :f3, after f2, 2d
+
+  section Business Tools
+  Product API                                :g1, after c1, 3d
+  Reservation API + AI tool                  :g2, after f2, 3d
+  Order API + AI tool                        :g3, after g1, 3d
+  Human handoff API + AI tool                :g4, after f2, 3d
+
+  section MVP Polish
+  Notifications                              :h1, after g2, 2d
+  Audit logs                                 :h2, after g3, 2d
+  Dashboard overview                         :h3, after g4, 2d
+  End-to-end test                            :h4, after h3, 3d

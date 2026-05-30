@@ -1,0 +1,21 @@
+sequenceDiagram
+  autonumber
+  actor Owner
+  participant Web as apps/web
+  participant API as services/api
+  participant AI as services/ai-engine
+  participant DB as PostgreSQL
+
+  Owner->>Web: Answer onboarding step
+  Web->>API: POST /onboarding/answer
+  API->>DB: Read business_onboarding
+  API->>DB: Read onboarding_steps
+  API->>DB: Read agent_settings
+  API->>AI: POST /ai/onboarding/process
+  AI-->>API: parsed data + next step + flags
+  API->>DB: Update onboarding_steps status=completed
+  API->>DB: Update business_onboarding currentStep/progress/needs*
+  API->>DB: Update agent_settings when needed
+  API->>DB: Insert audit_logs
+  API-->>Web: nextStep + progressPercent
+  Web-->>Owner: Show next onboarding step

@@ -1,0 +1,19 @@
+sequenceDiagram
+  autonumber
+  actor User
+  participant Web as apps/web
+  participant API as services/api
+  participant DB as PostgreSQL
+
+  User->>Web: Submit register form
+  Web->>API: POST /auth/register
+  API->>DB: BEGIN TRANSACTION
+  API->>DB: INSERT users
+  API->>DB: INSERT businesses status=onboarding
+  API->>DB: INSERT business_members role=owner
+  API->>DB: INSERT business_onboarding progress=0
+  API->>DB: INSERT onboarding_steps default steps
+  API->>DB: INSERT agent_settings default Ningki
+  API->>DB: COMMIT
+  API-->>Web: accessToken + business profile
+  Web-->>User: Redirect to onboarding

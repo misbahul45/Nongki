@@ -1,0 +1,66 @@
+mindmap
+  root((services/api MVP))
+    Auth
+      POST /auth/register
+      POST /auth/login
+      GET /auth/me
+      POST /auth/logout
+    Business
+      GET /businesses/current
+      PATCH /businesses/current
+      GET /businesses/current/overview
+    Onboarding
+      GET /onboarding
+      POST /onboarding/answer
+      PATCH /onboarding/steps/:stepKey
+      POST /onboarding/check-readiness
+    Knowledge
+      POST /knowledge/documents/upload
+      GET /knowledge/documents
+      GET /knowledge/documents/:id
+      DELETE /knowledge/documents/:id
+      POST /knowledge/reindex
+    WhatsApp
+      POST /whatsapp/session/start
+      GET /whatsapp/session
+      POST /whatsapp/bot/enable
+      POST /whatsapp/bot/disable
+    CRM
+      GET /customers
+      GET /customers/:id
+      PATCH /customers/:id
+      POST /customers/:id/tags
+    Conversations
+      GET /conversations
+      GET /conversations/:id
+      POST /conversations/:id/messages
+      POST /conversations/:id/return-to-ai
+    Products
+      GET /products
+      POST /products
+      PATCH /products/:id
+      DELETE /products/:id
+    Reservations
+      GET /reservations
+      POST /reservations
+      POST /reservations/:id/confirm
+      POST /reservations/:id/cancel
+    Orders
+      GET /orders
+      POST /orders
+      POST /orders/:id/confirm
+      PATCH /orders/:id/status
+    Internal WA
+      POST /internal/wa/incoming-message
+      POST /internal/wa/session-status
+      POST /internal/wa/message-status
+    Internal AI
+      GET /internal/context/:businessId
+      GET /internal/conversations/:id/history
+      GET /internal/products/:businessId
+      GET /internal/knowledge/search
+      POST /internal/ai/reply
+    Internal Tools
+      POST /internal/tools/reservations
+      POST /internal/tools/orders
+      POST /internal/tools/handoffs

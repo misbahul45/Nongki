@@ -1,0 +1,23 @@
+flowchart TD
+  A["receive_message"] --> B["load_business_context"]
+  B --> C["load_customer_profile"]
+  C --> D["load_conversation_history"]
+  D --> E["check_human_takeover"]
+
+  E --> F{"Human takeover?"}
+  F -->|"Yes"| G["stop_ai_reply<br/>notify admin"]
+  F -->|"No"| H["classify_intent"]
+
+  H --> I["retrieve_knowledge<br/>FAISS by businessId"]
+  I --> J["decide_action"]
+  J --> K{"Need tool?"}
+
+  K -->|"No"| L["generate_reply"]
+  K -->|"Yes"| M["tool_router"]
+
+  M --> N{"Tool type"}
+  N -->|"reservation"| O["create_reservation_tool"]
+  N -->|"order"| P["create_order_tool"]
+  N -->|"payment"| Q["create_payment_qris_tool"]
+  N -->|"handoff"| R["human_handoff_tool"]
+  N -->|"knowledge"| S["knowledge_search_tool"]

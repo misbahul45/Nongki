@@ -1,0 +1,33 @@
+sequenceDiagram
+  autonumber
+  actor Customer
+  actor Admin
+  participant API as services/api
+  participant AI as services/ai-engine
+  participant DB as PostgreSQL
+  participant WA as services/wa-worker
+  participant Web as apps/web
+
+  Customer->>API: Message asks admin / complaint / unknown answer
+  API->>AI: POST /ai/agent/run
+  AI->>AI: Detect handoff reason
+  AI->>API: POST /internal/tools/handoffs
+  API->>DB: BEGIN TRANSACTION
+  API->>DB: UPDATE conversations humanTakeover=true aiEnabled=false
+  API->>DB: INSERT human_handoffs status=open
+  API->>DB: INSERT notifications type=new_handoff
+  API->>DB: COMMIT
+  API->>WA: send "menghubungkan ke admin"
+  API-->>Web: Admin sees new handoff
+
+  Admin->>Web: Reply from inbox
+  Web->>API: POST /conversations/{id}/messages
+  API->>DB: INSERT messages senderType=admin outbound
+  API->>DB: UPDATE conversations lastAdminReplyAt
+  API->>WA: send admin message
+
+  Admin->>Web: Return to AI
+  Web->>API: POST /conversations/{id}/return-to-ai
+  API->>DB: UPDATE conversations humanTakeover=false aiEnabled=true
+  API->>DB: UPDATE human_handoffs status=resolved
+  API->>DB: INSERT audit_logs HANDOFF_RESOLVED

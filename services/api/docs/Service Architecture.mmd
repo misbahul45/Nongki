@@ -1,0 +1,45 @@
+flowchart LR
+  subgraph CLIENT["Client Layer"]
+    WEB["apps/web<br/>Dashboard + Onboarding UI"]
+    CUSTOMER["Customer WhatsApp"]
+  end
+
+  subgraph CORE["Backend Ecosystem"]
+    API["services/api<br/>Main API + Prisma + Cron"]
+    AI["services/ai-engine<br/>LangGraph Agent + FAISS"]
+    WA["services/wa-worker<br/>Baileys WhatsApp Gateway"]
+  end
+
+  subgraph DATA["Data Layer"]
+    DB[("PostgreSQL<br/>Prisma Models")]
+    FAISS[("FAISS Local Index<br/>businessId namespace")]
+    STORAGE[("File Storage<br/>menu / faq / promo docs")]
+  end
+
+  subgraph EXTERNAL["External Integrations"]
+    SHEETS["Google Sheets"]
+    PAYMENT["AstraPay QRIS"]
+    WHATSAPP["WhatsApp Network"]
+  end
+
+  WEB -->|"REST API"| API
+  CUSTOMER -->|"chat message"| WHATSAPP
+  WHATSAPP --> WA
+
+  WA -->|"internal HTTP only"| API
+  API -->|"internal HTTP only"| AI
+  AI -->|"internal HTTP tools"| API
+
+  API -->|"Prisma read/write"| DB
+  API -->|"upload metadata + file url"| STORAGE
+  AI -->|"read/write vector index"| FAISS
+
+  API -->|"sync orders/reservations/customers"| SHEETS
+  API -->|"generate QRIS + webhook callback"| PAYMENT
+  API -->|"send message command"| WA
+  WA -->|"send outbound WA"| WHATSAPP
+
+  classDef api fill:#f4f4f4,stroke:#333,stroke-width:2px;
+  classDef data fill:#fff,stroke:#333,stroke-width:1px;
+  class API api;
+  class DB,FAISS,STORAGE data;
