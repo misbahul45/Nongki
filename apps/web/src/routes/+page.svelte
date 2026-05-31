@@ -1,4 +1,6 @@
 <script lang="ts">
+	import Button from "$lib/components/ui/button/button.svelte";
+
 	const title = 'Nongki — AI WhatsApp Assistant untuk Bisnis';
 	const description =
 		'Nongki membantu bisnis mengelola chat WhatsApp, customer, order, reservasi, reminder, dan human handoff dengan bantuan AI.';
@@ -24,5 +26,9 @@
 </svelte:head>
 
 <section>
-	<div></div>
+	<div>
+		<Button>
+			Go to Sverdle
+		</Button>
+	</div>
 </section>
