@@ -12,6 +12,6 @@
 <AccordionPrimitive.Item
 	bind:ref
 	data-slot="accordion-item"
-	class={cn("not-last:border-b", className)}
+	class={cn("rounded-xl border-2 border-border bg-card px-1 shadow-[0_3px_0_0_var(--shadow-3d)]", className)}
 	{...restProps}
 />

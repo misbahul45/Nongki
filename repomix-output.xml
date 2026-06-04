@@ -120,6 +120,25 @@ apps/
             label/
               index.ts
               label.svelte
+            menubar/
+              index.ts
+              menubar-checkbox-item.svelte
+              menubar-content.svelte
+              menubar-group-heading.svelte
+              menubar-group.svelte
+              menubar-item.svelte
+              menubar-label.svelte
+              menubar-menu.svelte
+              menubar-portal.svelte
+              menubar-radio-group.svelte
+              menubar-radio-item.svelte
+              menubar-separator.svelte
+              menubar-shortcut.svelte
+              menubar-sub-content.svelte
+              menubar-sub-trigger.svelte
+              menubar-sub.svelte
+              menubar-trigger.svelte
+              menubar.svelte
             navigation-menu/
               index.ts
               navigation-menu-content.svelte
@@ -133,6 +152,10 @@ apps/
             separator/
               index.ts
               separator.svelte
+        contants/
+          layout.ts
+        hooks/
+          is-mobile.ts
         images/
           github.svg
           svelte-logo.svg
@@ -567,12 +590,486 @@ services/
 .dockerignore
 .env.example
 .gitignore
+coba.md
 docker-compose.yml
 report.md
 </directory_structure>
 
 <files>
 This section contains the contents of the repository's files.
+
+<file path="apps/web/src/lib/components/ui/menubar/index.ts">
+import Root from "./menubar.svelte";
+import Menu from "./menubar-menu.svelte";
+import Sub from "./menubar-sub.svelte";
+import RadioGroup from "./menubar-radio-group.svelte";
+import CheckboxItem from "./menubar-checkbox-item.svelte";
+import Content from "./menubar-content.svelte";
+import Item from "./menubar-item.svelte";
+import Group from "./menubar-group.svelte";
+import RadioItem from "./menubar-radio-item.svelte";
+import Separator from "./menubar-separator.svelte";
+import Shortcut from "./menubar-shortcut.svelte";
+import SubContent from "./menubar-sub-content.svelte";
+import SubTrigger from "./menubar-sub-trigger.svelte";
+import Trigger from "./menubar-trigger.svelte";
+import Label from "./menubar-label.svelte";
+import GroupHeading from "./menubar-group-heading.svelte";
+import Portal from "./menubar-portal.svelte";
+
+export {
+	Root,
+	CheckboxItem,
+	Content,
+	Item,
+	RadioItem,
+	Separator,
+	Shortcut,
+	SubContent,
+	SubTrigger,
+	Trigger,
+	Menu,
+	Group,
+	Sub,
+	RadioGroup,
+	Label,
+	GroupHeading,
+	Portal,
+	//
+	Root as Menubar,
+	CheckboxItem as MenubarCheckboxItem,
+	Content as MenubarContent,
+	Item as MenubarItem,
+	RadioItem as MenubarRadioItem,
+	Separator as MenubarSeparator,
+	Shortcut as MenubarShortcut,
+	SubContent as MenubarSubContent,
+	SubTrigger as MenubarSubTrigger,
+	Trigger as MenubarTrigger,
+	Menu as MenubarMenu,
+	Group as MenubarGroup,
+	Sub as MenubarSub,
+	RadioGroup as MenubarRadioGroup,
+	Label as MenubarLabel,
+	GroupHeading as MenubarGroupHeading,
+	Portal as MenubarPortal,
+};
+</file>
+
+<file path="apps/web/src/lib/components/ui/menubar/menubar-checkbox-item.svelte">
+<script lang="ts">
+	import { Menubar as MenubarPrimitive } from "bits-ui";
+	import { cn, type WithoutChildrenOrChild } from "$lib/utils.js";
+	import type { Snippet } from "svelte";
+	import MinusIcon from 'phosphor-svelte/lib/Minus';
+	import CheckIcon from 'phosphor-svelte/lib/Check';
+
+	let {
+		ref = $bindable(null),
+		class: className,
+		checked = $bindable(false),
+		indeterminate = $bindable(false),
+		inset,
+		children: childrenProp,
+		...restProps
+	}: WithoutChildrenOrChild<MenubarPrimitive.CheckboxItemProps> & {
+		inset?: boolean;
+		children?: Snippet;
+	} = $props();
+</script>
+
+<MenubarPrimitive.CheckboxItem
+	bind:ref
+	bind:checked
+	bind:indeterminate
+	data-slot="menubar-checkbox-item"
+	data-inset={inset}
+	class={cn(
+		"focus:bg-accent focus:text-accent-foreground focus:**:text-accent-foreground gap-2 rounded-none py-2 pr-28 pl-8 text-xs data-inset:pl-8 relative flex cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+		className
+	)}
+	{...restProps}
+>
+	{#snippet children({ checked: checked, indeterminate: indeterminate })}
+		<span
+			class="left-1.5 size-4 [&_svg:not([class*='size-'])]:size-4 pointer-events-none absolute flex items-center justify-center"
+		>
+			{#if indeterminate}
+				<MinusIcon  />
+			{:else if checked}
+				<CheckIcon  />
+			{/if}
+		</span>
+		{@render childrenProp?.()}
+	{/snippet}
+</MenubarPrimitive.CheckboxItem>
+</file>
+
+<file path="apps/web/src/lib/components/ui/menubar/menubar-content.svelte">
+<script lang="ts">
+	import { Menubar as MenubarPrimitive } from "bits-ui";
+	import MenubarPortal from "./menubar-portal.svelte";
+	import { cn, type WithoutChildrenOrChild } from "$lib/utils.js";
+	import type { ComponentProps } from "svelte";
+
+	let {
+		ref = $bindable(null),
+		class: className,
+		sideOffset = 8,
+		alignOffset = -4,
+		align = "start",
+		side = "bottom",
+		portalProps,
+		...restProps
+	}: MenubarPrimitive.ContentProps & {
+		portalProps?: WithoutChildrenOrChild<ComponentProps<typeof MenubarPortal>>;
+	} = $props();
+</script>
+
+<MenubarPortal {...portalProps}>
+	<MenubarPrimitive.Content
+		bind:ref
+		data-slot="menubar-content"
+		{align}
+		{alignOffset}
+		{side}
+		{sideOffset}
+		class={cn(
+			"bg-popover text-popover-foreground ring-foreground/10 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 z-50 min-w-36 origin-(--bits-menubar-content-transform-origin) overflow-hidden rounded-lg p-1 shadow-md ring-1 duration-100",
+			className
+		)}
+		{...restProps}
+	/>
+</MenubarPortal>
+</file>
+
+<file path="apps/web/src/lib/components/ui/menubar/menubar-group-heading.svelte">
+<script lang="ts">
+	import { cn } from "$lib/utils.js";
+	import { Menubar as MenubarPrimitive } from "bits-ui";
+	import type { ComponentProps } from "svelte";
+
+	let {
+		ref = $bindable(null),
+		inset,
+		class: className,
+		...restProps
+	}: ComponentProps<typeof MenubarPrimitive.GroupHeading> & {
+		inset?: boolean;
+	} = $props();
+</script>
+
+<MenubarPrimitive.GroupHeading
+	bind:ref
+	data-slot="menubar-group-heading"
+	data-inset={inset}
+	class={cn("px-2 py-1.5 text-sm font-medium data-[inset]:ps-8", className)}
+	{...restProps}
+/>
+</file>
+
+<file path="apps/web/src/lib/components/ui/menubar/menubar-group.svelte">
+<script lang="ts">
+	import { Menubar as MenubarPrimitive } from "bits-ui";
+
+	let {
+		ref = $bindable(null),
+		...restProps
+	}: MenubarPrimitive.GroupProps & {
+		inset?: boolean;
+	} = $props();
+</script>
+
+<MenubarPrimitive.Group bind:ref data-slot="menubar-group" {...restProps} />
+</file>
+
+<file path="apps/web/src/lib/components/ui/menubar/menubar-item.svelte">
+<script lang="ts">
+	import { Menubar as MenubarPrimitive } from "bits-ui";
+	import { cn } from "$lib/utils.js";
+
+	let {
+		ref = $bindable(null),
+		class: className,
+		inset = undefined,
+		variant = "default",
+		...restProps
+	}: MenubarPrimitive.ItemProps & {
+		inset?: boolean;
+		variant?: "default" | "destructive";
+	} = $props();
+</script>
+
+<MenubarPrimitive.Item
+	bind:ref
+	data-slot="menubar-item"
+	data-inset={inset}
+	data-variant={variant}
+	class={cn("focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:text-destructive! not-data-[variant=destructive]:focus:**:text-accent-foreground gap-2 rounded-none px-2 py-2 text-xs data-disabled:opacity-50 data-inset:pl-8 [&_svg:not([class*='size-'])]:size-4 group/menubar-item flex items-center", className)}
+	{...restProps}
+/>
+</file>
+
+<file path="apps/web/src/lib/components/ui/menubar/menubar-label.svelte">
+<script lang="ts">
+	import { cn } from "$lib/utils.js";
+	import { type WithElementRef } from "bits-ui";
+	import type { HTMLAttributes } from "svelte/elements";
+
+	let {
+		ref = $bindable(null),
+		inset,
+		children,
+		class: className,
+		...restProps
+	}: WithElementRef<HTMLAttributes<HTMLElement>> & {
+		inset?: boolean;
+	} = $props();
+</script>
+
+<div
+	bind:this={ref}
+	data-slot="menubar-label"
+	data-inset={inset}
+	class={cn("px-2 py-2 text-xs data-inset:pl-8", className)}
+	{...restProps}
+>
+	{@render children?.()}
+</div>
+</file>
+
+<file path="apps/web/src/lib/components/ui/menubar/menubar-menu.svelte">
+<script lang="ts">
+	import { Menubar as MenubarPrimitive } from "bits-ui";
+
+	let { ...restProps }: MenubarPrimitive.MenuProps = $props();
+</script>
+
+<MenubarPrimitive.Menu {...restProps} />
+</file>
+
+<file path="apps/web/src/lib/components/ui/menubar/menubar-portal.svelte">
+<script lang="ts">
+	import { Menubar as MenubarPrimitive } from "bits-ui";
+
+	let { ...restProps }: MenubarPrimitive.PortalProps = $props();
+</script>
+
+<MenubarPrimitive.Portal {...restProps} />
+</file>
+
+<file path="apps/web/src/lib/components/ui/menubar/menubar-radio-group.svelte">
+<script lang="ts">
+	import { Menubar as MenubarPrimitive } from "bits-ui";
+
+	let {
+		ref = $bindable(null),
+		value = $bindable(""),
+		...restProps
+	}: MenubarPrimitive.RadioGroupProps = $props();
+</script>
+
+<MenubarPrimitive.RadioGroup bind:ref bind:value data-slot="menubar-radio-group" {...restProps} />
+</file>
+
+<file path="apps/web/src/lib/components/ui/menubar/menubar-radio-item.svelte">
+<script lang="ts">
+	import { Menubar as MenubarPrimitive } from "bits-ui";
+	import { cn, type WithoutChild } from "$lib/utils.js";
+	import CheckIcon from 'phosphor-svelte/lib/Check';
+
+	let {
+		ref = $bindable(null),
+		class: className,
+		inset,
+		children: childrenProp,
+		...restProps
+	}: WithoutChild<MenubarPrimitive.RadioItemProps> & {
+		inset?: boolean;
+	} = $props();
+</script>
+
+<MenubarPrimitive.RadioItem
+	bind:ref
+	data-slot="menubar-radio-item"
+	data-inset={inset}
+	class={cn(
+		"focus:bg-accent focus:text-accent-foreground focus:**:text-accent-foreground gap-2 rounded-none py-2 pr-2 pl-8 text-xs data-disabled:opacity-50 data-inset:pl-8 [&_svg:not([class*='size-'])]:size-4 relative flex cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0",
+		className
+	)}
+	{...restProps}
+>
+	{#snippet children({ checked })}
+		<span
+			class="left-1.5 size-4 [&_svg:not([class*='size-'])]:size-4 pointer-events-none absolute flex items-center justify-center"
+		>
+			{#if checked}
+				<CheckIcon  />
+			{/if}
+		</span>
+		{@render childrenProp?.({ checked })}
+	{/snippet}
+</MenubarPrimitive.RadioItem>
+</file>
+
+<file path="apps/web/src/lib/components/ui/menubar/menubar-separator.svelte">
+<script lang="ts">
+	import { Menubar as MenubarPrimitive } from "bits-ui";
+	import { cn } from "$lib/utils.js";
+
+	let {
+		ref = $bindable(null),
+		class: className,
+		...restProps
+	}: MenubarPrimitive.SeparatorProps = $props();
+</script>
+
+<MenubarPrimitive.Separator
+	bind:ref
+	data-slot="menubar-separator"
+	class={cn("bg-border -mx-1 my-1 h-px", className)}
+	{...restProps}
+/>
+</file>
+
+<file path="apps/web/src/lib/components/ui/menubar/menubar-shortcut.svelte">
+<script lang="ts">
+	import type { HTMLAttributes } from "svelte/elements";
+	import { cn, type WithElementRef } from "$lib/utils.js";
+
+	let {
+		ref = $bindable(null),
+		class: className,
+		children,
+		...restProps
+	}: WithElementRef<HTMLAttributes<HTMLSpanElement>> = $props();
+</script>
+
+<span
+	bind:this={ref}
+	data-slot="menubar-shortcut"
+	class={cn("text-muted-foreground group-focus/menubar-item:text-accent-foreground text-xs tracking-widest ml-auto", className)}
+	{...restProps}
+>
+	{@render children?.()}
+</span>
+</file>
+
+<file path="apps/web/src/lib/components/ui/menubar/menubar-sub-content.svelte">
+<script lang="ts">
+	import { Menubar as MenubarPrimitive } from "bits-ui";
+	import { cn } from "$lib/utils.js";
+
+	let {
+		ref = $bindable(null),
+		class: className,
+		...restProps
+	}: MenubarPrimitive.SubContentProps = $props();
+</script>
+
+<MenubarPrimitive.SubContent
+	bind:ref
+	data-slot="menubar-sub-content"
+	class={cn("bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 min-w-32 rounded-none shadow-lg ring-1 duration-100", className)}
+	{...restProps}
+/>
+</file>
+
+<file path="apps/web/src/lib/components/ui/menubar/menubar-sub-trigger.svelte">
+<script lang="ts">
+	import { Menubar as MenubarPrimitive } from "bits-ui";
+	import { cn, type WithoutChild } from "$lib/utils.js";
+	import CaretRightIcon from 'phosphor-svelte/lib/CaretRight';
+
+	let {
+		ref = $bindable(null),
+		class: className,
+		inset = undefined,
+		children,
+		...restProps
+	}: WithoutChild<MenubarPrimitive.SubTriggerProps> & {
+		inset?: boolean;
+	} = $props();
+</script>
+
+<MenubarPrimitive.SubTrigger
+	bind:ref
+	data-slot="menubar-sub-trigger"
+	data-inset={inset}
+	class={cn(
+		"focus:bg-accent focus:text-accent-foreground data-open:bg-accent data-open:text-accent-foreground gap-2 rounded-none px-2 py-2 text-xs data-inset:pl-8 [&_svg:not([class*='size-'])]:size-4 flex cursor-default items-center outline-none select-none",
+		className
+	)}
+	{...restProps}
+>
+	{@render children?.()}
+	<CaretRightIcon class="cn-rtl-flip ml-auto size-4" />
+</MenubarPrimitive.SubTrigger>
+</file>
+
+<file path="apps/web/src/lib/components/ui/menubar/menubar-sub.svelte">
+<script lang="ts">
+	import { Menubar as MenubarPrimitive } from "bits-ui";
+
+	let { open = $bindable(false), ...restProps }: MenubarPrimitive.SubProps = $props();
+</script>
+
+<MenubarPrimitive.Sub bind:open {...restProps} />
+</file>
+
+<file path="apps/web/src/lib/components/ui/menubar/menubar-trigger.svelte">
+<script lang="ts">
+	import { Menubar as MenubarPrimitive } from "bits-ui";
+	import { cn } from "$lib/utils.js";
+
+	let {
+		ref = $bindable(null),
+		class: className,
+		...restProps
+	}: MenubarPrimitive.TriggerProps = $props();
+</script>
+
+<MenubarPrimitive.Trigger
+	bind:ref
+	data-slot="menubar-trigger"
+	class={cn("hover:bg-muted aria-expanded:bg-muted rounded-none px-1.5 py-[calc(--spacing(0.8))] text-xs font-medium flex items-center outline-hidden select-none", className)}
+	{...restProps}
+/>
+</file>
+
+<file path="apps/web/src/lib/components/ui/menubar/menubar.svelte">
+<script lang="ts">
+	import { Menubar as MenubarPrimitive } from "bits-ui";
+	import { cn } from "$lib/utils.js";
+
+	let {
+		ref = $bindable(null),
+		class: className,
+		...restProps
+	}: MenubarPrimitive.RootProps = $props();
+</script>
+
+<MenubarPrimitive.Root
+	bind:ref
+	data-slot="menubar"
+	class={cn("h-8 gap-0.5 rounded-none border p-1 flex items-center", className)}
+	{...restProps}
+/>
+</file>
+
+<file path="apps/web/src/lib/contants/layout.ts">
+
+</file>
+
+<file path="apps/web/src/lib/hooks/is-mobile.ts">
+import { browser } from "$app/environment";
+
+export const useIsMobile = () => {
+	if (!browser) return false;
+
+	return window.matchMedia("(max-width: 768px)").matches;
+};
+</file>
 
 <file path="apps/web/.vscode/extensions.json">
 {
@@ -613,25 +1110,250 @@ This section contains the contents of the repository's files.
 
 <file path="apps/web/src/lib/components/layouts/Header.svelte">
 <script lang="ts">
-	import { resolve } from '$app/paths';
-	import { page } from '$app/state';
+	import * as NavigationMenu from "$lib/components/ui/navigation-menu/index.js";
+	import { cn } from "$lib/utils.js";
+	import { navigationMenuTriggerStyle } from "$lib/components/ui/navigation-menu/navigation-menu-trigger.svelte";
+	import type { HTMLAttributes } from "svelte/elements";
+
+	import { CircleHelp, Circle, CircleCheck } from "@lucide/svelte";
+	import { useIsMobile } from "$lib/hooks/is-mobile";
+
+	const isMobile = useIsMobile();
+
+	const components: {
+		title: string;
+		href: string;
+		description: string;
+	}[] = [
+		{
+			title: "Alert Dialog",
+			href: "/docs/components/alert-dialog",
+			description:
+				"A modal dialog that interrupts the user with important content and expects a response."
+		},
+		{
+			title: "Hover Card",
+			href: "/docs/components/hover-card",
+			description:
+				"For sighted users to preview content available behind a link."
+		},
+		{
+			title: "Progress",
+			href: "/docs/components/progress",
+			description:
+				"Displays an indicator showing the completion progress of a task."
+		},
+		{
+			title: "Scroll-area",
+			href: "/docs/components/scroll-area",
+			description: "Visually or semantically separates content."
+		},
+		{
+			title: "Tabs",
+			href: "/docs/components/tabs",
+			description:
+				"A set of layered sections of content that are displayed one at a time."
+		},
+		{
+			title: "Tooltip",
+			href: "/docs/components/tooltip",
+			description:
+				"A popup that displays information related to an element."
+		}
+	];
+
+	type ListItemProps = HTMLAttributes<HTMLAnchorElement> & {
+		title: string;
+		href: string;
+		content: string;
+	};
 </script>
 
-<header>
-	<nav>
-		<ul>
-			<li aria-current={page.url.pathname === '/' ? 'page' : undefined}>
-				<a href={resolve('/')}>Home</a>
-			</li>
-			<li aria-current={page.url.pathname === '/about' ? 'page' : undefined}>
-				<a href={resolve('/about')}>About</a>
-			</li>
-			<li aria-current={page.url.pathname.startsWith('/sverdle') ? 'page' : undefined}>
-				<a href={resolve('/sverdle')}>Sverdle</a>
-			</li>
-		</ul>
+{#snippet ListItem({
+	title,
+	content,
+	href,
+	class: className,
+	...restProps
+}: ListItemProps)}
+	<li>
+		<NavigationMenu.Link>
+			{#snippet child()}
+				<a
+					{href}
+					class={cn(
+						"hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground block space-y-1 rounded-md p-3 leading-none no-underline transition-colors outline-none select-none",
+						className
+					)}
+					{...restProps}
+				>
+					<div class="text-sm leading-none font-medium">
+						{title}
+					</div>
+
+					<p class="text-muted-foreground line-clamp-2 text-sm leading-snug">
+						{content}
+					</p>
+				</a>
+			{/snippet}
+		</NavigationMenu.Link>
+	</li>
+{/snippet}
+
+<header class="border-b">
+	<nav class="container mx-auto flex items-center justify-between px-4 py-3">
+		<NavigationMenu.Root viewport={isMobile}>
+			<NavigationMenu.List class="flex-wrap">
+				<NavigationMenu.Item>
+					<NavigationMenu.Trigger>Home</NavigationMenu.Trigger>
+
+					<NavigationMenu.Content>
+						<ul
+							class="grid gap-2 p-2 md:w-[400px] lg:w-[500px] lg:grid-cols-[0.75fr_1fr]"
+						>
+							<li class="row-span-3">
+								<NavigationMenu.Link
+									class="from-muted/50 to-muted flex h-full w-full flex-col justify-end rounded-md bg-linear-to-b p-4 no-underline outline-hidden select-none focus:shadow-md md:p-6"
+								>
+									{#snippet child({ props })}
+										<a {...props} href="/">
+											<div class="mt-4 mb-2 text-lg font-medium">
+												shadcn-svelte
+											</div>
+
+											<p class="text-muted-foreground text-sm leading-tight">
+												Beautifully designed components built with Tailwind CSS.
+											</p>
+										</a>
+									{/snippet}
+								</NavigationMenu.Link>
+							</li>
+
+							{@render ListItem({
+								href: "/docs",
+								title: "Introduction",
+								content: "Re-usable components built using Bits UI and Tailwind CSS."
+							})}
+
+							{@render ListItem({
+								href: "/docs/installation",
+								title: "Installation",
+								content: "How to install dependencies and structure your app."
+							})}
+
+							{@render ListItem({
+								href: "/docs/components/typography",
+								title: "Typography",
+								content: "Styles for headings, paragraphs, lists, and more."
+							})}
+						</ul>
+					</NavigationMenu.Content>
+				</NavigationMenu.Item>
+
+				<NavigationMenu.Item>
+					<NavigationMenu.Trigger>Components</NavigationMenu.Trigger>
+
+					<NavigationMenu.Content>
+						<NavigationMenu.Content>
+							<ul
+								class="grid w-[300px] gap-2 p-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px]"
+							>
+								{#each components as component (component.href)}
+									{@render ListItem({
+										href: component.href,
+										title: component.title,
+										content: component.description
+									})}
+								{/each}
+							</ul>
+						</NavigationMenu.Content>
+					</NavigationMenu.Content>
+				</NavigationMenu.Item>
+
+				<NavigationMenu.Item>
+					<NavigationMenu.Link>
+						{#snippet child()}
+							<a href="/docs" class={navigationMenuTriggerStyle()}>
+								Docs
+							</a>
+						{/snippet}
+					</NavigationMenu.Link>
+				</NavigationMenu.Item>
+
+				<NavigationMenu.Item class="hidden md:block">
+					<NavigationMenu.Trigger>List</NavigationMenu.Trigger>
+
+					<NavigationMenu.Content>
+						<ul class="grid w-[300px] gap-4 p-2">
+							<li>
+								<NavigationMenu.Link href="##">
+									<div class="font-medium">Components</div>
+									<div class="text-muted-foreground">
+										Browse all components in the library.
+									</div>
+								</NavigationMenu.Link>
+
+								<NavigationMenu.Link href="##">
+									<div class="font-medium">Documentation</div>
+									<div class="text-muted-foreground">
+										Learn how to use the library.
+									</div>
+								</NavigationMenu.Link>
+
+								<NavigationMenu.Link href="##">
+									<div class="font-medium">Blog</div>
+									<div class="text-muted-foreground">
+										Read our latest blog posts.
+									</div>
+								</NavigationMenu.Link>
+							</li>
+						</ul>
+					</NavigationMenu.Content>
+				</NavigationMenu.Item>
+
+				<NavigationMenu.Item class="hidden md:block">
+					<NavigationMenu.Trigger>Simple</NavigationMenu.Trigger>
+
+					<NavigationMenu.Content>
+						<ul class="grid w-[200px] gap-4 p-2">
+							<li>
+								<NavigationMenu.Link href="##">Components</NavigationMenu.Link>
+								<NavigationMenu.Link href="##">Documentation</NavigationMenu.Link>
+								<NavigationMenu.Link href="##">Blocks</NavigationMenu.Link>
+							</li>
+						</ul>
+					</NavigationMenu.Content>
+				</NavigationMenu.Item>
+
+				<NavigationMenu.Item class="hidden md:block">
+					<NavigationMenu.Trigger>With Icon</NavigationMenu.Trigger>
+
+					<NavigationMenu.Content>
+						<ul class="grid w-[200px] gap-4 p-2">
+							<li>
+								<NavigationMenu.Link href="##" class="flex-row items-center gap-2">
+									<CircleHelp />
+									Backlog
+								</NavigationMenu.Link>
+
+								<NavigationMenu.Link href="##" class="flex-row items-center gap-2">
+									<Circle/>
+									To Do
+								</NavigationMenu.Link>
+
+								<NavigationMenu.Link href="##" class="flex-row items-center gap-2">
+									<CircleCheck />
+									Done
+								</NavigationMenu.Link>
+							</li>
+						</ul>
+					</NavigationMenu.Content>
+				</NavigationMenu.Item>
+			</NavigationMenu.List>
+		</NavigationMenu.Root>
 	</nav>
 </header>
+``
 </file>
 
 <file path="apps/web/src/lib/components/ui/accordion/accordion-content.svelte">
@@ -8263,1924 +8985,6 @@ CMD ["node", "dist/server.js"]
 #   app.register(routes, { prefix: '/api/v1' })
 </file>
 
-<file path="services/api/MVP.md">
-Berikut dokumentasi database MVP yang bisa kamu taruh sebagai file `DATABASE_MVP_FLOW.md`.
-
----
-
-# Database MVP Flow — Nongki App
-
-Dokumentasi ini menjelaskan tabel database yang benar-benar dibutuhkan untuk MVP Nongki App, beserta interaksi antar tabel pada setiap flow utama: onboarding, WhatsApp connection, AI reply, CRM, order/reservasi, pembayaran QRIS AstraPay, human takeover, dan notifikasi. Prinsip utama sistem: hanya `services/api` yang boleh menulis ke database; `apps/web`, `services/wa-worker`, dan `services/ai-engine` harus melewati API. Ini sesuai dengan arsitektur awal kamu yang menempatkan API sebagai pemilik utama database dan semua service lain hanya berinteraksi lewat HTTP/internal API. 
-
----
-
-## 1. Prinsip Database MVP
-
-Database MVP Nongki menggunakan pola **multi-tenant** berbasis `businessId`. Setiap data penting seperti customer, conversation, message, order, reservation, payment, knowledge, dan agent log harus selalu membawa `businessId`.
-
-Prinsip wajib:
-
-```text
-1. Semua mutasi data hanya lewat services/api.
-2. Frontend tidak boleh akses database langsung.
-3. WA Worker tidak boleh akses database langsung.
-4. AI Engine tidak boleh akses database langsung.
-5. Semua query tenant wajib filter businessId.
-6. AI hanya boleh mengubah data lewat tool API yang tervalidasi.
-7. Payment webhook wajib idempotent agar tidak double-process.
-8. Knowledge vector FAISS wajib dipisah per businessId.
-```
-
-Catatan: di schema kamu pakai **MySQL**, jadi dokumentasi final sebaiknya konsisten pakai MySQL, bukan PostgreSQL.
-
----
-
-# 2. Daftar Tabel MVP
-
-## A. User, Tenant, dan Onboarding
-
-### 1. `users`
-
-Menyimpan akun owner/admin yang login ke Nongki App.
-
-Dipakai untuk:
-
-```text
-- Register owner
-- Login dashboard
-- Relasi ke business
-- Relasi ke business_members
-- Notifikasi user
-- Audit log user action
-```
-
-Interaksi MVP:
-
-```text
-Register → insert users
-Login → read users
-Dashboard profile → read users
-Audit action → relation userId
-```
-
----
-
-### 2. `refresh_tokens`
-
-Menyimpan token login jangka panjang.
-
-Dipakai untuk:
-
-```text
-- Refresh session user
-- Logout / revoke token
-- Keamanan autentikasi
-```
-
-Interaksi MVP:
-
-```text
-Login → insert refresh_tokens
-Refresh session → read tokenHash
-Logout → update revokedAt
-```
-
----
-
-### 3. `businesses`
-
-Menyimpan workspace bisnis/UMKM.
-
-Ini adalah tabel tenant utama. Hampir semua tabel lain terhubung ke `businessId`.
-
-Dipakai untuk:
-
-```text
-- Identitas UMKM
-- Status onboarding / active
-- Timezone dan currency
-- Relasi ke owner
-- Tenant isolation
-```
-
-Interaksi MVP:
-
-```text
-Register owner → insert businesses
-Onboarding selesai → update status=active
-Incoming WhatsApp message → read business status
-Payment QRIS → read business/payment configuration
-Dashboard → read business detail
-```
-
-Field penting:
-
-```text
-id
-ownerId
-name
-slug
-type
-timezone
-currency
-status
-```
-
----
-
-### 4. `business_members`
-
-Menyimpan relasi user dengan bisnis.
-
-Dipakai untuk:
-
-```text
-- Menentukan owner/admin/staff
-- Permission dashboard
-- Target notifikasi admin
-```
-
-Interaksi MVP:
-
-```text
-Register owner → insert business_members role=owner
-Dashboard access → read business_members
-Notification owner/admin → read members by businessId
-```
-
----
-
-### 5. `business_onboarding`
-
-Menyimpan progres onboarding bisnis.
-
-Dipakai untuk:
-
-```text
-- Tracking setup awal
-- Menentukan apakah WhatsApp sudah siap
-- Menentukan apakah bot boleh diaktifkan
-```
-
-Interaksi MVP:
-
-```text
-Register → insert business_onboarding
-Onboarding answer → update progressPercent/currentStep
-WhatsApp connected → update readyForWhatsapp=true
-Readiness check → update readyForBotActivation=true
-Go live → business status active
-```
-
-Field penting:
-
-```text
-businessId
-currentStep
-progressPercent
-readyForWhatsapp
-readyForBotActivation
-needsReservation
-needsOrder
-needsHumanTakeover
-```
-
----
-
-### 6. `onboarding_steps`
-
-Menyimpan step onboarding per bisnis.
-
-Dipakai untuk:
-
-```text
-- Business profile
-- Menu upload
-- Opening hours
-- Agent persona
-- WhatsApp connect
-- Bot test
-- Go live
-```
-
-Interaksi MVP:
-
-```text
-Register → seed onboarding_steps
-User complete step → update status=completed
-Check readiness → read required completed steps
-WhatsApp connected → update whatsapp_connect completed
-```
-
----
-
-### 7. `agent_settings`
-
-Menyimpan konfigurasi AI assistant Ningki per bisnis.
-
-Dipakai untuk:
-
-```text
-- Nama agent
-- Persona
-- Tone
-- Bahasa
-- Auto reply enabled
-- Human takeover rule
-- Business rules
-- Allowed tools
-```
-
-Interaksi MVP:
-
-```text
-Register → insert default agent_settings
-Onboarding persona → update persona/tone/businessRules
-Enable bot → update autoReplyEnabled=true
-AI reply → read agent_settings
-Human takeover → read maxUnknownAttempts/handoffRules
-```
-
-Field penting:
-
-```text
-businessId
-agentName
-persona
-tone
-language
-autoReplyEnabled
-humanTakeoverEnabled
-maxUnknownAttempts
-businessRules
-allowedTools
-```
-
----
-
-# 3. WhatsApp dan CRM Tables
-
-## 8. `whatsapp_sessions`
-
-Menyimpan koneksi WhatsApp bisnis.
-
-Dipakai untuk:
-
-```text
-- QR pairing
-- Status connected/disconnected
-- Nomor WhatsApp bisnis
-- Status bot enabled
-```
-
-Interaksi MVP:
-
-```text
-Start session → insert whatsapp_sessions status=qr_pending
-Generate QR → update qrCode, qrExpiresAt
-QR scanned → update status=connected, phoneNumber
-Enable bot → update botEnabled=true
-Incoming message → read botEnabled/status
-Disconnected → update status=disconnected
-```
-
-Field penting:
-
-```text
-businessId
-sessionName
-phoneNumber
-status
-qrCode
-qrExpiresAt
-sessionDataEncrypted
-botEnabled
-```
-
-Catatan penting: di schema kamu ada typo:
-
-```prisma
-model WhatsappSession {@db.Char(36)Char(36)
-```
-
-Harus diperbaiki menjadi:
-
-```prisma
-model WhatsappSession {
-```
-
----
-
-## 9. `customers`
-
-Menyimpan profil pelanggan dari WhatsApp.
-
-Dipakai untuk:
-
-```text
-- Customer 360 sederhana
-- Identitas pelanggan
-- Lead status
-- Total interaksi
-- Total order/reservasi
-```
-
-Interaksi MVP:
-
-```text
-Incoming message → upsert customer by businessId + waPhone
-AI detect intent → update leadStatus
-Order created → update totalOrders
-Reservation created → update totalReservations
-Dashboard CRM → read customers
-```
-
-Field penting:
-
-```text
-businessId
-waPhone
-waName
-name
-leadStatus
-lastMessageAt
-totalInteractions
-totalOrders
-totalReservations
-notes
-metadata
-```
-
-Index penting:
-
-```text
-unique(businessId, waPhone)
-index(businessId, leadStatus)
-index(businessId, lastMessageAt)
-```
-
----
-
-## 10. `conversations`
-
-Menyimpan thread percakapan customer.
-
-Dipakai untuk:
-
-```text
-- Inbox dashboard
-- Status conversation
-- Human takeover
-- AI enabled per conversation
-- Summary chat
-```
-
-Interaksi MVP:
-
-```text
-Incoming message → upsert/open conversation
-AI reply → update lastMessage, lastAiReplyAt
-Admin reply → update lastAdminReplyAt
-Human takeover → update humanTakeover=true, aiEnabled=false
-Return to AI → update humanTakeover=false, aiEnabled=true
-Close conversation → update status=closed
-```
-
-Field penting:
-
-```text
-businessId
-customerId
-channel
-status
-aiEnabled
-humanTakeover
-assignedUserId
-lastMessage
-lastMessageAt
-lastAiReplyAt
-lastAdminReplyAt
-summary
-```
-
----
-
-## 11. `messages`
-
-Menyimpan semua pesan inbound dan outbound.
-
-Dipakai untuk:
-
-```text
-- Chat history
-- AI context
-- Idempotency WhatsApp
-- Dashboard inbox
-- Audit percakapan
-```
-
-Interaksi MVP:
-
-```text
-Customer message → insert inbound message
-Idempotency check → read by waMessageId
-AI reply → insert outbound message senderType=ai
-Admin reply → insert outbound message senderType=admin
-Dashboard inbox → read messages by conversationId
-```
-
-Field penting:
-
-```text
-businessId
-conversationId
-customerId
-senderType
-messageType
-content
-mediaUrl
-waMessageId
-direction
-status
-metadata
-```
-
-Catatan penting: untuk idempotency WhatsApp, sebaiknya tambahkan unique:
-
-```prisma
-@@unique([businessId, waMessageId])
-```
-
-Karena sekarang baru ada index biasa. Kalau `waMessageId` bisa null, pastikan handling-nya aman di MySQL.
-
----
-
-# 4. Knowledge Base dan AI Tables
-
-## 12. `files`
-
-Menyimpan metadata file upload.
-
-Dipakai untuk:
-
-```text
-- Upload menu
-- Upload FAQ
-- Upload promo
-- Upload dokumen knowledge
-```
-
-Interaksi MVP:
-
-```text
-Upload file → insert files
-Create knowledge document → relation fileId
-AI process document → read file metadata/path
-```
-
-Field penting:
-
-```text
-businessId
-uploadedBy
-filename
-originalName
-mimeType
-sizeBytes
-storageProvider
-storagePath
-publicUrl
-```
-
----
-
-## 13. `knowledge_documents`
-
-Menyimpan dokumen knowledge bisnis.
-
-Dipakai untuk:
-
-```text
-- Menu
-- FAQ
-- Promo
-- Opening hours
-- Location
-- Reservation policy
-- Order policy
-- Brand tone
-```
-
-Interaksi MVP:
-
-```text
-Upload document → insert status=draft
-AI processing started → update status=processing
-AI indexed → update status=indexed, extractedText
-AI failed → update status=failed
-AI reply → read indexed documents indirectly via search API
-```
-
-Field penting:
-
-```text
-businessId
-title
-documentType
-sourceType
-content
-fileId
-status
-extractedText
-metadata
-```
-
----
-
-## 14. `knowledge_chunks`
-
-Menyimpan potongan teks hasil indexing knowledge.
-
-Dipakai untuk:
-
-```text
-- RAG search
-- Mapping chunk ke FAISS vector
-- Menjaga knowledge tetap per businessId
-```
-
-Interaksi MVP:
-
-```text
-AI process document → insert chunks
-AI search knowledge → read chunks by embeddingRef/result
-Reindex → delete old chunks, insert new chunks
-```
-
-Field penting:
-
-```text
-businessId
-documentId
-chunkText
-chunkIndex
-embeddingRef
-vectorStore
-metadata
-```
-
-Catatan: embedding vector tidak perlu disimpan di MySQL untuk MVP. Cukup simpan `embeddingRef`, sedangkan vector asli disimpan di FAISS dengan namespace `businessId`.
-
----
-
-## 15. `agent_runs`
-
-Menyimpan log setiap eksekusi AI.
-
-Dipakai untuk:
-
-```text
-- Debug AI reply
-- Hitung token usage
-- Observability
-- Evaluasi intent
-```
-
-Interaksi MVP:
-
-```text
-AI run started → insert status=running
-AI success → update/insert status=success, output, intent, token usage
-AI failed → update status=failed, errorMessage
-Dashboard logs → read agent_runs
-```
-
-Field penting:
-
-```text
-businessId
-conversationId
-customerId
-agentType
-input
-output
-intent
-status
-errorMessage
-tokensInput
-tokensOutput
-latencyMs
-metadata
-```
-
----
-
-## 16. `tool_executions`
-
-Menyimpan log tool yang dipanggil AI.
-
-Dipakai untuk:
-
-```text
-- create_order
-- create_reservation
-- create_payment_qris
-- human_handoff
-- knowledge_search
-```
-
-Interaksi MVP:
-
-```text
-AI calls tool → insert tool_executions
-Tool success → update status=success, output
-Tool failed → update status=failed, errorMessage
-Audit AI action → read tool_executions
-```
-
-Field penting:
-
-```text
-businessId
-agentRunId
-conversationId
-toolName
-input
-output
-status
-errorMessage
-latencyMs
-```
-
----
-
-# 5. Product, Order, Reservation
-
-## 17. `product_categories`
-
-Menyimpan kategori menu/produk.
-
-Dipakai untuk:
-
-```text
-- Kategori minuman
-- Kategori makanan
-- Kategori promo
-```
-
-Interaksi MVP:
-
-```text
-Owner create category → insert
-Dashboard menu → read
-AI product lookup → read by businessId
-```
-
-Field penting:
-
-```text
-businessId
-name
-description
-sortOrder
-```
-
----
-
-## 18. `products`
-
-Menyimpan menu/produk UMKM.
-
-Dipakai untuk:
-
-```text
-- AI menjawab pertanyaan menu
-- AI membuat order
-- Dashboard menu
-```
-
-Interaksi MVP:
-
-```text
-Owner create menu → insert products
-AI read menu → read available products
-Order item created → productId optional relation
-Update availability → update isAvailable
-```
-
-Field penting:
-
-```text
-businessId
-categoryId
-name
-description
-price
-currency
-isAvailable
-imageUrl
-metadata
-```
-
----
-
-## 19. `orders`
-
-Menyimpan order customer.
-
-Dipakai untuk:
-
-```text
-- Order dari percakapan WhatsApp
-- Status order
-- Payment status
-- Dashboard order
-```
-
-Interaksi MVP:
-
-```text
-AI create_order_tool → insert order status=draft
-Order item inserted → update totalAmount
-Customer confirms → update status=pending_confirmation
-QRIS generated → update paymentStatus=waiting_payment
-Payment success → update paymentStatus=paid
-Order completed → update status=completed
-```
-
-Field penting:
-
-```text
-businessId
-customerId
-conversationId
-orderNumber
-status
-fulfillmentType
-totalAmount
-currency
-paymentStatus
-pickupTime
-deliveryAddress
-notes
-metadata
-```
-
-Index penting:
-
-```text
-unique(businessId, orderNumber)
-index(businessId, status)
-```
-
----
-
-## 20. `order_items`
-
-Menyimpan item dalam order.
-
-Dipakai untuk:
-
-```text
-- Detail produk yang dipesan
-- Perhitungan total order
-```
-
-Interaksi MVP:
-
-```text
-Create order → insert order_items
-Calculate total → sum subtotal
-Dashboard order detail → read by orderId
-```
-
-Field penting:
-
-```text
-businessId
-orderId
-productId
-productName
-quantity
-unitPrice
-subtotal
-notes
-```
-
----
-
-## 21. `reservations`
-
-Menyimpan reservasi customer.
-
-Dipakai untuk:
-
-```text
-- Reservasi dari WhatsApp
-- Konfirmasi admin
-- Payment reservation jika diperlukan
-```
-
-Interaksi MVP:
-
-```text
-AI create_reservation_tool → insert reservation status=pending
-Admin confirm → update status=confirmed
-Payment success → update status=confirmed
-Cancel → update status=cancelled
-Dashboard reservation → read by businessId
-```
-
-Field penting:
-
-```text
-businessId
-customerId
-conversationId
-reservationNumber
-reservationDate
-reservationTime
-guestCount
-customerName
-customerPhone
-status
-notes
-```
-
-Index penting:
-
-```text
-unique(businessId, reservationNumber)
-index(businessId, reservationDate)
-index(businessId, status)
-```
-
----
-
-# 6. Payment dan AstraPay QRIS
-
-## 22. `integrations`
-
-Menyimpan credential integrasi third-party per bisnis.
-
-Dipakai untuk:
-
-```text
-- AstraPay merchant credential
-- Status integrasi
-- Access token encrypted
-```
-
-Interaksi MVP:
-
-```text
-Owner/admin setup AstraPay → insert integrations provider=astrapay
-Generate QRIS → read integration credentials
-Credential expired/error → update status
-```
-
-Field penting:
-
-```text
-businessId
-provider
-status
-accessTokenEncrypted
-refreshTokenEncrypted
-expiresAt
-metadata
-```
-
-Catatan: untuk MVP, metadata bisa menyimpan:
-
-```json
-{
-  "merchantId": "xxx",
-  "partnerId": "xxx",
-  "environment": "sandbox"
-}
-```
-
----
-
-## 23. `payments`
-
-Menyimpan transaksi pembayaran.
-
-Dipakai untuk:
-
-```text
-- QRIS order
-- QRIS reservasi
-- QRIS top-up kredit AI jika nanti dipakai
-- Status paid/unpaid/expired
-```
-
-Interaksi MVP:
-
-```text
-Create payment QRIS → insert status=waiting_payment
-AstraPay callback success → update status=paid
-QR expired → update status=expired
-Payment failed → update status=failed
-Dashboard payment → read by orderId/reservationId
-```
-
-Field penting:
-
-```text
-businessId
-orderId
-reservationId
-customerId
-conversationId
-provider
-method
-status
-amount
-currency
-merchantReferenceNo
-providerReferenceNo
-qrContent
-qrImageUrl
-expiresAt
-paidAt
-rawRequest
-rawResponse
-rawCallback
-```
-
-Index penting:
-
-```text
-unique(merchantReferenceNo)
-index(businessId, status)
-index(orderId)
-index(reservationId)
-```
-
-Catatan penting: `merchantReferenceNo` harus unik karena dipakai untuk idempotency dan mapping callback AstraPay.
-
----
-
-## 24. `payment_events`
-
-Menyimpan riwayat event dari satu payment.
-
-Dipakai untuk:
-
-```text
-- QR generated
-- Payment received
-- QR expired
-- Payment failed
-```
-
-Interaksi MVP:
-
-```text
-QRIS generated → insert eventType=qr_generated
-Webhook paid → insert eventType=payment_received
-QR expired → insert eventType=qr_expired
-Failed callback → insert eventType=payment_failed
-```
-
-Field penting:
-
-```text
-businessId
-paymentId
-eventType
-payload
-createdAt
-```
-
----
-
-## 25. `webhook_events`
-
-Menyimpan log webhook masuk dan request eksternal.
-
-Dipakai untuk:
-
-```text
-- Callback AstraPay
-- Event WhatsApp/Baileys jika diperlukan
-- Idempotency webhook
-- Debug integrasi
-```
-
-Interaksi MVP:
-
-```text
-AstraPay callback received → insert webhook_events status=received
-If already processed → return 200 skip
-Validation success → update/insert status=processed
-Validation failed → update status=failed
-Ignored event → status=ignored
-```
-
-Field penting:
-
-```text
-businessId
-provider
-eventType
-externalId
-payload
-status
-processedAt
-errorMessage
-```
-
-Catatan penting: untuk idempotency, sebaiknya tambahkan unique:
-
-```prisma
-@@unique([provider, externalId])
-```
-
-Karena sekarang hanya index. Ini penting agar callback yang sama tidak diproses dobel saat retry dari payment provider.
-
----
-
-# 7. Human Takeover dan Notification
-
-## 26. `human_handoffs`
-
-Menyimpan kasus ketika AI menyerahkan percakapan ke admin.
-
-Dipakai untuk:
-
-```text
-- Customer minta admin
-- Komplain
-- Refund request
-- AI gagal menjawab
-- Sensitive request
-```
-
-Interaksi MVP:
-
-```text
-AI calls human_handoff_tool → insert human_handoffs status=open
-Conversation takeover → update conversations humanTakeover=true
-Admin assigned → update assignedUserId/status=assigned
-Resolved → update status=resolved, resolvedAt
-Return to AI → close handoff
-```
-
-Field penting:
-
-```text
-businessId
-conversationId
-customerId
-reason
-summary
-status
-assignedUserId
-resolvedAt
-```
-
----
-
-## 27. `notifications`
-
-Menyimpan notifikasi dashboard/admin.
-
-Dipakai untuk:
-
-```text
-- WhatsApp QR ready
-- WhatsApp disconnected
-- New handoff
-- New order
-- New reservation
-- Payment paid
-- Bot error
-```
-
-Interaksi MVP:
-
-```text
-QR ready → insert notification system
-Payment paid → insert notification new_order/new_reservation
-Human handoff → insert notification new_handoff
-Reminder due → insert notification reminder_due
-Dashboard read → update isRead=true
-```
-
-Field penting:
-
-```text
-businessId
-userId
-type
-title
-message
-isRead
-metadata
-readAt
-```
-
----
-
-## 28. `reminders`
-
-Menyimpan reminder sederhana.
-
-Dipakai untuk:
-
-```text
-- Payment follow-up
-- Reservation confirmation
-- Admin task
-```
-
-Interaksi MVP:
-
-```text
-Order waiting payment → insert payment_follow_up
-Reservation created → insert reservation_confirmation
-Cron due → read scheduled reminders
-Sent → update status=sent
-Payment paid → cancel payment_follow_up
-```
-
-Field penting:
-
-```text
-businessId
-customerId
-conversationId
-reservationId
-orderId
-type
-title
-description
-scheduledAt
-status
-channel
-createdBy
-sentAt
-completedAt
-```
-
-Catatan MVP: jangan buat reminder terlalu kompleks dulu. Cukup:
-
-```text
-payment_follow_up
-reservation_confirmation
-admin_task
-```
-
----
-
-# 8. Audit dan Observability
-
-## 29. `audit_logs`
-
-Menyimpan log aksi penting manusia/sistem.
-
-Dipakai untuk:
-
-```text
-- User login/logout
-- Bot enabled/disabled
-- WhatsApp connected
-- Order status changed
-- Payment status changed
-- Reservation confirmed
-- Handoff resolved
-```
-
-Interaksi MVP:
-
-```text
-Important action → insert audit_logs
-Dashboard audit → read by businessId
-```
-
-Field penting:
-
-```text
-businessId
-userId
-action
-entityType
-entityId
-oldData
-newData
-ipAddress
-userAgent
-```
-
----
-
-## 30. `cron_jobs`
-
-Menyimpan log eksekusi cron.
-
-Dipakai untuk:
-
-```text
-- QR expired job
-- Reminder job
-```
-
-Interaksi MVP:
-
-```text
-Cron start → insert status=running
-Cron success → update status=success, result
-Cron failed → update status=failed, errorMessage
-```
-
-Field penting:
-
-```text
-jobName
-status
-startedAt
-finishedAt
-result
-errorMessage
-```
-
-Catatan MVP: tabel ini opsional. Kalau mau cepat, log cron bisa pakai application logger dulu. Tapi kalau kamu ingin observability rapi, tetap pakai.
-
----
-
-# 9. Flow Interaksi Database MVP
-
-## Flow 1 — Register dan Workspace
-
-Trigger:
-
-```text
-Owner register dari web
-```
-
-Service:
-
-```text
-apps/web → services/api → MySQL
-```
-
-Database transaction:
-
-```text
-insert users
-insert businesses status=onboarding
-insert business_members role=owner
-insert business_onboarding progressPercent=0
-insert onboarding_steps default step
-insert agent_settings default Ningki
-insert audit_logs action=BUSINESS_REGISTERED
-```
-
-Output:
-
-```text
-Owner punya akun, workspace bisnis, onboarding progress, dan default Ningki AI settings.
-```
-
----
-
-## Flow 2 — Onboarding Business
-
-Trigger:
-
-```text
-Owner mengisi setup bisnis
-```
-
-Database read:
-
-```text
-business_onboarding
-onboarding_steps
-agent_settings
-businesses
-```
-
-Database write:
-
-```text
-update onboarding_steps status=completed
-update business_onboarding currentStep/progressPercent/needs*
-update businesses profile fields
-update agent_settings persona/tone/businessRules
-insert audit_logs action=ONBOARDING_STEP_COMPLETED
-```
-
-Output:
-
-```text
-Data bisnis dan konfigurasi Ningki mulai siap digunakan.
-```
-
----
-
-## Flow 3 — Upload Knowledge
-
-Trigger:
-
-```text
-Owner upload menu/FAQ/promo
-```
-
-Database write awal:
-
-```text
-insert files
-insert knowledge_documents status=draft
-```
-
-AI process:
-
-```text
-api → ai-engine → extract text → chunk → embedding → FAISS namespace businessId
-```
-
-Database write hasil:
-
-```text
-update knowledge_documents status=indexed, extractedText
-insert knowledge_chunks chunkText, chunkIndex, embeddingRef
-insert audit_logs action=KNOWLEDGE_INDEXED
-```
-
-Output:
-
-```text
-Ningki bisa menjawab pertanyaan customer berdasarkan knowledge bisnis.
-```
-
----
-
-## Flow 4 — Connect WhatsApp
-
-Trigger:
-
-```text
-Owner klik Hubungkan WhatsApp
-```
-
-Database write:
-
-```text
-insert whatsapp_sessions status=qr_pending
-update whatsapp_sessions qrCode, qrExpiresAt
-insert notifications QR siap di-scan
-```
-
-Saat QR scanned:
-
-```text
-update whatsapp_sessions status=connected, phoneNumber, lastConnectedAt
-update business_onboarding readyForWhatsapp=true
-update onboarding_steps whatsapp_connect=completed
-insert audit_logs action=WHATSAPP_CONNECTED
-```
-
-Saat bot enabled:
-
-```text
-update whatsapp_sessions botEnabled=true
-update agent_settings autoReplyEnabled=true
-insert audit_logs action=BOT_ENABLED
-```
-
-Output:
-
-```text
-WhatsApp bisnis terhubung dan Ningki siap menerima pesan.
-```
-
----
-
-## Flow 5 — Incoming Customer Message
-
-Trigger:
-
-```text
-Customer mengirim WhatsApp ke nomor bisnis
-```
-
-Database read:
-
-```text
-whatsapp_sessions → cek botEnabled dan connected
-businesses → cek status active
-messages → cek waMessageId untuk idempotency
-```
-
-Database write transaction:
-
-```text
-upsert customers by businessId + waPhone
-upsert conversations active/open
-insert messages inbound customer
-```
-
-Jika human takeover aktif:
-
-```text
-skip AI
-insert notifications jika perlu
-```
-
-Jika AI aktif:
-
-```text
-send context to ai-engine
-```
-
-Output:
-
-```text
-Pesan customer aman tersimpan sebagai data CRM.
-```
-
----
-
-## Flow 6 — Ningki AI Reply
-
-Trigger:
-
-```text
-Pesan customer diteruskan ke ai-engine
-```
-
-AI membaca context via API:
-
-```text
-agent_settings
-businesses
-customers
-conversations history
-knowledge search
-products
-reservations active
-```
-
-Database write setelah AI selesai:
-
-```text
-insert agent_runs status=success
-insert tool_executions jika ada tool dipanggil
-insert messages outbound senderType=ai
-update conversations lastMessage, lastMessageAt, lastAiReplyAt
-update customers leadStatus jika intent berubah
-```
-
-Output:
-
-```text
-Ningki membalas customer dan semua proses AI tercatat.
-```
-
----
-
-## Flow 7 — Human Takeover
-
-Trigger:
-
-```text
-Customer minta admin / komplain / AI gagal jawab
-```
-
-Database write:
-
-```text
-update conversations humanTakeover=true, aiEnabled=false, status=human_takeover
-insert human_handoffs reason, summary, status=open
-insert notifications type=new_handoff
-insert tool_executions human_handoff_tool
-```
-
-Admin reply:
-
-```text
-insert messages senderType=admin, direction=outbound
-update conversations lastAdminReplyAt
-```
-
-Return to AI:
-
-```text
-update conversations humanTakeover=false, aiEnabled=true, status=open
-update human_handoffs status=resolved, resolvedAt
-insert audit_logs action=HANDOFF_RESOLVED
-```
-
-Output:
-
-```text
-AI berhenti membalas sampai admin mengembalikan percakapan ke AI.
-```
-
----
-
-## Flow 8 — Create Order
-
-Trigger:
-
-```text
-Customer ingin order lewat WhatsApp
-```
-
-Database write transaction:
-
-```text
-insert orders status=draft, paymentStatus=unpaid
-insert order_items
-update orders totalAmount
-update customers totalOrders++
-insert tool_executions create_order_tool
-```
-
-Setelah customer konfirmasi:
-
-```text
-update orders status=pending_confirmation
-insert reminders type=payment_follow_up
-```
-
-Output:
-
-```text
-Order terbentuk dari percakapan WhatsApp dan siap dibayar.
-```
-
----
-
-## Flow 9 — Create Reservation
-
-Trigger:
-
-```text
-Customer ingin reservasi lewat WhatsApp
-```
-
-Database write transaction:
-
-```text
-insert reservations status=pending
-update customers leadStatus=reserved, totalReservations++
-insert reminders reservation_confirmation/admin_task
-insert tool_executions create_reservation_tool
-insert audit_logs action=RESERVATION_CREATED
-```
-
-Admin confirm:
-
-```text
-update reservations status=confirmed
-insert notifications type=new_reservation
-insert audit_logs action=RESERVATION_CONFIRMED
-```
-
-Output:
-
-```text
-Reservasi terbentuk dan bisa dikonfirmasi admin.
-```
-
----
-
-## Flow 10 — Generate QRIS AstraPay
-
-Trigger:
-
-```text
-Order/reservation perlu pembayaran
-```
-
-Database read:
-
-```text
-orders/reservations → ambil totalAmount
-businesses → ambil businessId
-integrations → ambil AstraPay credential
-```
-
-External call:
-
-```text
-services/api → AstraPay generate QRIS
-```
-
-Database write:
-
-```text
-insert payments status=waiting_payment, merchantReferenceNo, qrContent, expiresAt
-insert payment_events eventType=qr_generated
-update orders paymentStatus=waiting_payment
-insert webhook_events outgoing request log
-insert tool_executions create_payment_qris_tool
-```
-
-Output:
-
-```text
-QRIS dibuat dan dikirim ke customer melalui WhatsApp.
-```
-
----
-
-## Flow 11 — AstraPay Webhook Paid
-
-Trigger:
-
-```text
-AstraPay mengirim callback pembayaran berhasil
-```
-
-Database read:
-
-```text
-webhook_events → cek externalId sudah diproses atau belum
-payments → find by merchantReferenceNo
-businesses/integrations → validasi business/merchant
-```
-
-Validasi:
-
-```text
-signature valid
-amount cocok
-businessId cocok
-payment belum paid
-merchantReferenceNo belum diproses
-```
-
-Database write transaction:
-
-```text
-update payments status=paid, paidAt, providerReferenceNo, rawCallback
-insert payment_events eventType=payment_received
-update orders paymentStatus=paid jika payment order
-update reservations status=confirmed jika payment reservation
-insert/update webhook_events status=processed
-cancel reminders payment_follow_up
-insert notifications new_order/new_reservation/payment_paid
-insert audit_logs action=PAYMENT_PAID
-```
-
-Output:
-
-```text
-Status order/reservasi otomatis paid tanpa konfirmasi manual owner.
-```
-
----
-
-## Flow 12 — QRIS Expired
-
-Trigger:
-
-```text
-Cron mengecek payment waiting_payment yang sudah melewati expiresAt
-```
-
-Database read:
-
-```text
-payments where status=waiting_payment and expiresAt < now()
-```
-
-Database write:
-
-```text
-update payments status=expired
-insert payment_events eventType=qr_expired
-update orders paymentStatus=failed jika terkait order
-insert/update cron_jobs
-```
-
-Output:
-
-```text
-QR expired tidak dianggap paid dan customer bisa diminta generate QR baru.
-```
-
----
-
-## Flow 13 — Reminder Cron
-
-Trigger:
-
-```text
-Cron berjalan tiap 1 menit
-```
-
-Database read:
-
-```text
-reminders status=scheduled and scheduledAt <= now()
-businesses active
-customers waPhone
-whatsapp_sessions botEnabled
-```
-
-Database write:
-
-```text
-send via wa-worker jika channel=whatsapp
-insert notifications jika channel=admin_notification
-update reminders status=sent/sentAt
-insert/update cron_jobs
-```
-
-Output:
-
-```text
-Reminder pembayaran/reservasi/admin berjalan otomatis.
-```
-
----
-
-# 10. Tabel yang Sebaiknya Ditunda dari MVP
-
-Tabel berikut sudah boleh tetap ada di schema, tapi fitur dan interaksinya bisa ditunda:
-
-```text
-customer_tags
-customer_tag_assignments
-spreadsheet_configs
-spreadsheet_sync_logs
-advanced campaign table
-advanced RFM scoring table
-disbursement table
-mitra/affiliate table
-```
-
-Alasannya: MVP cukup membuktikan core loop dulu:
-
-```text
-WhatsApp → AI Reply → CRM Data → Order/Reservation → QRIS Payment → Owner Notification
-```
-
----
-
-# 11. Relasi MVP Paling Penting
-
-```text
-users
-  → businesses
-  → business_members
-
-businesses
-  → agent_settings
-  → whatsapp_sessions
-  → customers
-  → conversations
-  → messages
-  → knowledge_documents
-  → knowledge_chunks
-  → products
-  → orders
-  → reservations
-  → payments
-  → notifications
-  → audit_logs
-
-customers
-  → conversations
-  → messages
-  → orders
-  → reservations
-  → payments
-
-conversations
-  → messages
-  → agent_runs
-  → tool_executions
-  → human_handoffs
-  → orders
-  → reservations
-  → payments
-
-orders
-  → order_items
-  → payments
-  → reminders
-
-reservations
-  → payments
-  → reminders
-
-payments
-  → payment_events
-  → webhook_events
-```
-
----
-
-# 12. Checklist Keamanan Database MVP
-
-Wajib diterapkan sebelum demo/MVP:
-
-```text
-[ ] Semua tabel tenant punya businessId.
-[ ] Semua API query wajib filter businessId.
-[ ] Tidak ada direct DB access dari wa-worker.
-[ ] Tidak ada direct DB access dari ai-engine.
-[ ] Payment merchantReferenceNo unique.
-[ ] Webhook provider + externalId unique.
-[ ] WhatsApp waMessageId idempotent per businessId.
-[ ] Credential AstraPay disimpan encrypted.
-[ ] sessionDataEncrypted benar-benar encrypted.
-[ ] rawCallback/rawRequest jangan berisi secret sensitif.
-[ ] Semua status payment diproses dalam transaction.
-[ ] Human takeover mematikan AI reply.
-[ ] Knowledge FAISS dipisah per businessId.
-[ ] Audit log untuk aksi penting.
-```
-
----
-
-# 13. Minimal Database Setup untuk MVP
-
-Kalau mau benar-benar fokus MVP, tabel yang wajib dimigrate dan dipakai dulu:
-
-```text
-users
-refresh_tokens
-businesses
-business_members
-business_onboarding
-onboarding_steps
-agent_settings
-
-whatsapp_sessions
-customers
-conversations
-messages
-
-files
-knowledge_documents
-knowledge_chunks
-
-product_categories
-products
-orders
-order_items
-reservations
-
-integrations
-payments
-payment_events
-webhook_events
-
-human_handoffs
-notifications
-reminders
-agent_runs
-tool_executions
-audit_logs
-```
-
-Opsional:
-
-```text
-cron_jobs
-```
-
-Tunda:
-
-```text
-customer_tags
-customer_tag_assignments
-spreadsheet_configs
-spreadsheet_sync_logs
-```
-
----
-
-# 14. Kesimpulan MVP
-
-Database kamu sudah cukup kuat untuk MVP. Struktur yang paling penting sudah tersedia: tenant isolation lewat `businessId`, WhatsApp session, customer CRM, conversation/message history, knowledge base, AI run logging, order/reservation, QRIS payment, webhook event, human handoff, notification, dan audit log. Flow database kamu juga sudah jelas bahwa incoming WhatsApp message diproses oleh API, disimpan sebagai customer/conversation/message, lalu diteruskan ke AI engine jika bot aktif. 
-
-Fokus implementasi MVP sebaiknya dikunci pada satu loop utama:
-
-```text
-Owner onboarding
-→ connect WhatsApp
-→ upload knowledge/menu
-→ customer chat
-→ Ningki reply
-→ order/reservasi
-→ QRIS payment
-→ webhook paid
-→ owner notification
-```
-
-Kalau loop ini jalan stabil, Nongki sudah layak disebut MVP.
-</file>
-
 <file path="services/api/prisma.config.ts">
 import { config } from "dotenv";
 import { defineConfig } from "prisma/config";
@@ -16722,6 +15526,11 @@ infra/ssl
 **/*.log
 </file>
 
+<file path="coba.md">
+Resume this session with:
+claude --resume 3c8472cd-ff24-49f6-ae8b-092e9e1ed51c
+</file>
+
 <file path="report.md">
 # Database Flow — Ningki/Nongki Microservice Ecosystem
 
@@ -17520,23 +16329,6 @@ export default defineConfig(
 );
 </file>
 
-<file path="apps/web/vite.config.ts">
-import tailwindcss from '@tailwindcss/vite';
-import { sveltekit } from '@sveltejs/kit/vite';
-import { defineConfig } from 'vite';
-
-export default defineConfig(
-    { 
-    plugins: [tailwindcss(), sveltekit()],
-    server: {
-        host: '0.0.0.0',
-        port: 5173,
-        allowedHosts: ['web', 'localhost', '.localhost']  // tambahkan ini
-    }
-    }
-);
-</file>
-
 <file path="services/ai-enggine/app/api/health.py">
 from fastapi import APIRouter
 
@@ -17661,44 +16453,6 @@ async def whatsapp_respond(request: WhatsAppAgentRequest):
         status="not_implemented",
         message="This endpoint is scaffolded and will be implemented later."
     )
-</file>
-
-<file path="services/ai-enggine/app/core/config.py">
-"""
-Konfigurasi aplikasi AI Engine menggunakan Pydantic Settings.
-Load dari environment variables / .env file.
-"""
-
-from pydantic_settings import BaseSettings
-
-
-class Settings(BaseSettings):
-    app_env: str = "development"
-    app_name: str = "ningki-ai-enggine"
-    app_port: int = 8000
-
-    api_base_url: str = "http://localhost:3000"
-    api_internal_token: str = "change_me"
-
-    gemini_api_key: str = "change_me"
-    gemini_model: str = "gemini-1.5-flash"
-    gemini_embedding_model: str = "text-embedding-004"
-
-    faiss_index_dir: str = "./app/storage/faiss"
-    upload_tmp_dir: str = "./app/storage/tmp"
-
-    redis_url: str = "redis://localhost:6379"
-    rabbitmq_url: str = "amqp://localhost:5672"
-    event_exchange: str = "nongki.events"
-    event_exchange_type: str = "topic"
-    event_producer_ai: str = "services/ai-engine"
-    log_level: str = "info"
-
-    class Config:
-        env_file = ".env"
-
-
-settings = Settings()
 </file>
 
 <file path="services/ai-enggine/app/infra/rabbitmq.py">
@@ -20126,6 +18880,1924 @@ export const redisPlugin = fp(async (app: FastifyInstance) => {
 /generated/prisma
 </file>
 
+<file path="services/api/MVP.md">
+Berikut dokumentasi database MVP yang bisa kamu taruh sebagai file `DATABASE_MVP_FLOW.md`.
+
+---
+
+# Database MVP Flow — Nongki App
+
+Dokumentasi ini menjelaskan tabel database yang benar-benar dibutuhkan untuk MVP Nongki App, beserta interaksi antar tabel pada setiap flow utama: onboarding, WhatsApp connection, AI reply, CRM, order/reservasi, pembayaran QRIS AstraPay, human takeover, dan notifikasi. Prinsip utama sistem: hanya `services/api` yang boleh menulis ke database; `apps/web`, `services/wa-worker`, dan `services/ai-engine` harus melewati API. Ini sesuai dengan arsitektur awal kamu yang menempatkan API sebagai pemilik utama database dan semua service lain hanya berinteraksi lewat HTTP/internal API. 
+
+---
+
+## 1. Prinsip Database MVP
+
+Database MVP Nongki menggunakan pola **multi-tenant** berbasis `businessId`. Setiap data penting seperti customer, conversation, message, order, reservation, payment, knowledge, dan agent log harus selalu membawa `businessId`.
+
+Prinsip wajib:
+
+```text
+1. Semua mutasi data hanya lewat services/api.
+2. Frontend tidak boleh akses database langsung.
+3. WA Worker tidak boleh akses database langsung.
+4. AI Engine tidak boleh akses database langsung.
+5. Semua query tenant wajib filter businessId.
+6. AI hanya boleh mengubah data lewat tool API yang tervalidasi.
+7. Payment webhook wajib idempotent agar tidak double-process.
+8. Knowledge vector FAISS wajib dipisah per businessId.
+```
+
+Catatan: di schema kamu pakai **MySQL**, jadi dokumentasi final sebaiknya konsisten pakai MySQL, bukan PostgreSQL.
+
+---
+
+# 2. Daftar Tabel MVP
+
+## A. User, Tenant, dan Onboarding
+
+### 1. `users`
+
+Menyimpan akun owner/admin yang login ke Nongki App.
+
+Dipakai untuk:
+
+```text
+- Register owner
+- Login dashboard
+- Relasi ke business
+- Relasi ke business_members
+- Notifikasi user
+- Audit log user action
+```
+
+Interaksi MVP:
+
+```text
+Register → insert users
+Login → read users
+Dashboard profile → read users
+Audit action → relation userId
+```
+
+---
+
+### 2. `refresh_tokens`
+
+Menyimpan token login jangka panjang.
+
+Dipakai untuk:
+
+```text
+- Refresh session user
+- Logout / revoke token
+- Keamanan autentikasi
+```
+
+Interaksi MVP:
+
+```text
+Login → insert refresh_tokens
+Refresh session → read tokenHash
+Logout → update revokedAt
+```
+
+---
+
+### 3. `businesses`
+
+Menyimpan workspace bisnis/UMKM.
+
+Ini adalah tabel tenant utama. Hampir semua tabel lain terhubung ke `businessId`.
+
+Dipakai untuk:
+
+```text
+- Identitas UMKM
+- Status onboarding / active
+- Timezone dan currency
+- Relasi ke owner
+- Tenant isolation
+```
+
+Interaksi MVP:
+
+```text
+Register owner → insert businesses
+Onboarding selesai → update status=active
+Incoming WhatsApp message → read business status
+Payment QRIS → read business/payment configuration
+Dashboard → read business detail
+```
+
+Field penting:
+
+```text
+id
+ownerId
+name
+slug
+type
+timezone
+currency
+status
+```
+
+---
+
+### 4. `business_members`
+
+Menyimpan relasi user dengan bisnis.
+
+Dipakai untuk:
+
+```text
+- Menentukan owner/admin/staff
+- Permission dashboard
+- Target notifikasi admin
+```
+
+Interaksi MVP:
+
+```text
+Register owner → insert business_members role=owner
+Dashboard access → read business_members
+Notification owner/admin → read members by businessId
+```
+
+---
+
+### 5. `business_onboarding`
+
+Menyimpan progres onboarding bisnis.
+
+Dipakai untuk:
+
+```text
+- Tracking setup awal
+- Menentukan apakah WhatsApp sudah siap
+- Menentukan apakah bot boleh diaktifkan
+```
+
+Interaksi MVP:
+
+```text
+Register → insert business_onboarding
+Onboarding answer → update progressPercent/currentStep
+WhatsApp connected → update readyForWhatsapp=true
+Readiness check → update readyForBotActivation=true
+Go live → business status active
+```
+
+Field penting:
+
+```text
+businessId
+currentStep
+progressPercent
+readyForWhatsapp
+readyForBotActivation
+needsReservation
+needsOrder
+needsHumanTakeover
+```
+
+---
+
+### 6. `onboarding_steps`
+
+Menyimpan step onboarding per bisnis.
+
+Dipakai untuk:
+
+```text
+- Business profile
+- Menu upload
+- Opening hours
+- Agent persona
+- WhatsApp connect
+- Bot test
+- Go live
+```
+
+Interaksi MVP:
+
+```text
+Register → seed onboarding_steps
+User complete step → update status=completed
+Check readiness → read required completed steps
+WhatsApp connected → update whatsapp_connect completed
+```
+
+---
+
+### 7. `agent_settings`
+
+Menyimpan konfigurasi AI assistant Ningki per bisnis.
+
+Dipakai untuk:
+
+```text
+- Nama agent
+- Persona
+- Tone
+- Bahasa
+- Auto reply enabled
+- Human takeover rule
+- Business rules
+- Allowed tools
+```
+
+Interaksi MVP:
+
+```text
+Register → insert default agent_settings
+Onboarding persona → update persona/tone/businessRules
+Enable bot → update autoReplyEnabled=true
+AI reply → read agent_settings
+Human takeover → read maxUnknownAttempts/handoffRules
+```
+
+Field penting:
+
+```text
+businessId
+agentName
+persona
+tone
+language
+autoReplyEnabled
+humanTakeoverEnabled
+maxUnknownAttempts
+businessRules
+allowedTools
+```
+
+---
+
+# 3. WhatsApp dan CRM Tables
+
+## 8. `whatsapp_sessions`
+
+Menyimpan koneksi WhatsApp bisnis.
+
+Dipakai untuk:
+
+```text
+- QR pairing
+- Status connected/disconnected
+- Nomor WhatsApp bisnis
+- Status bot enabled
+```
+
+Interaksi MVP:
+
+```text
+Start session → insert whatsapp_sessions status=qr_pending
+Generate QR → update qrCode, qrExpiresAt
+QR scanned → update status=connected, phoneNumber
+Enable bot → update botEnabled=true
+Incoming message → read botEnabled/status
+Disconnected → update status=disconnected
+```
+
+Field penting:
+
+```text
+businessId
+sessionName
+phoneNumber
+status
+qrCode
+qrExpiresAt
+sessionDataEncrypted
+botEnabled
+```
+
+Catatan penting: di schema kamu ada typo:
+
+```prisma
+model WhatsappSession {@db.Char(36)Char(36)
+```
+
+Harus diperbaiki menjadi:
+
+```prisma
+model WhatsappSession {
+```
+
+---
+
+## 9. `customers`
+
+Menyimpan profil pelanggan dari WhatsApp.
+
+Dipakai untuk:
+
+```text
+- Customer 360 sederhana
+- Identitas pelanggan
+- Lead status
+- Total interaksi
+- Total order/reservasi
+```
+
+Interaksi MVP:
+
+```text
+Incoming message → upsert customer by businessId + waPhone
+AI detect intent → update leadStatus
+Order created → update totalOrders
+Reservation created → update totalReservations
+Dashboard CRM → read customers
+```
+
+Field penting:
+
+```text
+businessId
+waPhone
+waName
+name
+leadStatus
+lastMessageAt
+totalInteractions
+totalOrders
+totalReservations
+notes
+metadata
+```
+
+Index penting:
+
+```text
+unique(businessId, waPhone)
+index(businessId, leadStatus)
+index(businessId, lastMessageAt)
+```
+
+---
+
+## 10. `conversations`
+
+Menyimpan thread percakapan customer.
+
+Dipakai untuk:
+
+```text
+- Inbox dashboard
+- Status conversation
+- Human takeover
+- AI enabled per conversation
+- Summary chat
+```
+
+Interaksi MVP:
+
+```text
+Incoming message → upsert/open conversation
+AI reply → update lastMessage, lastAiReplyAt
+Admin reply → update lastAdminReplyAt
+Human takeover → update humanTakeover=true, aiEnabled=false
+Return to AI → update humanTakeover=false, aiEnabled=true
+Close conversation → update status=closed
+```
+
+Field penting:
+
+```text
+businessId
+customerId
+channel
+status
+aiEnabled
+humanTakeover
+assignedUserId
+lastMessage
+lastMessageAt
+lastAiReplyAt
+lastAdminReplyAt
+summary
+```
+
+---
+
+## 11. `messages`
+
+Menyimpan semua pesan inbound dan outbound.
+
+Dipakai untuk:
+
+```text
+- Chat history
+- AI context
+- Idempotency WhatsApp
+- Dashboard inbox
+- Audit percakapan
+```
+
+Interaksi MVP:
+
+```text
+Customer message → insert inbound message
+Idempotency check → read by waMessageId
+AI reply → insert outbound message senderType=ai
+Admin reply → insert outbound message senderType=admin
+Dashboard inbox → read messages by conversationId
+```
+
+Field penting:
+
+```text
+businessId
+conversationId
+customerId
+senderType
+messageType
+content
+mediaUrl
+waMessageId
+direction
+status
+metadata
+```
+
+Catatan penting: untuk idempotency WhatsApp, sebaiknya tambahkan unique:
+
+```prisma
+@@unique([businessId, waMessageId])
+```
+
+Karena sekarang baru ada index biasa. Kalau `waMessageId` bisa null, pastikan handling-nya aman di MySQL.
+
+---
+
+# 4. Knowledge Base dan AI Tables
+
+## 12. `files`
+
+Menyimpan metadata file upload.
+
+Dipakai untuk:
+
+```text
+- Upload menu
+- Upload FAQ
+- Upload promo
+- Upload dokumen knowledge
+```
+
+Interaksi MVP:
+
+```text
+Upload file → insert files
+Create knowledge document → relation fileId
+AI process document → read file metadata/path
+```
+
+Field penting:
+
+```text
+businessId
+uploadedBy
+filename
+originalName
+mimeType
+sizeBytes
+storageProvider
+storagePath
+publicUrl
+```
+
+---
+
+## 13. `knowledge_documents`
+
+Menyimpan dokumen knowledge bisnis.
+
+Dipakai untuk:
+
+```text
+- Menu
+- FAQ
+- Promo
+- Opening hours
+- Location
+- Reservation policy
+- Order policy
+- Brand tone
+```
+
+Interaksi MVP:
+
+```text
+Upload document → insert status=draft
+AI processing started → update status=processing
+AI indexed → update status=indexed, extractedText
+AI failed → update status=failed
+AI reply → read indexed documents indirectly via search API
+```
+
+Field penting:
+
+```text
+businessId
+title
+documentType
+sourceType
+content
+fileId
+status
+extractedText
+metadata
+```
+
+---
+
+## 14. `knowledge_chunks`
+
+Menyimpan potongan teks hasil indexing knowledge.
+
+Dipakai untuk:
+
+```text
+- RAG search
+- Mapping chunk ke FAISS vector
+- Menjaga knowledge tetap per businessId
+```
+
+Interaksi MVP:
+
+```text
+AI process document → insert chunks
+AI search knowledge → read chunks by embeddingRef/result
+Reindex → delete old chunks, insert new chunks
+```
+
+Field penting:
+
+```text
+businessId
+documentId
+chunkText
+chunkIndex
+embeddingRef
+vectorStore
+metadata
+```
+
+Catatan: embedding vector tidak perlu disimpan di MySQL untuk MVP. Cukup simpan `embeddingRef`, sedangkan vector asli disimpan di FAISS dengan namespace `businessId`.
+
+---
+
+## 15. `agent_runs`
+
+Menyimpan log setiap eksekusi AI.
+
+Dipakai untuk:
+
+```text
+- Debug AI reply
+- Hitung token usage
+- Observability
+- Evaluasi intent
+```
+
+Interaksi MVP:
+
+```text
+AI run started → insert status=running
+AI success → update/insert status=success, output, intent, token usage
+AI failed → update status=failed, errorMessage
+Dashboard logs → read agent_runs
+```
+
+Field penting:
+
+```text
+businessId
+conversationId
+customerId
+agentType
+input
+output
+intent
+status
+errorMessage
+tokensInput
+tokensOutput
+latencyMs
+metadata
+```
+
+---
+
+## 16. `tool_executions`
+
+Menyimpan log tool yang dipanggil AI.
+
+Dipakai untuk:
+
+```text
+- create_order
+- create_reservation
+- create_payment_qris
+- human_handoff
+- knowledge_search
+```
+
+Interaksi MVP:
+
+```text
+AI calls tool → insert tool_executions
+Tool success → update status=success, output
+Tool failed → update status=failed, errorMessage
+Audit AI action → read tool_executions
+```
+
+Field penting:
+
+```text
+businessId
+agentRunId
+conversationId
+toolName
+input
+output
+status
+errorMessage
+latencyMs
+```
+
+---
+
+# 5. Product, Order, Reservation
+
+## 17. `product_categories`
+
+Menyimpan kategori menu/produk.
+
+Dipakai untuk:
+
+```text
+- Kategori minuman
+- Kategori makanan
+- Kategori promo
+```
+
+Interaksi MVP:
+
+```text
+Owner create category → insert
+Dashboard menu → read
+AI product lookup → read by businessId
+```
+
+Field penting:
+
+```text
+businessId
+name
+description
+sortOrder
+```
+
+---
+
+## 18. `products`
+
+Menyimpan menu/produk UMKM.
+
+Dipakai untuk:
+
+```text
+- AI menjawab pertanyaan menu
+- AI membuat order
+- Dashboard menu
+```
+
+Interaksi MVP:
+
+```text
+Owner create menu → insert products
+AI read menu → read available products
+Order item created → productId optional relation
+Update availability → update isAvailable
+```
+
+Field penting:
+
+```text
+businessId
+categoryId
+name
+description
+price
+currency
+isAvailable
+imageUrl
+metadata
+```
+
+---
+
+## 19. `orders`
+
+Menyimpan order customer.
+
+Dipakai untuk:
+
+```text
+- Order dari percakapan WhatsApp
+- Status order
+- Payment status
+- Dashboard order
+```
+
+Interaksi MVP:
+
+```text
+AI create_order_tool → insert order status=draft
+Order item inserted → update totalAmount
+Customer confirms → update status=pending_confirmation
+QRIS generated → update paymentStatus=waiting_payment
+Payment success → update paymentStatus=paid
+Order completed → update status=completed
+```
+
+Field penting:
+
+```text
+businessId
+customerId
+conversationId
+orderNumber
+status
+fulfillmentType
+totalAmount
+currency
+paymentStatus
+pickupTime
+deliveryAddress
+notes
+metadata
+```
+
+Index penting:
+
+```text
+unique(businessId, orderNumber)
+index(businessId, status)
+```
+
+---
+
+## 20. `order_items`
+
+Menyimpan item dalam order.
+
+Dipakai untuk:
+
+```text
+- Detail produk yang dipesan
+- Perhitungan total order
+```
+
+Interaksi MVP:
+
+```text
+Create order → insert order_items
+Calculate total → sum subtotal
+Dashboard order detail → read by orderId
+```
+
+Field penting:
+
+```text
+businessId
+orderId
+productId
+productName
+quantity
+unitPrice
+subtotal
+notes
+```
+
+---
+
+## 21. `reservations`
+
+Menyimpan reservasi customer.
+
+Dipakai untuk:
+
+```text
+- Reservasi dari WhatsApp
+- Konfirmasi admin
+- Payment reservation jika diperlukan
+```
+
+Interaksi MVP:
+
+```text
+AI create_reservation_tool → insert reservation status=pending
+Admin confirm → update status=confirmed
+Payment success → update status=confirmed
+Cancel → update status=cancelled
+Dashboard reservation → read by businessId
+```
+
+Field penting:
+
+```text
+businessId
+customerId
+conversationId
+reservationNumber
+reservationDate
+reservationTime
+guestCount
+customerName
+customerPhone
+status
+notes
+```
+
+Index penting:
+
+```text
+unique(businessId, reservationNumber)
+index(businessId, reservationDate)
+index(businessId, status)
+```
+
+---
+
+# 6. Payment dan AstraPay QRIS
+
+## 22. `integrations`
+
+Menyimpan credential integrasi third-party per bisnis.
+
+Dipakai untuk:
+
+```text
+- AstraPay merchant credential
+- Status integrasi
+- Access token encrypted
+```
+
+Interaksi MVP:
+
+```text
+Owner/admin setup AstraPay → insert integrations provider=astrapay
+Generate QRIS → read integration credentials
+Credential expired/error → update status
+```
+
+Field penting:
+
+```text
+businessId
+provider
+status
+accessTokenEncrypted
+refreshTokenEncrypted
+expiresAt
+metadata
+```
+
+Catatan: untuk MVP, metadata bisa menyimpan:
+
+```json
+{
+  "merchantId": "xxx",
+  "partnerId": "xxx",
+  "environment": "sandbox"
+}
+```
+
+---
+
+## 23. `payments`
+
+Menyimpan transaksi pembayaran.
+
+Dipakai untuk:
+
+```text
+- QRIS order
+- QRIS reservasi
+- QRIS top-up kredit AI jika nanti dipakai
+- Status paid/unpaid/expired
+```
+
+Interaksi MVP:
+
+```text
+Create payment QRIS → insert status=waiting_payment
+AstraPay callback success → update status=paid
+QR expired → update status=expired
+Payment failed → update status=failed
+Dashboard payment → read by orderId/reservationId
+```
+
+Field penting:
+
+```text
+businessId
+orderId
+reservationId
+customerId
+conversationId
+provider
+method
+status
+amount
+currency
+merchantReferenceNo
+providerReferenceNo
+qrContent
+qrImageUrl
+expiresAt
+paidAt
+rawRequest
+rawResponse
+rawCallback
+```
+
+Index penting:
+
+```text
+unique(merchantReferenceNo)
+index(businessId, status)
+index(orderId)
+index(reservationId)
+```
+
+Catatan penting: `merchantReferenceNo` harus unik karena dipakai untuk idempotency dan mapping callback AstraPay.
+
+---
+
+## 24. `payment_events`
+
+Menyimpan riwayat event dari satu payment.
+
+Dipakai untuk:
+
+```text
+- QR generated
+- Payment received
+- QR expired
+- Payment failed
+```
+
+Interaksi MVP:
+
+```text
+QRIS generated → insert eventType=qr_generated
+Webhook paid → insert eventType=payment_received
+QR expired → insert eventType=qr_expired
+Failed callback → insert eventType=payment_failed
+```
+
+Field penting:
+
+```text
+businessId
+paymentId
+eventType
+payload
+createdAt
+```
+
+---
+
+## 25. `webhook_events`
+
+Menyimpan log webhook masuk dan request eksternal.
+
+Dipakai untuk:
+
+```text
+- Callback AstraPay
+- Event WhatsApp/Baileys jika diperlukan
+- Idempotency webhook
+- Debug integrasi
+```
+
+Interaksi MVP:
+
+```text
+AstraPay callback received → insert webhook_events status=received
+If already processed → return 200 skip
+Validation success → update/insert status=processed
+Validation failed → update status=failed
+Ignored event → status=ignored
+```
+
+Field penting:
+
+```text
+businessId
+provider
+eventType
+externalId
+payload
+status
+processedAt
+errorMessage
+```
+
+Catatan penting: untuk idempotency, sebaiknya tambahkan unique:
+
+```prisma
+@@unique([provider, externalId])
+```
+
+Karena sekarang hanya index. Ini penting agar callback yang sama tidak diproses dobel saat retry dari payment provider.
+
+---
+
+# 7. Human Takeover dan Notification
+
+## 26. `human_handoffs`
+
+Menyimpan kasus ketika AI menyerahkan percakapan ke admin.
+
+Dipakai untuk:
+
+```text
+- Customer minta admin
+- Komplain
+- Refund request
+- AI gagal menjawab
+- Sensitive request
+```
+
+Interaksi MVP:
+
+```text
+AI calls human_handoff_tool → insert human_handoffs status=open
+Conversation takeover → update conversations humanTakeover=true
+Admin assigned → update assignedUserId/status=assigned
+Resolved → update status=resolved, resolvedAt
+Return to AI → close handoff
+```
+
+Field penting:
+
+```text
+businessId
+conversationId
+customerId
+reason
+summary
+status
+assignedUserId
+resolvedAt
+```
+
+---
+
+## 27. `notifications`
+
+Menyimpan notifikasi dashboard/admin.
+
+Dipakai untuk:
+
+```text
+- WhatsApp QR ready
+- WhatsApp disconnected
+- New handoff
+- New order
+- New reservation
+- Payment paid
+- Bot error
+```
+
+Interaksi MVP:
+
+```text
+QR ready → insert notification system
+Payment paid → insert notification new_order/new_reservation
+Human handoff → insert notification new_handoff
+Reminder due → insert notification reminder_due
+Dashboard read → update isRead=true
+```
+
+Field penting:
+
+```text
+businessId
+userId
+type
+title
+message
+isRead
+metadata
+readAt
+```
+
+---
+
+## 28. `reminders`
+
+Menyimpan reminder sederhana.
+
+Dipakai untuk:
+
+```text
+- Payment follow-up
+- Reservation confirmation
+- Admin task
+```
+
+Interaksi MVP:
+
+```text
+Order waiting payment → insert payment_follow_up
+Reservation created → insert reservation_confirmation
+Cron due → read scheduled reminders
+Sent → update status=sent
+Payment paid → cancel payment_follow_up
+```
+
+Field penting:
+
+```text
+businessId
+customerId
+conversationId
+reservationId
+orderId
+type
+title
+description
+scheduledAt
+status
+channel
+createdBy
+sentAt
+completedAt
+```
+
+Catatan MVP: jangan buat reminder terlalu kompleks dulu. Cukup:
+
+```text
+payment_follow_up
+reservation_confirmation
+admin_task
+```
+
+---
+
+# 8. Audit dan Observability
+
+## 29. `audit_logs`
+
+Menyimpan log aksi penting manusia/sistem.
+
+Dipakai untuk:
+
+```text
+- User login/logout
+- Bot enabled/disabled
+- WhatsApp connected
+- Order status changed
+- Payment status changed
+- Reservation confirmed
+- Handoff resolved
+```
+
+Interaksi MVP:
+
+```text
+Important action → insert audit_logs
+Dashboard audit → read by businessId
+```
+
+Field penting:
+
+```text
+businessId
+userId
+action
+entityType
+entityId
+oldData
+newData
+ipAddress
+userAgent
+```
+
+---
+
+## 30. `cron_jobs`
+
+Menyimpan log eksekusi cron.
+
+Dipakai untuk:
+
+```text
+- QR expired job
+- Reminder job
+```
+
+Interaksi MVP:
+
+```text
+Cron start → insert status=running
+Cron success → update status=success, result
+Cron failed → update status=failed, errorMessage
+```
+
+Field penting:
+
+```text
+jobName
+status
+startedAt
+finishedAt
+result
+errorMessage
+```
+
+Catatan MVP: tabel ini opsional. Kalau mau cepat, log cron bisa pakai application logger dulu. Tapi kalau kamu ingin observability rapi, tetap pakai.
+
+---
+
+# 9. Flow Interaksi Database MVP
+
+## Flow 1 — Register dan Workspace
+
+Trigger:
+
+```text
+Owner register dari web
+```
+
+Service:
+
+```text
+apps/web → services/api → MySQL
+```
+
+Database transaction:
+
+```text
+insert users
+insert businesses status=onboarding
+insert business_members role=owner
+insert business_onboarding progressPercent=0
+insert onboarding_steps default step
+insert agent_settings default Ningki
+insert audit_logs action=BUSINESS_REGISTERED
+```
+
+Output:
+
+```text
+Owner punya akun, workspace bisnis, onboarding progress, dan default Ningki AI settings.
+```
+
+---
+
+## Flow 2 — Onboarding Business
+
+Trigger:
+
+```text
+Owner mengisi setup bisnis
+```
+
+Database read:
+
+```text
+business_onboarding
+onboarding_steps
+agent_settings
+businesses
+```
+
+Database write:
+
+```text
+update onboarding_steps status=completed
+update business_onboarding currentStep/progressPercent/needs*
+update businesses profile fields
+update agent_settings persona/tone/businessRules
+insert audit_logs action=ONBOARDING_STEP_COMPLETED
+```
+
+Output:
+
+```text
+Data bisnis dan konfigurasi Ningki mulai siap digunakan.
+```
+
+---
+
+## Flow 3 — Upload Knowledge
+
+Trigger:
+
+```text
+Owner upload menu/FAQ/promo
+```
+
+Database write awal:
+
+```text
+insert files
+insert knowledge_documents status=draft
+```
+
+AI process:
+
+```text
+api → ai-engine → extract text → chunk → embedding → FAISS namespace businessId
+```
+
+Database write hasil:
+
+```text
+update knowledge_documents status=indexed, extractedText
+insert knowledge_chunks chunkText, chunkIndex, embeddingRef
+insert audit_logs action=KNOWLEDGE_INDEXED
+```
+
+Output:
+
+```text
+Ningki bisa menjawab pertanyaan customer berdasarkan knowledge bisnis.
+```
+
+---
+
+## Flow 4 — Connect WhatsApp
+
+Trigger:
+
+```text
+Owner klik Hubungkan WhatsApp
+```
+
+Database write:
+
+```text
+insert whatsapp_sessions status=qr_pending
+update whatsapp_sessions qrCode, qrExpiresAt
+insert notifications QR siap di-scan
+```
+
+Saat QR scanned:
+
+```text
+update whatsapp_sessions status=connected, phoneNumber, lastConnectedAt
+update business_onboarding readyForWhatsapp=true
+update onboarding_steps whatsapp_connect=completed
+insert audit_logs action=WHATSAPP_CONNECTED
+```
+
+Saat bot enabled:
+
+```text
+update whatsapp_sessions botEnabled=true
+update agent_settings autoReplyEnabled=true
+insert audit_logs action=BOT_ENABLED
+```
+
+Output:
+
+```text
+WhatsApp bisnis terhubung dan Ningki siap menerima pesan.
+```
+
+---
+
+## Flow 5 — Incoming Customer Message
+
+Trigger:
+
+```text
+Customer mengirim WhatsApp ke nomor bisnis
+```
+
+Database read:
+
+```text
+whatsapp_sessions → cek botEnabled dan connected
+businesses → cek status active
+messages → cek waMessageId untuk idempotency
+```
+
+Database write transaction:
+
+```text
+upsert customers by businessId + waPhone
+upsert conversations active/open
+insert messages inbound customer
+```
+
+Jika human takeover aktif:
+
+```text
+skip AI
+insert notifications jika perlu
+```
+
+Jika AI aktif:
+
+```text
+send context to ai-engine
+```
+
+Output:
+
+```text
+Pesan customer aman tersimpan sebagai data CRM.
+```
+
+---
+
+## Flow 6 — Ningki AI Reply
+
+Trigger:
+
+```text
+Pesan customer diteruskan ke ai-engine
+```
+
+AI membaca context via API:
+
+```text
+agent_settings
+businesses
+customers
+conversations history
+knowledge search
+products
+reservations active
+```
+
+Database write setelah AI selesai:
+
+```text
+insert agent_runs status=success
+insert tool_executions jika ada tool dipanggil
+insert messages outbound senderType=ai
+update conversations lastMessage, lastMessageAt, lastAiReplyAt
+update customers leadStatus jika intent berubah
+```
+
+Output:
+
+```text
+Ningki membalas customer dan semua proses AI tercatat.
+```
+
+---
+
+## Flow 7 — Human Takeover
+
+Trigger:
+
+```text
+Customer minta admin / komplain / AI gagal jawab
+```
+
+Database write:
+
+```text
+update conversations humanTakeover=true, aiEnabled=false, status=human_takeover
+insert human_handoffs reason, summary, status=open
+insert notifications type=new_handoff
+insert tool_executions human_handoff_tool
+```
+
+Admin reply:
+
+```text
+insert messages senderType=admin, direction=outbound
+update conversations lastAdminReplyAt
+```
+
+Return to AI:
+
+```text
+update conversations humanTakeover=false, aiEnabled=true, status=open
+update human_handoffs status=resolved, resolvedAt
+insert audit_logs action=HANDOFF_RESOLVED
+```
+
+Output:
+
+```text
+AI berhenti membalas sampai admin mengembalikan percakapan ke AI.
+```
+
+---
+
+## Flow 8 — Create Order
+
+Trigger:
+
+```text
+Customer ingin order lewat WhatsApp
+```
+
+Database write transaction:
+
+```text
+insert orders status=draft, paymentStatus=unpaid
+insert order_items
+update orders totalAmount
+update customers totalOrders++
+insert tool_executions create_order_tool
+```
+
+Setelah customer konfirmasi:
+
+```text
+update orders status=pending_confirmation
+insert reminders type=payment_follow_up
+```
+
+Output:
+
+```text
+Order terbentuk dari percakapan WhatsApp dan siap dibayar.
+```
+
+---
+
+## Flow 9 — Create Reservation
+
+Trigger:
+
+```text
+Customer ingin reservasi lewat WhatsApp
+```
+
+Database write transaction:
+
+```text
+insert reservations status=pending
+update customers leadStatus=reserved, totalReservations++
+insert reminders reservation_confirmation/admin_task
+insert tool_executions create_reservation_tool
+insert audit_logs action=RESERVATION_CREATED
+```
+
+Admin confirm:
+
+```text
+update reservations status=confirmed
+insert notifications type=new_reservation
+insert audit_logs action=RESERVATION_CONFIRMED
+```
+
+Output:
+
+```text
+Reservasi terbentuk dan bisa dikonfirmasi admin.
+```
+
+---
+
+## Flow 10 — Generate QRIS AstraPay
+
+Trigger:
+
+```text
+Order/reservation perlu pembayaran
+```
+
+Database read:
+
+```text
+orders/reservations → ambil totalAmount
+businesses → ambil businessId
+integrations → ambil AstraPay credential
+```
+
+External call:
+
+```text
+services/api → AstraPay generate QRIS
+```
+
+Database write:
+
+```text
+insert payments status=waiting_payment, merchantReferenceNo, qrContent, expiresAt
+insert payment_events eventType=qr_generated
+update orders paymentStatus=waiting_payment
+insert webhook_events outgoing request log
+insert tool_executions create_payment_qris_tool
+```
+
+Output:
+
+```text
+QRIS dibuat dan dikirim ke customer melalui WhatsApp.
+```
+
+---
+
+## Flow 11 — AstraPay Webhook Paid
+
+Trigger:
+
+```text
+AstraPay mengirim callback pembayaran berhasil
+```
+
+Database read:
+
+```text
+webhook_events → cek externalId sudah diproses atau belum
+payments → find by merchantReferenceNo
+businesses/integrations → validasi business/merchant
+```
+
+Validasi:
+
+```text
+signature valid
+amount cocok
+businessId cocok
+payment belum paid
+merchantReferenceNo belum diproses
+```
+
+Database write transaction:
+
+```text
+update payments status=paid, paidAt, providerReferenceNo, rawCallback
+insert payment_events eventType=payment_received
+update orders paymentStatus=paid jika payment order
+update reservations status=confirmed jika payment reservation
+insert/update webhook_events status=processed
+cancel reminders payment_follow_up
+insert notifications new_order/new_reservation/payment_paid
+insert audit_logs action=PAYMENT_PAID
+```
+
+Output:
+
+```text
+Status order/reservasi otomatis paid tanpa konfirmasi manual owner.
+```
+
+---
+
+## Flow 12 — QRIS Expired
+
+Trigger:
+
+```text
+Cron mengecek payment waiting_payment yang sudah melewati expiresAt
+```
+
+Database read:
+
+```text
+payments where status=waiting_payment and expiresAt < now()
+```
+
+Database write:
+
+```text
+update payments status=expired
+insert payment_events eventType=qr_expired
+update orders paymentStatus=failed jika terkait order
+insert/update cron_jobs
+```
+
+Output:
+
+```text
+QR expired tidak dianggap paid dan customer bisa diminta generate QR baru.
+```
+
+---
+
+## Flow 13 — Reminder Cron
+
+Trigger:
+
+```text
+Cron berjalan tiap 1 menit
+```
+
+Database read:
+
+```text
+reminders status=scheduled and scheduledAt <= now()
+businesses active
+customers waPhone
+whatsapp_sessions botEnabled
+```
+
+Database write:
+
+```text
+send via wa-worker jika channel=whatsapp
+insert notifications jika channel=admin_notification
+update reminders status=sent/sentAt
+insert/update cron_jobs
+```
+
+Output:
+
+```text
+Reminder pembayaran/reservasi/admin berjalan otomatis.
+```
+
+---
+
+# 10. Tabel yang Sebaiknya Ditunda dari MVP
+
+Tabel berikut sudah boleh tetap ada di schema, tapi fitur dan interaksinya bisa ditunda:
+
+```text
+customer_tags
+customer_tag_assignments
+spreadsheet_configs
+spreadsheet_sync_logs
+advanced campaign table
+advanced RFM scoring table
+disbursement table
+mitra/affiliate table
+```
+
+Alasannya: MVP cukup membuktikan core loop dulu:
+
+```text
+WhatsApp → AI Reply → CRM Data → Order/Reservation → QRIS Payment → Owner Notification
+```
+
+---
+
+# 11. Relasi MVP Paling Penting
+
+```text
+users
+  → businesses
+  → business_members
+
+businesses
+  → agent_settings
+  → whatsapp_sessions
+  → customers
+  → conversations
+  → messages
+  → knowledge_documents
+  → knowledge_chunks
+  → products
+  → orders
+  → reservations
+  → payments
+  → notifications
+  → audit_logs
+
+customers
+  → conversations
+  → messages
+  → orders
+  → reservations
+  → payments
+
+conversations
+  → messages
+  → agent_runs
+  → tool_executions
+  → human_handoffs
+  → orders
+  → reservations
+  → payments
+
+orders
+  → order_items
+  → payments
+  → reminders
+
+reservations
+  → payments
+  → reminders
+
+payments
+  → payment_events
+  → webhook_events
+```
+
+---
+
+# 12. Checklist Keamanan Database MVP
+
+Wajib diterapkan sebelum demo/MVP:
+
+```text
+[ ] Semua tabel tenant punya businessId.
+[ ] Semua API query wajib filter businessId.
+[ ] Tidak ada direct DB access dari wa-worker.
+[ ] Tidak ada direct DB access dari ai-engine.
+[ ] Payment merchantReferenceNo unique.
+[ ] Webhook provider + externalId unique.
+[ ] WhatsApp waMessageId idempotent per businessId.
+[ ] Credential AstraPay disimpan encrypted.
+[ ] sessionDataEncrypted benar-benar encrypted.
+[ ] rawCallback/rawRequest jangan berisi secret sensitif.
+[ ] Semua status payment diproses dalam transaction.
+[ ] Human takeover mematikan AI reply.
+[ ] Knowledge FAISS dipisah per businessId.
+[ ] Audit log untuk aksi penting.
+```
+
+---
+
+# 13. Minimal Database Setup untuk MVP
+
+Kalau mau benar-benar fokus MVP, tabel yang wajib dimigrate dan dipakai dulu:
+
+```text
+users
+refresh_tokens
+businesses
+business_members
+business_onboarding
+onboarding_steps
+agent_settings
+
+whatsapp_sessions
+customers
+conversations
+messages
+
+files
+knowledge_documents
+knowledge_chunks
+
+product_categories
+products
+orders
+order_items
+reservations
+
+integrations
+payments
+payment_events
+webhook_events
+
+human_handoffs
+notifications
+reminders
+agent_runs
+tool_executions
+audit_logs
+```
+
+Opsional:
+
+```text
+cron_jobs
+```
+
+Tunda:
+
+```text
+customer_tags
+customer_tag_assignments
+spreadsheet_configs
+spreadsheet_sync_logs
+```
+
+---
+
+# 14. Kesimpulan MVP
+
+Database kamu sudah cukup kuat untuk MVP. Struktur yang paling penting sudah tersedia: tenant isolation lewat `businessId`, WhatsApp session, customer CRM, conversation/message history, knowledge base, AI run logging, order/reservation, QRIS payment, webhook event, human handoff, notification, dan audit log. Flow database kamu juga sudah jelas bahwa incoming WhatsApp message diproses oleh API, disimpan sebagai customer/conversation/message, lalu diteruskan ke AI engine jika bot aktif. 
+
+Fokus implementasi MVP sebaiknya dikunci pada satu loop utama:
+
+```text
+Owner onboarding
+→ connect WhatsApp
+→ upload knowledge/menu
+→ customer chat
+→ Ningki reply
+→ order/reservasi
+→ QRIS payment
+→ webhook paid
+→ owner notification
+```
+
+Kalau loop ini jalan stabil, Nongki sudah layak disebut MVP.
+</file>
+
 <file path="services/api/pnpm-workspace.yaml">
 allowBuilds:
   '@prisma/engines': true
@@ -20182,35 +20854,6 @@ allowBuilds:
     "skipLibCheck": true,
   }
 }
-</file>
-
-<file path="services/wa-worker/src/config/env.ts">
-import "dotenv/config"
-import { z } from "zod"
-
-const envSchema = z.object({
-  NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
-  WA_WORKER_PORT: z.coerce.number().default(5000),
-  API_INTERNAL_URL: z.string().default("http://localhost:4000"),
-  WA_WORKER_INTERNAL_TOKEN: z.string().default("dev-wa-worker-token"),
-  API_INTERNAL_TOKEN: z.string().default("dev-api-token"),
-  WHATSAPP_AUTH_DIR: z.string().default(".sessions"),
-  REDIS_URL: z.string().default("redis://localhost:6379"),
-  RABBITMQ_URL: z.string().default("amqp://localhost:5672"),
-  EVENT_EXCHANGE: z.string().default("nongki.events"),
-  EVENT_EXCHANGE_TYPE: z.string().default("topic"),
-  EVENT_PRODUCER_WA: z.string().default("services/wa-worker"),
-  WA_SEND_RATE_LIMIT: z.coerce.number().default(60),
-})
-
-const parsed = envSchema.safeParse(process.env)
-
-if (!parsed.success) {
-  console.error("Invalid environment variables:", parsed.error.flatten().fieldErrors)
-  process.exit(1)
-}
-
-export const env = parsed.data
 </file>
 
 <file path="services/wa-worker/src/modules/health/health.routes.ts">
@@ -20985,6 +21628,26 @@ export {
 }
 </file>
 
+<file path="apps/web/vite.config.ts">
+import tailwindcss from '@tailwindcss/vite';
+import { sveltekit } from '@sveltejs/kit/vite';
+import { defineConfig } from 'vite';
+
+export default defineConfig(
+    {
+    // Load .env from the monorepo root instead of apps/web.
+    // Only PUBLIC_-prefixed vars are exposed to the client (SvelteKit $env/static/public).
+    envDir: '../../',
+    plugins: [tailwindcss(), sveltekit()],
+    server: {
+        host: '0.0.0.0',
+        port: 5173,
+        allowedHosts: ['web', 'localhost', '.localhost']  // tambahkan ini
+    }
+    }
+);
+</file>
+
 <file path="infra/nginx/conf.d/default.conf">
 resolver 127.0.0.11 valid=10s ipv6=off;
 
@@ -21075,6 +21738,54 @@ server {
         proxy_send_timeout 60s;
     }
 }
+</file>
+
+<file path="services/ai-enggine/app/core/config.py">
+"""
+Konfigurasi aplikasi AI Engine menggunakan Pydantic Settings.
+Load dari environment variables / .env file.
+"""
+
+from pathlib import Path
+
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+# Monorepo root .env (this file lives at services/ai-enggine/app/core/config.py).
+_ROOT_ENV = Path(__file__).resolve().parents[4] / ".env"
+
+
+class Settings(BaseSettings):
+    app_env: str = "development"
+    app_name: str = "ningki-ai-enggine"
+    app_port: int = 8000
+
+    api_base_url: str = "http://localhost:3000"
+    api_internal_token: str = "change_me"
+
+    gemini_api_key: str = "change_me"
+    gemini_model: str = "gemini-1.5-flash"
+    gemini_embedding_model: str = "text-embedding-004"
+
+    faiss_index_dir: str = "./app/storage/faiss"
+    upload_tmp_dir: str = "./app/storage/tmp"
+
+    redis_url: str = "redis://localhost:6379"
+    rabbitmq_url: str = "amqp://localhost:5672"
+    event_exchange: str = "nongki.events"
+    event_exchange_type: str = "topic"
+    event_producer_ai: str = "services/ai-engine"
+    log_level: str = "info"
+
+    # Read the package-local .env first (if present), then the monorepo root .env.
+    # Actual environment variables (e.g. those injected by Docker) always take precedence.
+    model_config = SettingsConfigDict(
+        env_file=(".env", str(_ROOT_ENV)),
+        env_file_encoding="utf-8",
+        extra="ignore",
+    )
+
+
+settings = Settings()
 </file>
 
 <file path="services/ai-enggine/Dockerfile">
@@ -22405,6 +23116,41 @@ const start = async () => {
   }
 };
 start();
+</file>
+
+<file path="services/wa-worker/src/config/env.ts">
+import dotenv from "dotenv"
+import path from "path"
+import { z } from "zod"
+
+// Load env from the package dir first (if any), then fall back to the monorepo root .env.
+// dotenv does not override already-set vars, so values injected by Docker take precedence.
+dotenv.config({ path: path.join(process.cwd(), ".env") })
+dotenv.config({ path: path.join(process.cwd(), "../../.env") })
+
+const envSchema = z.object({
+  NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
+  WA_WORKER_PORT: z.coerce.number().default(5000),
+  API_INTERNAL_URL: z.string().default("http://localhost:4000"),
+  WA_WORKER_INTERNAL_TOKEN: z.string().default("dev-wa-worker-token"),
+  API_INTERNAL_TOKEN: z.string().default("dev-api-token"),
+  WHATSAPP_AUTH_DIR: z.string().default(".sessions"),
+  REDIS_URL: z.string().default("redis://localhost:6379"),
+  RABBITMQ_URL: z.string().default("amqp://localhost:5672"),
+  EVENT_EXCHANGE: z.string().default("nongki.events"),
+  EVENT_EXCHANGE_TYPE: z.string().default("topic"),
+  EVENT_PRODUCER_WA: z.string().default("services/wa-worker"),
+  WA_SEND_RATE_LIMIT: z.coerce.number().default(60),
+})
+
+const parsed = envSchema.safeParse(process.env)
+
+if (!parsed.success) {
+  console.error("Invalid environment variables:", parsed.error.flatten().fieldErrors)
+  process.exit(1)
+}
+
+export const env = parsed.data
 </file>
 
 <file path="services/wa-worker/Dockerfile">

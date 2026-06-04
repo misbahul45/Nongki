@@ -2,14 +2,52 @@
 	import Header from '$lib/components/layouts/Header.svelte';
 	import './layout.css';
 
+	import { browser } from '$app/environment';
+	import { QueryClient, QueryClientProvider } from '@tanstack/svelte-query';
+
 	let { children } = $props();
+
+	const queryClient = new QueryClient({
+		defaultOptions: {
+			queries: {
+				enabled: browser
+			}
+		}
+	});
+
+	const title = 'Nongki — AI WhatsApp Assistant untuk Bisnis';
+	const description =
+		'Nongki membantu bisnis mengelola chat WhatsApp, customer, order, reservasi, reminder, dan human handoff dengan bantuan AI.';
 </script>
 
-<div>
-	<Header />
-	<main>{@render children()}</main>
+<svelte:head>
+	<title>{title}</title>
 
-	<footer>
+	<meta name="description" content={description} />
+	<meta name="keywords" content="Nongki, AI WhatsApp, bisnis, UMKM, chatbot, CRM, order, reservasi" />
+	<meta name="author" content="Nongki" />
+	<meta name="robots" content="index, follow" />
 
-	</footer>
-</div>
+	<meta property="og:title" content={title} />
+	<meta property="og:description" content={description} />
+	<meta property="og:type" content="website" />
+	<meta property="og:site_name" content="Nongki" />
+
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content={title} />
+	<meta name="twitter:description" content={description} />
+
+	<link rel="canonical" href="https://nongki.app" />
+</svelte:head>
+
+<QueryClientProvider client={queryClient}>
+	<div>
+		<Header />
+
+		<main>
+			{@render children()}
+		</main>
+
+		<footer></footer>
+	</div>
+</QueryClientProvider>

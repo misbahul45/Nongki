@@ -2,11 +2,11 @@
 	import { tv, type VariantProps } from "tailwind-variants";
 
 	export const itemVariants = tv({
-		base: "[a]:hover:bg-muted rounded-none border text-xs group/item focus-visible:border-ring focus-visible:ring-ring/50 flex w-full flex-wrap items-center transition-colors duration-100 outline-none focus-visible:ring-[3px] [a]:transition-colors",
+		base: "[a]:hover:bg-muted/50 [a]:active:translate-y-px rounded-2xl border-2 text-xs group/item focus-visible:border-ring focus-visible:ring-ring/50 flex w-full flex-wrap items-center transition-colors duration-100 outline-none focus-visible:ring-[3px] [a]:transition-colors",
 		variants: {
 			variant: {
 				default: "border-transparent",
-				outline: "border-border",
+				outline: "border-border bg-card shadow-[0_3px_0_0_var(--shadow-3d)]",
 				muted: "bg-muted/50 border-transparent",
 			},
 			size: {
