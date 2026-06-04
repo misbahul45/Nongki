@@ -13,13 +13,17 @@
 	let imageLoaded = $state(false);
 	let imageError = $state(false);
 
+	let gsap: typeof import("gsap").default;
+
 	onMount(() => {
 		let ctx: { revert: () => void } | undefined;
 
 		async function initAnimation() {
-			const { default: gsap } = await import("gsap");
-
 			await tick();
+
+			if (!sectionEl || !titleEl || !descEl || !ctaEl || !imageWrapEl) return;
+
+			gsap = (await import("gsap")).default;
 
 			ctx = gsap.context(() => {
 				const tl = gsap.timeline(heroAnimation.timeline);
@@ -30,24 +34,6 @@
 					.from(imageWrapEl, heroAnimation.imageWrap, heroAnimation.offsets.imageWrap);
 
 				gsap.to(imageWrapEl, heroAnimation.float);
-
-				if (imageEl?.complete && imageEl.naturalWidth > 0) {
-					imageLoaded = true;
-
-					gsap.fromTo(
-						imageEl,
-						{
-							opacity: 0,
-							scale: 1.06
-						},
-						{
-							opacity: 1,
-							scale: 1,
-							duration: 0.7,
-							ease: "power3.out"
-						}
-					);
-				}
 			}, sectionEl);
 		}
 
@@ -58,29 +44,35 @@
 		};
 	});
 
-	$effect(() => {
-		if (!imageLoaded || !imageEl) return;
+	const handleImageLoad = async () => {
+		imageLoaded = true;
 
-		async function animateImage() {
-			const { default: gsap } = await import("gsap");
+		await tick();
 
-			gsap.fromTo(
-				imageEl,
-				{
-					opacity: 0,
-					scale: 1.06
-				},
-				{
-					opacity: 1,
-					scale: 1,
-					duration: 0.7,
-					ease: "power3.out"
-				}
-			);
+		if (!gsap) {
+			gsap = (await import("gsap")).default;
 		}
 
-		animateImage();
-	});
+		if (!imageEl) return;
+
+		gsap.fromTo(
+			imageEl,
+			{
+				opacity: 0,
+				scale: 1.06
+			},
+			{
+				opacity: 1,
+				scale: 1,
+				duration: 0.7,
+				ease: "power3.out"
+			}
+		);
+	};
+
+	const handleImageError = () => {
+		imageError = true;
+	};
 </script>
 
 <div
@@ -127,7 +119,9 @@
 					{/if}
 
 					{#if imageError}
-						<div class="flex min-h-[260px] items-center justify-center rounded-2xl bg-muted p-8 text-center sm:min-h-[360px]">
+						<div
+							class="flex min-h-[260px] items-center justify-center rounded-2xl bg-muted p-8 text-center sm:min-h-[360px]"
+						>
 							<div>
 								<p class="text-lg font-bold">Image gagal dimuat</p>
 								<p class="mt-2 text-sm text-muted-foreground">
@@ -145,12 +139,8 @@
 							loading="eager"
 							decoding="async"
 							fetchpriority="high"
-							onload={() => {
-								imageLoaded = true;
-							}}
-							onerror={() => {
-								imageError = true;
-							}}
+							onload={handleImageLoad}
+							onerror={handleImageError}
 						/>
 					{/if}
 				</CardContent>
