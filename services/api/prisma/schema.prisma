@@ -505,7 +505,7 @@ model AgentSettings {
   @@map("agent_settings")
 }
 
-model WhatsappSession {@db.Char(36)Char(36)
+model WhatsappSession {
   id                    String                @id @default(uuid()) @db.Char(36)
   businessId            String                @map("business_id") @db.Char(36)
   sessionName           String                @map("session_name")

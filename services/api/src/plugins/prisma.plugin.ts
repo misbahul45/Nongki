@@ -1,1 +1,0 @@
-// Prisma Fastify plugin
