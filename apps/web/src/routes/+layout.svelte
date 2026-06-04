@@ -32,10 +32,10 @@
 	<link rel="canonical" href="https://nongki.app" />
 </svelte:head>
 
-<QueryProvider>
+<div>
 	<Header />
 
 	<main>
 		{@render children()}
 	</main>
-</QueryProvider>
+</div>
