@@ -16,13 +16,13 @@
 	import { cn } from "$lib/utils.js";
 	import { Menu, X } from "@lucide/svelte";
 
-	let isMobileMenuOpen = false;
-	let isLogin = false;
+	let isMobileMenuOpen = $state(false);
+	let isLogin = $state(false);
 
-	let mobileMenuEl: HTMLDivElement;
-	let mobileMenuInnerEl: HTMLDivElement;
+	let mobileMenuEl = $state<HTMLDivElement>();
+	let mobileMenuInnerEl = $state<HTMLDivElement>();
 
-	let gsap: typeof import("gsap").default;
+	let gsap = $state<typeof import("gsap").default>();
 
 	const mobileGroups = [
 		{
@@ -52,16 +52,19 @@
 
 		if (!gsap || !mobileMenuEl || !mobileMenuInnerEl) return;
 
+		const menu = mobileMenuEl;
+		const inner = mobileMenuInnerEl;
+
 		gsap.fromTo(
-			mobileMenuEl,
-			headerAnimation.mobileMenu.open.from,
-			headerAnimation.mobileMenu.open.to
+			menu,
+			{ ...headerAnimation.mobileMenu.open.from },
+			{ ...headerAnimation.mobileMenu.open.to }
 		);
 
 		gsap.fromTo(
-			mobileMenuInnerEl.children,
-			headerAnimation.mobileMenuItems.from,
-			headerAnimation.mobileMenuItems.to
+			inner.children,
+			{ ...headerAnimation.mobileMenuItems.from },
+			{ ...headerAnimation.mobileMenuItems.to }
 		);
 	};
 
@@ -76,7 +79,9 @@
 			return;
 		}
 
-		gsap.to(mobileMenuEl, {
+		const menu = mobileMenuEl;
+
+		gsap.to(menu, {
 			...headerAnimation.mobileMenu.close,
 			onComplete: () => {
 				isMobileMenuOpen = false;
@@ -96,13 +101,14 @@
 
 <header
 	class={cn(
-		"sticky top-0 z-50  border-b backdrop-blur transition-colors duration-300",
-		isMobileMenuOpen ? "bg-background min-h-screen" : "bg-background/80"
+		"sticky top-0 z-50 border-b backdrop-blur transition-colors duration-300",
+		isMobileMenuOpen ? "min-h-screen bg-background" : "bg-background/80"
 	)}
 >
 	<nav class="container mx-auto flex items-center justify-between px-4 py-3">
 		<a href="/" aria-label="Home" data-sveltekit-preload-data class="flex items-center gap-2">
-			<enhanced:img src={logo} alt="logo" class="h-auto w-12" />
+			<img src={logo} alt="logo" class="h-auto w-12" />
+
 			<span class="text-lg font-bold text-primary">
 				{siteConfig.name}
 			</span>
@@ -177,7 +183,7 @@
 										onclick={closeMobileMenu}
 									>
 										<div
-											class="bg-muted text-muted-foreground flex size-9 shrink-0 items-center justify-center rounded-md"
+											class="flex size-9 shrink-0 items-center justify-center rounded-md bg-muted text-muted-foreground"
 										>
 											<Icon class="size-4" />
 										</div>
@@ -187,7 +193,7 @@
 												{item.title}
 											</div>
 
-											<p class="text-muted-foreground line-clamp-2 text-sm leading-snug">
+											<p class="line-clamp-2 text-sm leading-snug text-muted-foreground">
 												{item.description}
 											</p>
 										</div>
