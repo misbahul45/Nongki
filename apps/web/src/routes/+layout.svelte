@@ -2,18 +2,10 @@
 	import Header from '$lib/components/layouts/Header.svelte';
 	import './layout.css';
 
-	import { browser } from '$app/environment';
-	import { QueryClient, QueryClientProvider } from '@tanstack/svelte-query';
-
 	let { children } = $props();
 
-	const queryClient = new QueryClient({
-		defaultOptions: {
-			queries: {
-				enabled: browser
-			}
-		}
-	});
+	import QueryProvider from '$lib/providers/QueryProvider.svelte';
+
 
 	const title = 'Nongki — AI WhatsApp Assistant untuk Bisnis';
 	const description =
@@ -40,14 +32,10 @@
 	<link rel="canonical" href="https://nongki.app" />
 </svelte:head>
 
-<QueryClientProvider client={queryClient}>
-	<div>
-		<Header />
+<QueryProvider>
+	<Header />
 
-		<main>
-			{@render children()}
-		</main>
-
-		<footer></footer>
-	</div>
-</QueryClientProvider>
+	<main>
+		{@render children()}
+	</main>
+</QueryProvider>
