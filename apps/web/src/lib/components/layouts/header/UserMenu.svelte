@@ -7,7 +7,9 @@
 <DropdownMenu.Root>
 	<DropdownMenu.Trigger>
 		{#snippet child({ props })}
-			<Button {...props} variant="outline" class="gap-2">
+			{@const safeProps = props ?? {}}
+
+			<Button {...safeProps} variant="outline" class="gap-2">
 				<UserCircle class="size-4" />
 				User
 			</Button>

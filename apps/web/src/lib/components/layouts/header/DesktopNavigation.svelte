@@ -85,8 +85,10 @@
 							class="from-muted/60 to-muted flex h-full w-full flex-col justify-end rounded-md bg-linear-to-b p-5 no-underline outline-hidden select-none focus:shadow-md"
 						>
 							{#snippet child({ props })}
-								<a {...props} href="/product">
-									<enhanced:img src={logo} alt="logo" class="h-auto w-56" />
+								{@const safeProps = props ?? {}}
+
+								<a {...safeProps} href="/product">
+									<img src={logo} alt="logo" class="h-auto w-56" />
 
 									<div class="mb-2 text-lg font-semibold">
 										{siteConfig.agentName} AI Agent
