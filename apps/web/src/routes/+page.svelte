@@ -6,4 +6,5 @@
 
 <div class="">
 	<HeroSection />
+	<div class='h-screen'></div>
 </div>

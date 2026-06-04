@@ -72,10 +72,10 @@
 				<CardContent>
 					<img
 						bind:this={imageEl}
+						loading="lazy"
 						src={heroContent.image.src}
 						alt={heroContent.image.alt}
 						class="h-auto w-full rounded-2xl object-cover"
-						loading="eager"
 						decoding="async"
 					/>
 				</CardContent>

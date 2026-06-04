@@ -199,3 +199,41 @@ export const authNavigation = {
 		href: "/auth/register"
 	}
 };
+
+
+export const headerAnimation = {
+	mobileMenu: {
+		open: {
+			from: {
+				height: 0,
+				opacity: 0
+			},
+			to: {
+				height: "auto",
+				opacity: 1,
+				duration: 0.35,
+				ease: "power3.out"
+			}
+		},
+		close: {
+			height: 0,
+			opacity: 0,
+			duration: 0.22,
+			ease: "power2.in"
+		}
+	},
+	mobileMenuItems: {
+		from: {
+			y: -10,
+			opacity: 0
+		},
+		to: {
+			y: 0,
+			opacity: 1,
+			duration: 0.28,
+			stagger: 0.035,
+			delay: 0.08,
+			ease: "power2.out"
+		}
+	}
+};
