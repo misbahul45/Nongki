@@ -1913,3 +1913,6 @@ Owner onboarding
 ```
 
 Kalau loop ini jalan stabil, Nongki sudah layak disebut MVP.
+
+
+

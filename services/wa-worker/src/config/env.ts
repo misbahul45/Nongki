@@ -1,5 +1,11 @@
-import "dotenv/config"
+import dotenv from "dotenv"
+import path from "path"
 import { z } from "zod"
+
+// Load env from the package dir first (if any), then fall back to the monorepo root .env.
+// dotenv does not override already-set vars, so values injected by Docker take precedence.
+dotenv.config({ path: path.join(process.cwd(), ".env") })
+dotenv.config({ path: path.join(process.cwd(), "../../.env") })
 
 const envSchema = z.object({
   NODE_ENV: z.enum(["development", "production", "test"]).default("development"),

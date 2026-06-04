@@ -3,7 +3,12 @@ Konfigurasi aplikasi AI Engine menggunakan Pydantic Settings.
 Load dari environment variables / .env file.
 """
 
-from pydantic_settings import BaseSettings
+from pathlib import Path
+
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+# Monorepo root .env (this file lives at services/ai-enggine/app/core/config.py).
+_ROOT_ENV = Path(__file__).resolve().parents[4] / ".env"
 
 
 class Settings(BaseSettings):
@@ -28,8 +33,13 @@ class Settings(BaseSettings):
     event_producer_ai: str = "services/ai-engine"
     log_level: str = "info"
 
-    class Config:
-        env_file = ".env"
+    # Read the package-local .env first (if present), then the monorepo root .env.
+    # Actual environment variables (e.g. those injected by Docker) always take precedence.
+    model_config = SettingsConfigDict(
+        env_file=(".env", str(_ROOT_ENV)),
+        env_file_encoding="utf-8",
+        extra="ignore",
+    )
 
 
 settings = Settings()
