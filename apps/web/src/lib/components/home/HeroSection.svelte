@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from "svelte";
+	import { onMount, tick } from "svelte";
 	import { Card, CardContent } from "$lib/components/ui/card";
 	import { heroAnimation, heroContent } from "$lib/constants/home/heroSection";
 
@@ -10,11 +10,16 @@
 	let imageWrapEl: HTMLDivElement;
 	let imageEl: HTMLImageElement;
 
+	let imageLoaded = $state(false);
+	let imageError = $state(false);
+
 	onMount(() => {
 		let ctx: { revert: () => void } | undefined;
 
 		async function initAnimation() {
 			const { default: gsap } = await import("gsap");
+
+			await tick();
 
 			ctx = gsap.context(() => {
 				const tl = gsap.timeline(heroAnimation.timeline);
@@ -22,10 +27,27 @@
 				tl.from(titleEl, heroAnimation.title)
 					.from(descEl, heroAnimation.description, heroAnimation.offsets.description)
 					.from(ctaEl, heroAnimation.cta, heroAnimation.offsets.cta)
-					.from(imageWrapEl, heroAnimation.imageWrap, heroAnimation.offsets.imageWrap)
-					.from(imageEl, heroAnimation.image, heroAnimation.offsets.image);
+					.from(imageWrapEl, heroAnimation.imageWrap, heroAnimation.offsets.imageWrap);
 
 				gsap.to(imageWrapEl, heroAnimation.float);
+
+				if (imageEl?.complete && imageEl.naturalWidth > 0) {
+					imageLoaded = true;
+
+					gsap.fromTo(
+						imageEl,
+						{
+							opacity: 0,
+							scale: 1.06
+						},
+						{
+							opacity: 1,
+							scale: 1,
+							duration: 0.7,
+							ease: "power3.out"
+						}
+					);
+				}
 			}, sectionEl);
 		}
 
@@ -35,20 +57,50 @@
 			ctx?.revert();
 		};
 	});
+
+	$effect(() => {
+		if (!imageLoaded || !imageEl) return;
+
+		async function animateImage() {
+			const { default: gsap } = await import("gsap");
+
+			gsap.fromTo(
+				imageEl,
+				{
+					opacity: 0,
+					scale: 1.06
+				},
+				{
+					opacity: 1,
+					scale: 1,
+					duration: 0.7,
+					ease: "power3.out"
+				}
+			);
+		}
+
+		animateImage();
+	});
 </script>
 
 <div
 	bind:this={sectionEl}
-	class="mx-auto flex flex-col-reverse lg:grid w-full max-w-7xl items-center gap-10 px-4 lg:py-20 pb-8 pt-12 lg:grid-cols-2"
+	class="mx-auto flex w-full max-w-7xl flex-col-reverse items-center gap-10 px-4 pb-8 pt-12 lg:grid lg:grid-cols-2 lg:py-20"
 >
 	<div class="space-y-6">
-		<h1 bind:this={titleEl} class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight">
+		<h1
+			bind:this={titleEl}
+			class="text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl lg:text-5xl"
+		>
 			{heroContent.title.before}
 			<span class="text-primary"> {heroContent.title.highlight}</span>
 			{heroContent.title.after}
 		</h1>
 
-		<p bind:this={descEl} class="max-w-xl text-medium leading-relaxed text-muted-foreground">
+		<p
+			bind:this={descEl}
+			class="max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg"
+		>
 			{heroContent.description}
 		</p>
 
@@ -66,18 +118,41 @@
 		</div>
 	</div>
 
-	<div class="relative">
+	<div class="relative w-full">
 		<div bind:this={imageWrapEl}>
 			<Card class="overflow-hidden rounded-3xl border-2 shadow-3d-lg">
-				<CardContent>
-					<img
-						bind:this={imageEl}
-						loading="lazy"
-						src={heroContent.image.src}
-						alt={heroContent.image.alt}
-						class="h-auto w-full rounded-2xl object-cover"
-						decoding="async"
-					/>
+				<CardContent class="relative min-h-[260px] p-3 sm:min-h-[360px]">
+					{#if !imageLoaded && !imageError}
+						<div class="absolute inset-3 animate-pulse rounded-2xl bg-muted"></div>
+					{/if}
+
+					{#if imageError}
+						<div class="flex min-h-[260px] items-center justify-center rounded-2xl bg-muted p-8 text-center sm:min-h-[360px]">
+							<div>
+								<p class="text-lg font-bold">Image gagal dimuat</p>
+								<p class="mt-2 text-sm text-muted-foreground">
+									Cek URL gambar atau pindahkan image ke folder static.
+								</p>
+							</div>
+						</div>
+					{:else}
+						<img
+							bind:this={imageEl}
+							src={heroContent.image.src}
+							alt={heroContent.image.alt}
+							class="h-auto w-full rounded-2xl object-cover"
+							class:opacity-0={!imageLoaded}
+							loading="eager"
+							decoding="async"
+							fetchpriority="high"
+							onload={() => {
+								imageLoaded = true;
+							}}
+							onerror={() => {
+								imageError = true;
+							}}
+						/>
+					{/if}
 				</CardContent>
 			</Card>
 		</div>
