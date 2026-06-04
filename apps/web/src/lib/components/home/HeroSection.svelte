@@ -3,17 +3,17 @@
 	import { Card, CardContent } from "$lib/components/ui/card";
 	import { heroAnimation, heroContent } from "$lib/constants/home/heroSection";
 
-	let sectionEl: HTMLDivElement;
-	let titleEl: HTMLHeadingElement;
-	let descEl: HTMLParagraphElement;
-	let ctaEl: HTMLDivElement;
-	let imageWrapEl: HTMLDivElement;
-	let imageEl: HTMLImageElement;
+	let sectionEl = $state<HTMLDivElement>();
+	let titleEl = $state<HTMLHeadingElement>();
+	let descEl = $state<HTMLParagraphElement>();
+	let ctaEl = $state<HTMLDivElement>();
+	let imageWrapEl = $state<HTMLDivElement>();
+	let imageEl = $state<HTMLImageElement>();
 
 	let imageLoaded = $state(false);
 	let imageError = $state(false);
 
-	let gsap: typeof import("gsap").default;
+	let gsap: typeof import("gsap").default | undefined;
 
 	onMount(() => {
 		let ctx: { revert: () => void } | undefined;
@@ -23,18 +23,28 @@
 
 			if (!sectionEl || !titleEl || !descEl || !ctaEl || !imageWrapEl) return;
 
+			const section = sectionEl;
+			const title = titleEl;
+			const desc = descEl;
+			const cta = ctaEl;
+			const imageWrap = imageWrapEl;
+
 			gsap = (await import("gsap")).default;
 
+			if (!gsap) return;
+
 			ctx = gsap.context(() => {
-				const tl = gsap.timeline(heroAnimation.timeline);
+				const tl = gsap?.timeline(heroAnimation.timeline);
 
-				tl.from(titleEl, heroAnimation.title)
-					.from(descEl, heroAnimation.description, heroAnimation.offsets.description)
-					.from(ctaEl, heroAnimation.cta, heroAnimation.offsets.cta)
-					.from(imageWrapEl, heroAnimation.imageWrap, heroAnimation.offsets.imageWrap);
+				if (!tl) return;
 
-				gsap.to(imageWrapEl, heroAnimation.float);
-			}, sectionEl);
+				tl.from(title, heroAnimation.title)
+					.from(desc, heroAnimation.description, heroAnimation.offsets.description)
+					.from(cta, heroAnimation.cta, heroAnimation.offsets.cta)
+					.from(imageWrap, heroAnimation.imageWrap, heroAnimation.offsets.imageWrap);
+
+				gsap?.to(imageWrap, heroAnimation.float);
+			}, section);
 		}
 
 		initAnimation();
@@ -49,14 +59,16 @@
 
 		await tick();
 
+		if (!imageEl) return;
+
+		const image = imageEl;
+
 		if (!gsap) {
 			gsap = (await import("gsap")).default;
 		}
 
-		if (!imageEl) return;
-
 		gsap.fromTo(
-			imageEl,
+			image,
 			{
 				opacity: 0,
 				scale: 1.06
