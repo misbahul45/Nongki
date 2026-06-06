@@ -4,7 +4,7 @@
 	
 </script>
 
-<div class="">
+<div class="px-8">
 	<HeroSection />
 	<div class='h-screen'></div>
 </div>

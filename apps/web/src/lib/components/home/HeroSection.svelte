@@ -109,7 +109,7 @@
 		</p>
 
 		<div bind:this={ctaEl} class="flex flex-col gap-3 sm:flex-row">
-			{#each heroContent.actions as action}
+			{#each heroContent.actions as action (action.href)}
 				<a
 					href={action.href}
 					class={action.variant === "primary"
@@ -125,14 +125,14 @@
 	<div class="relative w-full">
 		<div bind:this={imageWrapEl}>
 			<Card class="overflow-hidden rounded-3xl border-2 shadow-3d-lg">
-				<CardContent class="relative min-h-[260px] p-3 sm:min-h-[360px]">
+				<CardContent class="relative min-h-65 sm:min-h-90">
 					{#if !imageLoaded && !imageError}
 						<div class="absolute inset-3 animate-pulse rounded-2xl bg-muted"></div>
 					{/if}
 
 					{#if imageError}
 						<div
-							class="flex min-h-[260px] items-center justify-center rounded-2xl bg-muted p-8 text-center sm:min-h-[360px]"
+							class="flex min-h-65 items-center justify-center rounded-2xl bg-muted p-8 text-center sm:min-h-90"
 						>
 							<div>
 								<p class="text-lg font-bold">Image gagal dimuat</p>
