@@ -21,7 +21,7 @@
 		className
 	)}
 >
-	<div class="mx-auto mb-3 h-1.5 w-16 rounded-full bg-foreground/15"></div>
+	<div class="mx-auto mb-3 h-1.5 w-16 rounded-full bg-foreground/20"></div>
 	<div class="overflow-hidden rounded-[1.45rem] border-2 border-border bg-muted/40">
 		<div class="flex items-center gap-3 border-b-2 bg-background px-4 py-3">
 			<div

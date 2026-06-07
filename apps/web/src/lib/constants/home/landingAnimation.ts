@@ -22,12 +22,10 @@ export const landingAnimation = {
 			x: 70,
 			y: 30,
 			opacity: 0,
-			scale: 0.9,
-			rotate: 4
+			scale: 0.9
 		},
 		float: {
 			y: -12,
-			rotate: 1.5,
 			duration: 2.8,
 			ease: 'sine.inOut',
 			repeat: -1,

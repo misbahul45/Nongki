@@ -40,7 +40,7 @@
 
 		<Reveal delay={0.08}>
 			<Card
-				class="shadow-3d-lg overflow-hidden rounded-3xl border-2 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.005]"
+				class="shadow-3d-lg overflow-hidden rounded-3xl border-2 transition-all duration-300 hover:scale-[1.005]"
 			>
 				<CardContent class="p-0">
 					<div class="flex items-center gap-2 border-b-2 bg-muted/40 px-4 py-3">

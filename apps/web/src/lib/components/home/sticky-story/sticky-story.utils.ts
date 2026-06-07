@@ -12,12 +12,12 @@ export function getStoryCardClass(index: number) {
 					: 'bg-background';
 	const hover =
 		index % 4 === 0
-			? 'hover:-translate-y-1 hover:scale-[1.01]'
+			? 'hover:scale-[1.01]'
 			: index % 4 === 1
-				? 'hover:-translate-y-1 hover:shadow-[0_12px_0_0_var(--shadow-3d)]'
+				? 'hover:shadow-[0_12px_0_0_var(--shadow-3d)]'
 				: index % 4 === 2
-					? 'hover:-translate-y-1 hover:border-primary/60'
-					: 'hover:-translate-y-1 hover:-rotate-1';
+					? 'hover:border-primary/60'
+					: 'hover:shadow-3d-lg';
 
 	return cn(
 		'shadow-3d-lg group flex min-h-[320px] transform-gpu flex-col rounded-3xl border-2 p-6 transition-all duration-300 xl:min-h-[360px]',

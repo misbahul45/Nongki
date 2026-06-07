@@ -1,6 +1,5 @@
 import {
 	Bot,
-	Brain,
 	CheckCircle2,
 	CreditCard,
 	FileText,
@@ -109,32 +108,82 @@ export const reactiveOverview = {
 	title: 'Bukan chatbot biasa. Nongki adalah Reactive CRM.',
 	description:
 		'Chatbot biasa berhenti di jawaban. CRM biasa menunggu input manual. Nongki menghubungkan keduanya: membalas chat, menangkap data, membaca pola, lalu menyarankan action.',
-	cta: {
-		label: 'Pelajari konsep produk',
-		href: '/product/whatsapp-crm'
-	},
-	loop: ['Chat', 'Data', 'Insight', 'Action', 'Approval'],
-	note: 'Owner tetap memegang kontrol. AI menyarankan, owner memutuskan.',
-	cards: [
+	flow: [
+		{
+			id: 'chat',
+			title: 'Customer Chat',
+			subtitle: 'WhatsApp masuk',
+			caption: 'Pelanggan tanya menu, harga, promo, atau reservasi.',
+			status: 'Input',
+			tone: 'secondary',
+			metrics: ['12 chat', '5 intent']
+		},
+		{
+			id: 'reply',
+			title: 'AI Reply',
+			subtitle: 'Jawaban otomatis',
+			caption: 'Ningki membalas sesuai knowledge base dan tone brand.',
+			status: 'Response',
+			tone: 'primary',
+			metrics: ['FAQ', 'Order', 'Reservasi']
+		},
+		{
+			id: 'profile',
+			title: 'Customer 360',
+			subtitle: 'Data terbentuk',
+			caption: 'Minat, histori chat, dan status lead otomatis diperbarui.',
+			status: 'Data',
+			tone: 'accent',
+			metrics: ['Lead 87', 'Interest']
+		},
+		{
+			id: 'insight',
+			title: 'Reactive Insight',
+			subtitle: 'Pola terbaca',
+			caption: 'Sistem menemukan hot lead, lost order, dan produk ramai ditanya.',
+			status: 'Insight',
+			tone: 'secondary',
+			metrics: ['2 hot lead', '1 lost']
+		},
+		{
+			id: 'digest',
+			title: 'Owner Digest',
+			subtitle: 'Ringkasan owner',
+			caption: 'Ringkasan harian dikirim langsung ke WhatsApp owner.',
+			status: 'Notify',
+			tone: 'primary',
+			metrics: ['Digest', 'Saran']
+		},
+		{
+			id: 'approval',
+			title: 'Owner Approval',
+			subtitle: 'Action aman',
+			caption: 'AI membuat draft, owner tetap memutuskan sebelum dikirim.',
+			status: 'Action',
+			tone: 'accent',
+			metrics: ['Approve', 'Edit']
+		}
+	],
+	comparisons: [
 		{
 			title: 'Chatbot biasa',
-			description: 'Membalas pertanyaan, tapi tidak membangun database pelanggan.',
-			icon: Bot
+			description: 'Membalas pertanyaan, tapi tidak membangun database pelanggan.'
 		},
 		{
 			title: 'CRM biasa',
-			description: 'Menyimpan data, tapi sering butuh input manual dan jarang dibuka owner.',
-			icon: FileText
+			description: 'Menyimpan data, tapi sering butuh input manual dan jarang dibuka owner.'
 		},
 		{
-			title: 'Nongki Reactive CRM',
+			title: 'Ningki Reactive CRM',
 			description:
-				'Membalas, memahami, mencatat, memberi insight, lalu membantu owner mengambil action.',
-			icon: Brain,
-			highlight: true
+				'Membalas, memahami, mencatat, memberi insight, lalu membantu owner mengambil action.'
 		}
-	]
-};
+	],
+	cta: {
+		label: 'Pelajari konsep produk',
+		href: '/product/whatsapp-crm'
+	}
+} as const;
 
 export const stickyStorySection = {
 	eyebrow: 'Cara kerja',

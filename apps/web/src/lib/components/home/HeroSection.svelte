@@ -95,8 +95,8 @@
 					<a
 						href={action.href}
 						class={action.variant === 'primary'
-							? 'shadow-3d-primary inline-flex h-12 items-center justify-center rounded-xl border-2 border-primary bg-primary px-6 font-bold text-primary-foreground transition-all active:translate-y-1'
-							: 'shadow-3d inline-flex h-12 items-center justify-center rounded-xl border-2 bg-background px-6 font-bold transition-all active:translate-y-1'}
+							? 'shadow-3d-primary inline-flex h-12 items-center justify-center rounded-xl border-2 border-primary bg-primary px-6 font-bold text-primary-foreground transition-all'
+							: 'shadow-3d inline-flex h-12 items-center justify-center rounded-xl border-2 bg-background px-6 font-bold transition-all'}
 					>
 						{action.label}
 					</a>
@@ -123,7 +123,7 @@
 
 			<Card class="shadow-3d-lg overflow-hidden rounded-3xl border-2">
 				<CardContent class="grid gap-4 p-4 md:grid-cols-[0.9fr_1.1fr]">
-					<MockPhone title="Ningki" subtitle="AI WhatsApp CRM" class="md:translate-y-4">
+					<MockPhone title="Ningki" subtitle="AI WhatsApp CRM" class="">
 						<WhatsAppBubble>Kak menu non-coffee ada?</WhatsAppBubble>
 						<WhatsAppBubble variant="outgoing">
 							Ada Kak. Hari ini ada Matcha Latte, Chocolate, dan Lychee Tea. Mau saya bantu

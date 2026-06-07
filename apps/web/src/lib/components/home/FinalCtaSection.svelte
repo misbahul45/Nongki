@@ -8,7 +8,7 @@
 <SectionShell variant="primary" class="py-16 md:py-24">
 	<Reveal>
 		<div
-			class="relative mx-auto max-w-4xl rounded-3xl border-2 border-primary-foreground/20 bg-background p-8 text-center text-foreground shadow-[0_10px_0_0_var(--shadow-3d-primary)] transition-all duration-300 hover:-translate-y-1 hover:scale-[1.01] md:p-12"
+			class="relative mx-auto max-w-4xl rounded-3xl border-2 border-primary-foreground/20 bg-background p-8 text-center text-foreground shadow-[0_10px_0_0_var(--shadow-3d-primary)] transition-all duration-300 hover:scale-[1.01] md:p-12"
 		>
 			<div class="animate-float-soft absolute top-8 -left-4 hidden lg:block">
 				<MetricPill value={finalCta.pills[0]} />

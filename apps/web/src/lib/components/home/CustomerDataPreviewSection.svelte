@@ -12,7 +12,7 @@
 	<div class="grid gap-10 lg:grid-cols-[1fr_0.9fr] lg:items-center">
 		<Reveal>
 			<Card
-				class="shadow-3d-lg hover:shadow-3d-lg rounded-3xl border-2 transition-all duration-300 hover:-translate-y-1"
+				class="shadow-3d-lg hover:shadow-3d-lg rounded-3xl border-2 transition-all duration-300"
 			>
 				<CardHeader>
 					<CardTitle>Customer 360</CardTitle>

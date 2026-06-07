@@ -8,8 +8,8 @@
 
 	function cardHoverClass(index: number) {
 		return index === 0
-			? 'group-hover:-translate-y-1 group-hover:border-destructive/60'
-			: 'group-hover:-translate-y-1 group-hover:border-primary/60 group-hover:shadow-3d-lg';
+			? 'group-hover:border-destructive/60'
+			: 'group-hover:border-primary/60 group-hover:shadow-3d-lg';
 	}
 </script>
 

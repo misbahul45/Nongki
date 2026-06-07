@@ -34,7 +34,7 @@
 			<Reveal delay={index * 0.06}>
 				<a href={item.href} class="group block h-full">
 					<Card
-						class="group-hover:shadow-3d-lg h-full overflow-hidden rounded-3xl border-2 transition-all duration-300 group-hover:-translate-y-1"
+						class="group-hover:shadow-3d-lg h-full overflow-hidden rounded-3xl border-2 transition-all duration-300"
 					>
 						<CardContent class="p-4">
 							<div

@@ -9,12 +9,12 @@
 
 	function hoverClass(index: number, highlighted?: boolean) {
 		if (highlighted) {
-			return 'transform-gpu border-primary hover:-translate-y-2 hover:scale-[1.015]';
+			return 'transform-gpu border-primary hover:scale-[1.015]';
 		}
 
 		return index === 0
-			? 'transform-gpu hover:-translate-y-1 hover:shadow-3d-lg'
-			: 'transform-gpu hover:-translate-y-1 hover:border-primary/60 hover:shadow-3d-lg';
+			? 'transform-gpu hover:shadow-3d-lg'
+			: 'transform-gpu hover:border-primary/60 hover:shadow-3d-lg';
 	}
 </script>
 
@@ -32,7 +32,7 @@
 			<Reveal delay={index * 0.06}>
 				<Card
 					class={cn(
-						'shadow-3d-lg h-full rounded-3xl border-2 transition-all duration-300 active:translate-y-1',
+						'shadow-3d-lg h-full rounded-3xl border-2 transition-all duration-300',
 						hoverClass(index, item.highlight),
 						item.highlight &&
 							'bg-primary text-primary-foreground shadow-[0_8px_0_0_var(--shadow-3d-primary)]'

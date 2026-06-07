@@ -73,6 +73,7 @@ src/
         OwnerDigestPreviewSection.svelte
         PricingPreviewSection.svelte
         ProblemOverviewSection.svelte
+        ReactiveFlowNode.svelte
         ReactiveOverviewSection.svelte
         Reveal.svelte
         RevenuePreviewSection.svelte
@@ -114,7 +115,7 @@ src/
           breadcrumb-ellipsis.svelte
           breadcrumb-item.svelte
           breadcrumb-link.svelte
-          breadcrumb-list.svelte
+          breadcrumb-list.sveltex
           breadcrumb-page.svelte
           breadcrumb-separator.svelte
           breadcrumb.svelte
@@ -432,6 +433,7 @@ src/
       home/
         landingAnimation.ts
         landingPage.ts
+      footer.ts
       header.ts
     hooks/
       is-mobile.svelte.ts
@@ -1084,12 +1086,12 @@ export function getStoryCardClass(index: number) {
 					: 'bg-background';
 	const hover =
 		index % 4 === 0
-			? 'hover:-translate-y-1 hover:scale-[1.01]'
+			? 'hover:scale-[1.01]'
 			: index % 4 === 1
-				? 'hover:-translate-y-1 hover:shadow-[0_12px_0_0_var(--shadow-3d)]'
+				? 'hover:shadow-[0_12px_0_0_var(--shadow-3d)]'
 				: index % 4 === 2
-					? 'hover:-translate-y-1 hover:border-primary/60'
-					: 'hover:-translate-y-1 hover:-rotate-1';
+					? 'hover:border-primary/60'
+					: 'hover:shadow-3d-lg';
 
 	return cn(
 		'shadow-3d-lg group flex min-h-[320px] transform-gpu flex-col rounded-3xl border-2 p-6 transition-all duration-300 xl:min-h-[360px]',
@@ -1322,6 +1324,7 @@ export function isAtTop(panel: HTMLElement) {
 
 	let sectionEl = $state<HTMLElement>();
 	let scrollPanelEl = $state<HTMLDivElement>();
+	let isSectionReady = $state(false);
 
 	let { eyebrow, title, description, cta, points = [], items }: StickyVerticalStoryProps = $props();
 
@@ -1332,18 +1335,40 @@ export function isAtTop(panel: HTMLElement) {
 
 		const mediaQuery = window.matchMedia('(min-width: 1024px)');
 
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				if (!mediaQuery.matches) {
+					isSectionReady = false;
+					return;
+				}
+
+				// Scroll lock baru aktif ketika section hampir 1 layar penuh terlihat.
+				isSectionReady = entry.intersectionRatio >= 0.92;
+			},
+			{
+				threshold: [0, 0.5, 0.75, 0.9, 0.92, 1]
+			}
+		);
+
+		observer.observe(section);
+
 		const handleWheel = (event: WheelEvent) => {
 			const panel = scrollPanelEl;
 
-			if (!panel || !mediaQuery.matches) return;
+			if (!panel || !mediaQuery.matches || !isSectionReady) return;
 
 			const delta = event.deltaY;
 			const scrollingDown = delta > 0;
 			const scrollingUp = delta < 0;
+
 			const atTop = isAtTop(panel);
 			const atBottom = isAtBottom(panel);
 
-			if ((scrollingDown && !atBottom) || (scrollingUp && !atTop)) {
+			const shouldLockPage =
+				(scrollingDown && !atBottom) ||
+				(scrollingUp && !atTop);
+
+			if (shouldLockPage) {
 				event.preventDefault();
 				panel.scrollTop += delta;
 			}
@@ -1352,6 +1377,7 @@ export function isAtTop(panel: HTMLElement) {
 		section.addEventListener('wheel', handleWheel, { passive: false });
 
 		return () => {
+			observer.disconnect();
 			section.removeEventListener('wheel', handleWheel);
 		};
 	});
@@ -1380,7 +1406,7 @@ export function isAtTop(panel: HTMLElement) {
 		<div class="h-full overflow-hidden py-8">
 			<div
 				bind:this={scrollPanelEl}
-				class="h-full scrollbar-none overflow-y-auto overscroll-contain pr-3"
+				class="scrollbar-none h-full overflow-y-auto overscroll-contain pr-3"
 			>
 				<div class="space-y-6 pb-8">
 					{#each items as item, index (item.href)}
@@ -1408,7 +1434,7 @@ export function isAtTop(panel: HTMLElement) {
 	<div class="grid gap-10 lg:grid-cols-[1fr_0.9fr] lg:items-center">
 		<Reveal>
 			<Card
-				class="shadow-3d-lg hover:shadow-3d-lg rounded-3xl border-2 transition-all duration-300 hover:-translate-y-1"
+				class="shadow-3d-lg hover:shadow-3d-lg rounded-3xl border-2 transition-all duration-300"
 			>
 				<CardHeader>
 					<CardTitle>Customer 360</CardTitle>
@@ -1507,7 +1533,7 @@ export function isAtTop(panel: HTMLElement) {
 
 		<Reveal delay={0.08}>
 			<Card
-				class="shadow-3d-lg overflow-hidden rounded-3xl border-2 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.005]"
+				class="shadow-3d-lg overflow-hidden rounded-3xl border-2 transition-all duration-300 hover:scale-[1.005]"
 			>
 				<CardContent class="p-0">
 					<div class="flex items-center gap-2 border-b-2 bg-muted/40 px-4 py-3">
@@ -1588,7 +1614,7 @@ export function isAtTop(panel: HTMLElement) {
 </file>
 
 <file path="src/lib/components/home/FeaturePreviewCard.svelte">
-\<script lang="ts">
+<script lang="ts">
 	import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card';
 	import { cn } from '$lib/utils';
 	import VisualMini from './VisualMini.svelte';
@@ -1614,10 +1640,10 @@ export function isAtTop(panel: HTMLElement) {
 	} = $props();
 </script>
 
-<a {href} class={cn('group block h-full', className)}>
+\<a {href} class={cn('group block h-full', className)}>
 	<Card
 		class={cn(
-			'h-full overflow-hidden rounded-3xl border-2 bg-background transition-all duration-300 group-hover:-translate-y-1',
+			'h-full overflow-hidden rounded-3xl border-2 bg-background transition-all duration-300',
 			'shadow-3d-lg group-hover:shadow-[0_12px_0_0_var(--shadow-3d)]',
 			featured &&
 				'border-primary bg-primary/5 shadow-[0_8px_0_0_var(--shadow-3d-primary)] group-hover:scale-[1.01] group-hover:shadow-[0_12px_0_0_var(--shadow-3d-primary)]'
@@ -1628,8 +1654,8 @@ export function isAtTop(panel: HTMLElement) {
 				{#if Icon}
 					<div
 						class={cn(
-							'grid size-11 shrink-0 place-items-center rounded-2xl border-2 bg-muted text-primary shadow-3d-sm transition-transform duration-300 group-hover:scale-105',
-							featured && 'border-primary bg-primary text-primary-foreground shadow-3d-primary'
+							'shadow-3d-sm grid size-11 shrink-0 place-items-center rounded-2xl border-2 bg-muted text-primary transition-transform duration-300 group-hover:scale-105',
+							featured && 'shadow-3d-primary border-primary bg-primary text-primary-foreground'
 						)}
 					>
 						<Icon class="size-5" />
@@ -1638,7 +1664,7 @@ export function isAtTop(panel: HTMLElement) {
 
 				<div class="min-w-0">
 					{#if featured}
-						<p class="mb-1 text-xs font-bold uppercase tracking-[0.18em] text-primary">
+						<p class="mb-1 text-xs font-bold tracking-[0.18em] text-primary uppercase">
 							Fitur unggulan
 						</p>
 					{/if}
@@ -1667,8 +1693,8 @@ export function isAtTop(panel: HTMLElement) {
 			<div
 				class={cn(
 					'inline-flex items-center rounded-full border-2 px-3 py-1.5 text-sm font-bold transition-all duration-300',
-					'bg-background text-primary shadow-3d-sm group-hover:border-primary',
-					featured && 'border-primary bg-primary text-primary-foreground shadow-3d-primary'
+					'shadow-3d-sm bg-background text-primary group-hover:border-primary',
+					featured && 'shadow-3d-primary border-primary bg-primary text-primary-foreground'
 				)}
 			>
 				Pelajari detail →
@@ -1704,7 +1730,7 @@ export function isAtTop(panel: HTMLElement) {
 		/>
 	</Reveal>
 
-	<div class="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-12">
+	<div class="mt-10 grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-12">
 		{#each featurePreview.items as item, index (item.href)}
 			<Reveal delay={index * 0.05} class={layoutClass(item.layout)}>
 				<FeaturePreviewCard
@@ -1719,7 +1745,7 @@ export function isAtTop(panel: HTMLElement) {
 		{/each}
 	</div>
 
-	<div class="mt-8 text-center">
+	<div class="mt-12 text-center">
 		<Button href={featurePreview.cta.href} variant="outline">{featurePreview.cta.label}</Button>
 	</div>
 </SectionShell>
@@ -1736,7 +1762,7 @@ export function isAtTop(panel: HTMLElement) {
 <SectionShell variant="primary" class="py-16 md:py-24">
 	<Reveal>
 		<div
-			class="relative mx-auto max-w-4xl rounded-3xl border-2 border-primary-foreground/20 bg-background p-8 text-center text-foreground shadow-[0_10px_0_0_var(--shadow-3d-primary)] transition-all duration-300 hover:-translate-y-1 hover:scale-[1.01] md:p-12"
+			class="relative mx-auto max-w-4xl rounded-3xl border-2 border-primary-foreground/20 bg-background p-8 text-center text-foreground shadow-[0_10px_0_0_var(--shadow-3d-primary)] transition-all duration-300 hover:scale-[1.01] md:p-12"
 		>
 			<div class="animate-float-soft absolute top-8 -left-4 hidden lg:block">
 				<MetricPill value={finalCta.pills[0]} />
@@ -2140,18 +2166,57 @@ export function isAtTop(panel: HTMLElement) {
 
 <file path="src/lib/components/home/OwnerDigestPreviewSection.svelte">
 <script lang="ts">
-	import { Button } from '$lib/components/ui/button';
+	import { onMount } from 'svelte';
 	import { ownerDigestPreview } from '$lib/constants/home/landingPage';
-	import MetricPill from './MetricPill.svelte';
 	import MockPhone from './MockPhone.svelte';
 	import Reveal from './Reveal.svelte';
 	import SectionShell from './SectionShell.svelte';
 	import SectionTitle from './SectionTitle.svelte';
-	import WhatsAppBubble from './WhatsAppBubble.svelte';
+
+	let phoneWrapEl = $state<HTMLDivElement>();
+	let phoneTransform = $state('perspective(1200px) rotateX(0deg) rotateY(0deg) translateZ(0)');
+
+	onMount(() => {
+		const el = phoneWrapEl;
+		if (!el) return;
+
+		const mediaQuery = window.matchMedia('(min-width: 1024px)');
+
+		function handlePointerMove(event: PointerEvent) {
+			if (!mediaQuery.matches) return;
+
+			const rect = el.getBoundingClientRect();
+			const x = event.clientX - rect.left;
+			const y = event.clientY - rect.top;
+			const centerX = rect.width / 2;
+			const centerY = rect.height / 2;
+			const rotateY = ((x - centerX) / centerX) * 7;
+			const rotateX = -((y - centerY) / centerY) * 7;
+
+			phoneTransform = `perspective(1200px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateZ(0)`;
+		}
+
+		function handlePointerLeave() {
+			phoneTransform = 'perspective(1200px) rotateX(0deg) rotateY(0deg) translateZ(0)';
+		}
+
+		el.addEventListener('pointermove', handlePointerMove);
+		el.addEventListener('pointerleave', handlePointerLeave);
+
+		return () => {
+			el.removeEventListener('pointermove', handlePointerMove);
+			el.removeEventListener('pointerleave', handlePointerLeave);
+		};
+	});
 </script>
 
-<SectionShell variant="primary">
-	<div class="grid gap-10 lg:grid-cols-2 lg:items-center">
+<SectionShell variant="primary" class="relative overflow-hidden">
+	<div
+		aria-hidden="true"
+		class="pointer-events-none absolute inset-x-6 bottom-8 hidden h-32 rounded-[2rem] border-2 border-primary-foreground/15 bg-primary-foreground/10 backdrop-blur-md lg:block"
+	></div>
+
+	<div class="relative z-10 grid gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
 		<Reveal>
 			<SectionTitle
 				eyebrow={ownerDigestPreview.eyebrow}
@@ -2159,46 +2224,94 @@ export function isAtTop(panel: HTMLElement) {
 				description={ownerDigestPreview.description}
 				inverted
 			/>
-			<div class="mt-6 grid gap-3 sm:grid-cols-2">
+
+			<div class="mt-7 grid gap-4 sm:grid-cols-2">
 				{#each ownerDigestPreview.benefits as benefit (benefit)}
 					<div
-						class="rounded-2xl border-2 border-primary-foreground/25 bg-primary-foreground/10 p-3 text-sm font-bold"
+						class="rounded-3xl border-2 border-primary-foreground/25 bg-primary-foreground/10 p-4 font-bold shadow-[0_5px_0_0_rgba(255,255,255,0.18)] backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:bg-primary-foreground/15"
 					>
 						{benefit}
 					</div>
 				{/each}
 			</div>
-			<Button href={ownerDigestPreview.cta.href} variant="secondary" class="mt-6">
+
+			<a
+				href={ownerDigestPreview.cta.href}
+				class="shadow-3d mt-7 inline-flex h-12 items-center justify-center rounded-xl border-2 border-background bg-background px-6 text-sm font-bold text-primary transition-all hover:scale-[1.01] active:translate-y-1"
+			>
 				{ownerDigestPreview.cta.label}
-			</Button>
+			</a>
 		</Reveal>
 
-		<Reveal delay={0.08} class="relative">
-			<div class="animate-float-soft absolute top-12 -left-2 z-10 hidden md:block">
-				<MetricPill value={ownerDigestPreview.pills[0]} />
+		<Reveal delay={0.08} class="relative min-h-[560px] md:min-h-[620px]">
+			<div
+				aria-hidden="true"
+				class="absolute right-8 bottom-8 left-8 z-0 hidden h-28 rounded-[2rem] border-2 border-primary-foreground/20 bg-primary-foreground/10 backdrop-blur-md lg:block"
+			></div>
+
+			<div class="animate-float-soft absolute top-10 -left-2 z-20 hidden md:block">
+				<div
+					class="shadow-3d rounded-2xl border-2 bg-background px-4 py-3 text-sm font-bold text-foreground"
+				>
+					{ownerDigestPreview.pills[0]}
+				</div>
 			</div>
-			<div class="animate-float-medium absolute -right-1 bottom-20 z-10 hidden md:block">
-				<MetricPill value={ownerDigestPreview.pills[1]} />
+
+			<div class="absolute -right-2 bottom-28 z-20 hidden md:block">
+				<div
+					class="shadow-3d-secondary rounded-2xl border-2 bg-secondary px-4 py-3 text-sm font-bold text-secondary-foreground"
+				>
+					{ownerDigestPreview.pills[1]}
+				</div>
 			</div>
-			<MockPhone
-				title="Ningki Digest"
-				subtitle="ringkasan owner"
-				class="mx-auto max-w-sm text-foreground"
+
+			<div
+				bind:this={phoneWrapEl}
+				class="relative z-10 mx-auto max-w-md transform-gpu transition-transform duration-200 ease-out will-change-transform"
+				style:transform={phoneTransform}
 			>
-				<WhatsAppBubble variant="outgoing">
-					<strong>Ringkasan Hari Ini</strong><br /><br />
-					• 12 chat masuk, 3 jadi order<br />
-					• 2 hot lead perlu follow-up<br />
-					• 1 customer repeat mulai tidak aktif<br />
-					• 9 orang tanya menu non-coffee<br /><br />
-					Saran: Buat promo Afternoon Coffee Bundle.<br /><br />
-					Balas 1 untuk buat follow-up draft.
-				</WhatsAppBubble>
-				<WhatsAppBubble>1</WhatsAppBubble>
-				<WhatsAppBubble variant="success">
-					Siap. Draft follow-up dibuat dan menunggu approval.
-				</WhatsAppBubble>
-			</MockPhone>
+				<div
+					class="rounded-[2.5rem] border-2 border-primary-foreground/25 bg-primary-foreground/15 p-3 shadow-[0_16px_0_0_rgba(0,0,0,0.2)] backdrop-blur-sm"
+				>
+					<MockPhone
+						title="Ningki Digest"
+						subtitle="ringkasan owner"
+						class="mx-auto text-foreground shadow-[0_14px_0_0_rgba(0,0,0,0.22)]"
+					>
+						<div
+							class="ml-auto max-w-[88%] rounded-3xl border-2 border-primary bg-primary p-5 text-xs leading-relaxed text-primary-foreground shadow-[0_4px_0_0_var(--shadow-3d-primary)]"
+						>
+							<strong>Ringkasan Hari Ini</strong><br /><br />
+							• 12 chat masuk, 3 jadi order<br />
+							• 2 hot lead perlu follow-up<br />
+							• 1 customer repeat mulai tidak aktif<br />
+							• 9 orang tanya menu non-coffee<br /><br />
+							Saran: Buat promo Afternoon Coffee Bundle.<br /><br />
+							Balas 1 untuk buat follow-up draft.
+						</div>
+
+						<div
+							class="max-w-[72%] rounded-2xl border-2 border-border bg-background px-4 py-3 text-sm font-bold text-foreground shadow-[0_3px_0_0_var(--shadow-3d)]"
+						>
+							1
+						</div>
+
+						<div
+							class="max-w-[88%] rounded-3xl border-2 border-secondary/50 bg-secondary/20 px-4 py-3 text-xs leading-relaxed font-bold text-foreground"
+						>
+							Siap. Draft follow-up dibuat dan menunggu approval.
+						</div>
+					</MockPhone>
+				</div>
+			</div>
+
+			<div class="absolute bottom-8 left-12 z-20 hidden md:block">
+				<div
+					class="shadow-3d rounded-2xl border-2 bg-background px-4 py-3 text-sm font-bold text-primary"
+				>
+					Balas 1 untuk draft
+				</div>
+			</div>
 		</Reveal>
 	</div>
 </SectionShell>
@@ -2216,12 +2329,12 @@ export function isAtTop(panel: HTMLElement) {
 
 	function hoverClass(index: number, highlighted?: boolean) {
 		if (highlighted) {
-			return 'transform-gpu border-primary hover:-translate-y-2 hover:scale-[1.015]';
+			return 'transform-gpu border-primary hover:scale-[1.015]';
 		}
 
 		return index === 0
-			? 'transform-gpu hover:-translate-y-1 hover:shadow-3d-lg'
-			: 'transform-gpu hover:-translate-y-1 hover:border-primary/60 hover:shadow-3d-lg';
+			? 'transform-gpu hover:shadow-3d-lg'
+			: 'transform-gpu hover:border-primary/60 hover:shadow-3d-lg';
 	}
 </script>
 
@@ -2239,7 +2352,7 @@ export function isAtTop(panel: HTMLElement) {
 			<Reveal delay={index * 0.06}>
 				<Card
 					class={cn(
-						'shadow-3d-lg h-full rounded-3xl border-2 transition-all duration-300 active:translate-y-1',
+						'shadow-3d-lg h-full rounded-3xl border-2 transition-all duration-300',
 						hoverClass(index, item.highlight),
 						item.highlight &&
 							'bg-primary text-primary-foreground shadow-[0_8px_0_0_var(--shadow-3d-primary)]'
@@ -2386,17 +2499,99 @@ export function isAtTop(panel: HTMLElement) {
 </SectionShell>
 </file>
 
+<file path="src/lib/components/home/ReactiveFlowNode.svelte">
+<script lang="ts">
+	import { Bot, CheckCircle2, ContactRound, Lightbulb, MessageCircle, Send } from '@lucide/svelte';
+	import { cn } from '$lib/utils';
+	import type { Component } from 'svelte';
+
+	type ReactiveFlowItem = {
+		id: string;
+		title: string;
+		subtitle: string;
+		caption: string;
+		status: string;
+		tone?: 'primary' | 'secondary' | 'accent';
+		metrics?: readonly string[];
+	};
+
+	let { item, compact = false }: { item: ReactiveFlowItem; compact?: boolean } = $props();
+
+	const iconMap: Record<string, Component> = {
+		chat: MessageCircle,
+		reply: Bot,
+		profile: ContactRound,
+		insight: Lightbulb,
+		digest: Send,
+		approval: CheckCircle2
+	};
+
+	const Icon = $derived(iconMap[item.id] ?? MessageCircle);
+	const tone = $derived(item.tone ?? 'primary');
+	const iconClass = $derived(
+		tone === 'secondary'
+			? 'border-secondary bg-secondary text-secondary-foreground shadow-3d-secondary'
+			: tone === 'accent'
+				? 'border-accent bg-accent text-accent-foreground shadow-3d-accent'
+				: 'border-primary bg-primary text-primary-foreground shadow-3d-primary'
+	);
+	const metricClass = $derived(
+		tone === 'secondary'
+			? 'bg-secondary/20 text-secondary-foreground'
+			: tone === 'accent'
+				? 'bg-accent/10 text-accent-foreground'
+				: 'bg-primary/10 text-primary'
+	);
+</script>
+
+<article
+	class={cn(
+		'shadow-3d-sm hover:shadow-3d-lg min-w-0 overflow-hidden rounded-3xl border-2 bg-background p-4 transition-all duration-300',
+		compact ? 'min-h-0' : 'h-full min-h-[238px]'
+	)}
+>
+	<div class="flex items-start justify-between gap-3">
+		<div class={cn('grid size-11 shrink-0 place-items-center rounded-2xl border-2', iconClass)}>
+			<Icon class="size-5" />
+		</div>
+
+		<span class="rounded-full border-2 bg-muted/40 px-3 py-1 text-xs font-bold">
+			{item.status}
+		</span>
+	</div>
+
+	<div class="mt-4">
+		<h3 class="text-lg leading-tight font-bold">{item.title}</h3>
+		<p class="mt-1 text-sm font-bold text-primary">{item.subtitle}</p>
+		<p class="mt-2 text-sm leading-relaxed text-muted-foreground">{item.caption}</p>
+	</div>
+
+	{#if item.metrics?.length}
+		<div class="mt-4 flex flex-wrap gap-2">
+			{#each item.metrics as metric (metric)}
+				<span
+					class={cn('rounded-xl border-2 bg-background px-2 py-1 text-xs font-bold', metricClass)}
+				>
+					{metric}
+				</span>
+			{/each}
+		</div>
+	{/if}
+</article>
+</file>
+
 <file path="src/lib/components/home/ReactiveOverviewSection.svelte">
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
-	import { Card, CardContent } from '$lib/components/ui/card';
 	import { reactiveOverview } from '$lib/constants/home/landingPage';
+	import { cn } from '$lib/utils';
+	import ReactiveFlowNode from './ReactiveFlowNode.svelte';
 	import Reveal from './Reveal.svelte';
 	import SectionShell from './SectionShell.svelte';
 	import SectionTitle from './SectionTitle.svelte';
 </script>
 
-<SectionShell>
+<SectionShell variant="soft">
 	<Reveal>
 		<SectionTitle
 			title={reactiveOverview.title}
@@ -2405,49 +2600,199 @@ export function isAtTop(panel: HTMLElement) {
 		/>
 	</Reveal>
 
-	<div class="mt-10 grid gap-5 lg:grid-cols-3">
-		{#each reactiveOverview.cards as card, index (card.title)}
-			{@const Icon = card.icon}
-			<Reveal delay={index * 0.08}>
-				<Card
-					class={card.highlight
-						? 'h-full rounded-3xl border-2 bg-primary text-primary-foreground shadow-[0_8px_0_0_var(--shadow-3d-primary)]'
-						: 'shadow-3d-lg h-full rounded-3xl border-2'}
-				>
-					<CardContent class="space-y-5 p-6">
-						<div
-							class={card.highlight
-								? 'grid size-12 place-items-center rounded-2xl bg-primary-foreground text-primary'
-								: 'shadow-3d-sm grid size-12 place-items-center rounded-2xl border-2 bg-background text-primary'}
-						>
-							<Icon class="size-6" />
-						</div>
-						<h3 class="text-2xl font-bold">{card.title}</h3>
-						<p class={card.highlight ? 'text-primary-foreground/80' : 'text-muted-foreground'}>
-							{card.description}
-						</p>
-					</CardContent>
-				</Card>
-			</Reveal>
-		{/each}
-	</div>
+	<Reveal delay={0.08}>
+		<div
+			class="shadow-3d-lg relative mt-12 overflow-hidden rounded-3xl border-2 bg-background p-5 md:p-8"
+		>
+			<div
+				aria-hidden="true"
+				class="pointer-events-none absolute inset-0 [background-image:radial-gradient(circle,var(--border)_1px,transparent_1px)] [background-size:24px_24px] opacity-60"
+			></div>
+
+			<div class="relative z-10">
+				<div class="relative hidden min-h-[660px] lg:block">
+					<svg
+						class="pointer-events-none absolute inset-0 z-10 h-full w-full"
+						viewBox="0 0 1000 660"
+						preserveAspectRatio="none"
+						aria-hidden="true"
+					>
+						<defs>
+							<marker
+								id="reactive-arrow-primary"
+								markerWidth="10"
+								markerHeight="10"
+								refX="8"
+								refY="5"
+								orient="auto"
+								markerUnits="strokeWidth"
+							>
+								<path d="M 0 0 L 10 5 L 0 10 z" class="fill-primary"></path>
+							</marker>
+							<marker
+								id="reactive-arrow-secondary"
+								markerWidth="10"
+								markerHeight="10"
+								refX="8"
+								refY="5"
+								orient="auto"
+								markerUnits="strokeWidth"
+							>
+								<path d="M 0 0 L 10 5 L 0 10 z" class="fill-secondary"></path>
+							</marker>
+							<marker
+								id="reactive-arrow-accent"
+								markerWidth="10"
+								markerHeight="10"
+								refX="8"
+								refY="5"
+								orient="auto"
+								markerUnits="strokeWidth"
+							>
+								<path d="M 0 0 L 10 5 L 0 10 z" class="fill-accent"></path>
+							</marker>
+						</defs>
+
+						<circle cx="310" cy="150" r="6" class="fill-secondary"></circle>
+						<path
+							d="M 310 150 C 330 118, 345 182, 365 150"
+							fill="none"
+							class="stroke-secondary"
+							stroke-width="4"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							marker-end="url(#reactive-arrow-secondary)"
+						></path>
+
+						<circle cx="635" cy="150" r="6" class="fill-primary"></circle>
+						<path
+							d="M 635 150 C 655 118, 670 182, 690 150"
+							fill="none"
+							class="stroke-primary"
+							stroke-width="4"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							marker-end="url(#reactive-arrow-primary)"
+						></path>
+
+						<circle cx="825" cy="255" r="6" class="fill-accent"></circle>
+						<path
+							d="M 825 255 C 865 315, 785 335, 825 370"
+							fill="none"
+							class="stroke-accent"
+							stroke-width="4"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							marker-end="url(#reactive-arrow-accent)"
+						></path>
+
+						<circle cx="690" cy="510" r="6" class="fill-secondary"></circle>
+						<path
+							d="M 690 510 C 670 478, 655 542, 635 510"
+							fill="none"
+							class="stroke-secondary"
+							stroke-width="4"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							marker-end="url(#reactive-arrow-secondary)"
+						></path>
+
+						<circle cx="365" cy="510" r="6" class="fill-primary"></circle>
+						<path
+							d="M 365 510 C 345 478, 330 542, 310 510"
+							fill="none"
+							class="stroke-primary"
+							stroke-width="4"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							marker-end="url(#reactive-arrow-primary)"
+						></path>
+					</svg>
+
+					<span
+						class="shadow-3d-sm absolute top-[2%] left-[26%] z-30 rounded-full border-2 bg-background px-3 py-1 text-xs font-bold text-foreground"
+					>
+						intent detected
+					</span>
+					<span
+						class="shadow-3d-sm absolute top-[2%] left-[58%] z-30 rounded-full border-2 bg-background px-3 py-1 text-xs font-bold text-foreground"
+					>
+						profile updated
+					</span>
+					<span
+						class="shadow-3d-sm absolute top-[47%] right-[7%] z-30 rounded-full border-2 bg-background px-3 py-1 text-xs font-bold text-foreground"
+					>
+						insight generated
+					</span>
+					<span
+						class="shadow-3d-sm absolute bottom-[2%] left-[58%] z-30 rounded-full border-2 bg-background px-3 py-1 text-xs font-bold text-foreground"
+					>
+						digest sent
+					</span>
+					<span
+						class="shadow-3d-sm absolute bottom-[2%] left-[26%] z-30 rounded-full border-2 bg-background px-3 py-1 text-xs font-bold text-foreground"
+					>
+						owner decides
+					</span>
+
+					<div class="absolute top-[7%] left-[4%] z-20 w-[27%]">
+						<ReactiveFlowNode item={reactiveOverview.flow[0]} />
+					</div>
+					<div class="absolute top-[7%] left-[36.5%] z-20 w-[27%]">
+						<ReactiveFlowNode item={reactiveOverview.flow[1]} />
+					</div>
+					<div class="absolute top-[7%] right-[4%] z-20 w-[27%]">
+						<ReactiveFlowNode item={reactiveOverview.flow[2]} />
+					</div>
+					<div class="absolute right-[4%] bottom-[8%] z-20 w-[27%]">
+						<ReactiveFlowNode item={reactiveOverview.flow[3]} />
+					</div>
+					<div class="absolute bottom-[8%] left-[36.5%] z-20 w-[27%]">
+						<ReactiveFlowNode item={reactiveOverview.flow[4]} />
+					</div>
+					<div class="absolute bottom-[8%] left-[4%] z-20 w-[27%]">
+						<ReactiveFlowNode item={reactiveOverview.flow[5]} />
+					</div>
+				</div>
+
+				<div class="grid gap-4 lg:hidden">
+					{#each reactiveOverview.flow as item, index (item.id)}
+						<ReactiveFlowNode {item} compact />
+						{#if index < reactiveOverview.flow.length - 1}
+							<div class="flex justify-center">
+								<div class="flex h-10 flex-col items-center">
+									<div class="h-7 w-0.5 rounded-full bg-primary/50"></div>
+									<div
+										class="size-0 border-x-[6px] border-t-[8px] border-x-transparent border-t-primary"
+									></div>
+								</div>
+							</div>
+						{/if}
+					{/each}
+				</div>
+			</div>
+		</div>
+	</Reveal>
 
 	<Reveal delay={0.12}>
-		<div class="shadow-3d mx-auto mt-10 max-w-4xl rounded-3xl border-2 bg-muted/40 p-4">
-			<div class="flex flex-wrap items-center justify-center gap-2">
-				{#each reactiveOverview.loop as item, index (item)}
-					<span class="rounded-2xl border-2 bg-background px-4 py-2 text-sm font-bold">{item}</span>
-					{#if index < reactiveOverview.loop.length - 1}
-						<span class="text-primary">→</span>
-					{/if}
-				{/each}
-			</div>
-			<p class="mt-4 text-center text-sm font-bold text-muted-foreground">
-				{reactiveOverview.note}
-			</p>
+		<div class="mt-8 grid gap-4 md:grid-cols-3">
+			{#each reactiveOverview.comparisons as card, index (card.title)}
+				<article
+					class={cn(
+						'shadow-3d-sm hover:shadow-3d-lg rounded-3xl border-2 bg-background p-5 transition-all duration-300',
+						index === 2 && 'border-primary bg-primary/5 shadow-[0_6px_0_0_var(--shadow-3d-primary)]'
+					)}
+				>
+					<h3 class="text-lg font-bold">{card.title}</h3>
+					<p class="mt-2 text-sm leading-relaxed text-muted-foreground">{card.description}</p>
+				</article>
+			{/each}
 		</div>
-		<div class="mt-6 text-center">
-			<Button href={reactiveOverview.cta.href}>{reactiveOverview.cta.label}</Button>
+
+		<div class="mt-8 text-center">
+			<Button href={reactiveOverview.cta.href} variant="outline">
+				{reactiveOverview.cta.label}
+			</Button>
 		</div>
 	</Reveal>
 </SectionShell>
@@ -2529,8 +2874,8 @@ export function isAtTop(panel: HTMLElement) {
 
 	function cardHoverClass(index: number) {
 		return index === 0
-			? 'group-hover:-translate-y-1 group-hover:border-destructive/60'
-			: 'group-hover:-translate-y-1 group-hover:border-primary/60 group-hover:shadow-3d-lg';
+			? 'group-hover:border-destructive/60'
+			: 'group-hover:border-primary/60 group-hover:shadow-3d-lg';
 	}
 </script>
 
@@ -2668,7 +3013,7 @@ export function isAtTop(panel: HTMLElement) {
 
 	<h2
 		class={cn(
-			'mt-3 text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl',
+			'mt-3 text-xl font-bold tracking-tight sm:text-2xl md:text-3xl',
 			!compact && 'lg:text-5xl'
 		)}
 	>
@@ -2753,7 +3098,7 @@ export function isAtTop(panel: HTMLElement) {
 			<Reveal delay={index * 0.06}>
 				<a href={item.href} class="group block h-full">
 					<Card
-						class="group-hover:shadow-3d-lg h-full overflow-hidden rounded-3xl border-2 transition-all duration-300 group-hover:-translate-y-1"
+						class="group-hover:shadow-3d-lg h-full overflow-hidden rounded-3xl border-2 transition-all duration-300"
 					>
 						<CardContent class="p-4">
 							<div
@@ -3173,18 +3518,89 @@ export function isAtTop(panel: HTMLElement) {
 
 <file path="src/lib/components/layouts/Footer.svelte">
 <script lang="ts">
+	import logo from '$lib/assets/logo.png';
+	import {
+		footerBottomLinks,
+		footerBrand,
+		footerNavigationGroups,
+		footerPills
+	} from '$lib/constants/footer';
+
 	const year = new Date().getFullYear();
 </script>
 
-<footer class="border-t bg-muted/50 py-6">
-	<div class="container flex flex-col items-center justify-between gap-3 md:flex-row">
-		<p class="text-sm text-muted-foreground">
-			&copy; {year} Nongki. All rights reserved.
-		</p>
+<footer class="border-t bg-muted/40">
+	<div class="mx-auto w-full max-w-7xl px-4 py-12 md:py-16">
+		<div class="mt-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.3fr_repeat(4,1fr)]">
+			<div>
+				<a href="/" class="flex w-fit items-center gap-3" aria-label="Nongki home">
+					<img src={logo} alt="Nongki logo" class="h-auto w-12" />
 
-		<p class="text-sm text-muted-foreground">
-			AI assistant for WhatsApp-based business operations.
-		</p>
+					<span class="font-heading text-xl font-bold text-primary">
+						{footerBrand.name}
+					</span>
+				</a>
+
+				<p class="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
+					{footerBrand.description}
+				</p>
+
+				<div class="mt-4">
+					<span
+						class="inline-flex rounded-full border-2 bg-background px-4 py-2 text-xs font-bold shadow-3d-sm"
+					>
+						{footerBrand.tagline}
+					</span>
+				</div>
+
+				<div class="mt-4 flex flex-wrap gap-2">
+					{#each footerPills as pill (pill)}
+						<span
+							class="rounded-full border-2 bg-background px-3 py-1 text-xs font-bold text-muted-foreground shadow-3d-sm"
+						>
+							{pill}
+						</span>
+					{/each}
+				</div>
+			</div>
+
+			{#each footerNavigationGroups as group (group.title)}
+				<nav aria-label={group.title}>
+					<h3 class="font-heading text-sm font-bold text-foreground">
+						{group.title}
+					</h3>
+
+					<ul class="mt-4 grid gap-3">
+						{#each group.links as link (link.href)}
+							<li>
+								<a
+									href={link.href}
+									class="text-sm font-semibold text-muted-foreground transition-colors hover:text-primary"
+								>
+									{link.label}
+								</a>
+							</li>
+						{/each}
+					</ul>
+				</nav>
+			{/each}
+		</div>
+
+		<div class="my-8 h-px w-full bg-border"></div>
+
+		<div
+			class="flex flex-col gap-4 text-xs text-muted-foreground md:flex-row md:items-center md:justify-between"
+		>
+			<p>&copy; {year} Nongki. All rights reserved.</p>
+
+			<div class="flex flex-wrap gap-4">
+				{#each footerBottomLinks as link (link.href)}
+					<a href={link.href} class="font-bold transition-colors hover:text-primary">
+						{link.label}
+					</a>
+				{/each}
+			</div>
+		</div>
 	</div>
 </footer>
 </file>
@@ -12325,7 +12741,6 @@ export const landingAnimation = {
 <file path="src/lib/constants/home/landingPage.ts">
 import {
 	Bot,
-	Brain,
 	CheckCircle2,
 	CreditCard,
 	FileText,
@@ -12434,32 +12849,82 @@ export const reactiveOverview = {
 	title: 'Bukan chatbot biasa. Nongki adalah Reactive CRM.',
 	description:
 		'Chatbot biasa berhenti di jawaban. CRM biasa menunggu input manual. Nongki menghubungkan keduanya: membalas chat, menangkap data, membaca pola, lalu menyarankan action.',
-	cta: {
-		label: 'Pelajari konsep produk',
-		href: '/product/whatsapp-crm'
-	},
-	loop: ['Chat', 'Data', 'Insight', 'Action', 'Approval'],
-	note: 'Owner tetap memegang kontrol. AI menyarankan, owner memutuskan.',
-	cards: [
+	flow: [
+		{
+			id: 'chat',
+			title: 'Customer Chat',
+			subtitle: 'WhatsApp masuk',
+			caption: 'Pelanggan tanya menu, harga, promo, atau reservasi.',
+			status: 'Input',
+			tone: 'secondary',
+			metrics: ['12 chat', '5 intent']
+		},
+		{
+			id: 'reply',
+			title: 'AI Reply',
+			subtitle: 'Jawaban otomatis',
+			caption: 'Ningki membalas sesuai knowledge base dan tone brand.',
+			status: 'Response',
+			tone: 'primary',
+			metrics: ['FAQ', 'Order', 'Reservasi']
+		},
+		{
+			id: 'profile',
+			title: 'Customer 360',
+			subtitle: 'Data terbentuk',
+			caption: 'Minat, histori chat, dan status lead otomatis diperbarui.',
+			status: 'Data',
+			tone: 'accent',
+			metrics: ['Lead 87', 'Interest']
+		},
+		{
+			id: 'insight',
+			title: 'Reactive Insight',
+			subtitle: 'Pola terbaca',
+			caption: 'Sistem menemukan hot lead, lost order, dan produk ramai ditanya.',
+			status: 'Insight',
+			tone: 'secondary',
+			metrics: ['2 hot lead', '1 lost']
+		},
+		{
+			id: 'digest',
+			title: 'Owner Digest',
+			subtitle: 'Ringkasan owner',
+			caption: 'Ringkasan harian dikirim langsung ke WhatsApp owner.',
+			status: 'Notify',
+			tone: 'primary',
+			metrics: ['Digest', 'Saran']
+		},
+		{
+			id: 'approval',
+			title: 'Owner Approval',
+			subtitle: 'Action aman',
+			caption: 'AI membuat draft, owner tetap memutuskan sebelum dikirim.',
+			status: 'Action',
+			tone: 'accent',
+			metrics: ['Approve', 'Edit']
+		}
+	],
+	comparisons: [
 		{
 			title: 'Chatbot biasa',
-			description: 'Membalas pertanyaan, tapi tidak membangun database pelanggan.',
-			icon: Bot
+			description: 'Membalas pertanyaan, tapi tidak membangun database pelanggan.'
 		},
 		{
 			title: 'CRM biasa',
-			description: 'Menyimpan data, tapi sering butuh input manual dan jarang dibuka owner.',
-			icon: FileText
+			description: 'Menyimpan data, tapi sering butuh input manual dan jarang dibuka owner.'
 		},
 		{
-			title: 'Nongki Reactive CRM',
+			title: 'Ningki Reactive CRM',
 			description:
-				'Membalas, memahami, mencatat, memberi insight, lalu membantu owner mengambil action.',
-			icon: Brain,
-			highlight: true
+				'Membalas, memahami, mencatat, memberi insight, lalu membantu owner mengambil action.'
 		}
-	]
-};
+	],
+	cta: {
+		label: 'Pelajari konsep produk',
+		href: '/product/whatsapp-crm'
+	}
+} as const;
 
 export const stickyStorySection = {
 	eyebrow: 'Cara kerja',
@@ -12817,6 +13282,82 @@ export const finalCta = {
 	],
 	pills: ['Hot lead', 'Customer 360', 'Digest ready', 'QRIS paid', 'Campaign draft']
 };
+</file>
+
+<file path="src/lib/constants/footer.ts">
+// src/lib/constants/footer.ts
+
+export const footerBrand = {
+	name: 'Nongki',
+	description:
+		'AI WhatsApp CRM untuk membantu UMKM F&B mengubah chat pelanggan menjadi data, insight, dan action.',
+	tagline: 'Chat → Data → Insight → Action'
+};
+
+export const footerCta = {
+	title: 'Siap membuat WhatsApp bisnismu bekerja lebih pintar?',
+	description:
+		'Mulai dari auto-reply, Customer 360, owner digest, sampai campaign approval.',
+	primaryAction: {
+		label: 'Mulai Gratis',
+		href: '/auth/register'
+	},
+	secondaryAction: {
+		label: 'Lihat Demo',
+		href: '#cara-kerja'
+	}
+};
+
+export const footerNavigationGroups = [
+	{
+		title: 'Produk',
+		links: [
+			{ label: 'WhatsApp CRM', href: '/product/whatsapp-crm' },
+			{ label: 'AI Agent', href: '/product/ai-agent' },
+			{ label: 'Customer 360', href: '/product/customer-360' },
+			{ label: 'QRIS Payment', href: '/product/qris-payment' },
+			{ label: 'Dashboard Owner', href: '/product/dashboard' }
+		]
+	},
+	{
+		title: 'Fitur',
+		links: [
+			{ label: 'AI Reply', href: '/features/ai-reply' },
+			{ label: 'Inbox CRM', href: '/features/inbox-crm' },
+			{ label: 'Automation Flow', href: '/features/automation-flow' },
+			{ label: 'Knowledge Base', href: '/features/knowledge-base' },
+			{ label: 'Human Takeover', href: '/features/human-takeover' }
+		]
+	},
+	{
+		title: 'Workflow',
+		links: [
+			{ label: 'Customer Chat', href: '/workflow/customer-chat' },
+			{ label: 'Order Reservation', href: '/workflow/order-reservation' },
+			{ label: 'QRIS Webhook', href: '/workflow/qris-webhook' },
+			{ label: 'Connect WhatsApp', href: '/workflow/connect-whatsapp' },
+			{ label: 'Upload Knowledge', href: '/workflow/upload-knowledge' }
+		]
+	},
+	{
+		title: 'Solusi',
+		links: [
+			{ label: 'Coffee Shop', href: '/solutions/coffee-shop' },
+			{ label: 'Cafe & Resto', href: '/solutions/cafe-resto' },
+			{ label: 'UMKM F&B', href: '/solutions/umkm-fnb' },
+			{ label: 'Harga', href: '/pricing' },
+			{ label: 'Docs', href: '/docs' }
+		]
+	}
+];
+
+export const footerBottomLinks = [
+	{ label: 'Docs', href: '/docs' },
+	{ label: 'Harga', href: '/pricing' },
+	{ label: 'Masuk', href: '/auth/login' }
+];
+
+export const footerPills = ['WhatsApp-first', 'F&B CRM', 'Owner Digest'];
 </file>
 
 <file path="src/lib/constants/header.ts">
@@ -13988,6 +14529,7 @@ export const prerender = true;
 	let { children } = $props();
 
 	import QueryProvider from '$lib/providers/QueryProvider.svelte';
+	import Footer from '$lib/components/layouts/Footer.svelte';
 
 
 	const title = 'Nongki — AI WhatsApp Assistant untuk Bisnis';
@@ -14021,6 +14563,7 @@ export const prerender = true;
 	<main>
 		{@render children()}
 	</main>
+	<Footer />
 </QueryProvider>
 </file>
 
