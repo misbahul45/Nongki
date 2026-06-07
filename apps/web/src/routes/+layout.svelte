@@ -5,6 +5,7 @@
 	let { children } = $props();
 
 	import QueryProvider from '$lib/providers/QueryProvider.svelte';
+	import Footer from '$lib/components/layouts/Footer.svelte';
 
 
 	const title = 'Nongki — AI WhatsApp Assistant untuk Bisnis';
@@ -38,4 +39,5 @@
 	<main>
 		{@render children()}
 	</main>
+	<Footer />
 </QueryProvider>

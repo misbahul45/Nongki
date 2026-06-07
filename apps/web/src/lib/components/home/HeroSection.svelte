@@ -1,19 +1,23 @@
 <script lang="ts">
-	import { onMount, tick } from "svelte";
-	import { Card, CardContent } from "$lib/components/ui/card";
-	import { heroAnimation, heroContent } from "$lib/constants/home/heroSection";
+	import { onMount, tick } from 'svelte';
+	import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card';
+	import { Progress } from '$lib/components/ui/progress';
+	import { heroOverview } from '$lib/constants/home/landingPage';
+	import { landingAnimation } from '$lib/constants/home/landingAnimation';
+	import MockPhone from './MockPhone.svelte';
+	import WhatsAppBubble from './WhatsAppBubble.svelte';
+	import MetricPill from './MetricPill.svelte';
+	import GradientDecor from './GradientDecor.svelte';
+
+	const heroAnimation = landingAnimation.hero;
 
 	let sectionEl = $state<HTMLDivElement>();
 	let titleEl = $state<HTMLHeadingElement>();
 	let descEl = $state<HTMLParagraphElement>();
 	let ctaEl = $state<HTMLDivElement>();
-	let imageWrapEl = $state<HTMLDivElement>();
-	let imageEl = $state<HTMLImageElement>();
+	let mockupEl = $state<HTMLDivElement>();
 
-	let imageLoaded = $state(false);
-	let imageError = $state(false);
-
-	let gsap: typeof import("gsap").default | undefined;
+	let gsap: typeof import('gsap').default | undefined;
 
 	onMount(() => {
 		let ctx: { revert: () => void } | undefined;
@@ -21,15 +25,15 @@
 		async function initAnimation() {
 			await tick();
 
-			if (!sectionEl || !titleEl || !descEl || !ctaEl || !imageWrapEl) return;
+			if (!sectionEl || !titleEl || !descEl || !ctaEl || !mockupEl) return;
 
 			const section = sectionEl;
 			const title = titleEl;
 			const desc = descEl;
 			const cta = ctaEl;
-			const imageWrap = imageWrapEl;
+			const mockup = mockupEl;
 
-			gsap = (await import("gsap")).default;
+			gsap = (await import('gsap')).default;
 
 			if (!gsap) return;
 
@@ -41,9 +45,9 @@
 				tl.from(title, heroAnimation.title)
 					.from(desc, heroAnimation.description, heroAnimation.offsets.description)
 					.from(cta, heroAnimation.cta, heroAnimation.offsets.cta)
-					.from(imageWrap, heroAnimation.imageWrap, heroAnimation.offsets.imageWrap);
+					.from(mockup, heroAnimation.mockup, heroAnimation.offsets.mockup);
 
-				gsap?.to(imageWrap, heroAnimation.float);
+				gsap?.to(mockup, heroAnimation.float);
 			}, section);
 		}
 
@@ -54,109 +58,130 @@
 		};
 	});
 
-	const handleImageLoad = async () => {
-		imageLoaded = true;
-
-		await tick();
-
-		if (!imageEl) return;
-
-		const image = imageEl;
-
-		if (!gsap) {
-			gsap = (await import("gsap")).default;
-		}
-
-		gsap.fromTo(
-			image,
-			{
-				opacity: 0,
-				scale: 1.06
-			},
-			{
-				opacity: 1,
-				scale: 1,
-				duration: 0.7,
-				ease: "power3.out"
-			}
-		);
-	};
-
-	const handleImageError = () => {
-		imageError = true;
-	};
+	const ownerMetrics = heroOverview.metrics;
 </script>
 
-<div
-	bind:this={sectionEl}
-	class="mx-auto flex w-full max-w-7xl flex-col-reverse items-center gap-10 px-4 pb-8 pt-12 lg:grid lg:grid-cols-2 lg:py-20"
+<section
+	class="relative isolate overflow-hidden bg-gradient-to-br from-background via-secondary/10 to-primary/10"
 >
-	<div class="space-y-6">
-		<h1
-			bind:this={titleEl}
-			class="text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl lg:text-5xl"
-		>
-			{heroContent.title.before}
-			<span class="text-primary"> {heroContent.title.highlight}</span>
-			{heroContent.title.after}
-		</h1>
+	<GradientDecor variant="hero" />
+	<div
+		bind:this={sectionEl}
+		class="relative z-10 mx-auto grid w-full max-w-7xl items-center gap-10 px-4 pt-12 pb-12 lg:grid-cols-[0.92fr_1.08fr] lg:py-20"
+	>
+		<div class="space-y-6">
+			<p class="text-xs font-bold tracking-[0.2em] text-primary uppercase">
+				{heroOverview.eyebrow}
+			</p>
 
-		<p
-			bind:this={descEl}
-			class="max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg"
-		>
-			{heroContent.description}
-		</p>
+			<h1
+				bind:this={titleEl}
+				class="max-w-3xl text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl"
+			>
+				{heroOverview.title.before}
+				<span class="text-primary"> {heroOverview.title.highlight}</span>
+				{heroOverview.title.after}
+			</h1>
 
-		<div bind:this={ctaEl} class="flex flex-col gap-3 sm:flex-row">
-			{#each heroContent.actions as action (action.href)}
+			<p
+				bind:this={descEl}
+				class="max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg"
+			>
+				{heroOverview.description}
+			</p>
+
+			<div bind:this={ctaEl} class="flex flex-col gap-3 sm:flex-row">
+				{#each heroOverview.actions as action (action.href)}
+					<a
+						href={action.href}
+						class={action.variant === 'primary'
+							? 'shadow-3d-primary inline-flex h-12 items-center justify-center rounded-xl border-2 border-primary bg-primary px-6 font-bold text-primary-foreground transition-all active:translate-y-1'
+							: 'shadow-3d inline-flex h-12 items-center justify-center rounded-xl border-2 bg-background px-6 font-bold transition-all active:translate-y-1'}
+					>
+						{action.label}
+					</a>
+				{/each}
 				<a
-					href={action.href}
-					class={action.variant === "primary"
-						? "inline-flex h-12 items-center justify-center rounded-xl border-2 border-primary bg-primary px-6 font-bold text-primary-foreground shadow-3d-primary transition-all active:translate-y-1"
-						: "inline-flex h-12 items-center justify-center rounded-xl border-2 bg-background px-6 font-bold shadow-3d transition-all active:translate-y-1"}
+					href={heroOverview.productLink.href}
+					class="inline-flex h-12 items-center justify-center px-2 text-sm font-bold text-primary"
 				>
-					{action.label}
+					{heroOverview.productLink.label} →
 				</a>
-			{/each}
+			</div>
 		</div>
-	</div>
 
-	<div class="relative w-full">
-		<div bind:this={imageWrapEl}>
-			<Card class="overflow-hidden rounded-3xl border-2 shadow-3d-lg">
-				<CardContent class="relative min-h-65 sm:min-h-90">
-					{#if !imageLoaded && !imageError}
-						<div class="absolute inset-3 animate-pulse rounded-2xl bg-muted"></div>
-					{/if}
+		<div class="relative w-full" bind:this={mockupEl}>
+			<div class="animate-float-soft absolute top-10 -left-3 z-10 hidden md:block">
+				<MetricPill value={heroOverview.floatingPills[0]} />
+			</div>
+			<div class="animate-float-medium absolute -right-2 bottom-20 z-10 hidden md:block">
+				<MetricPill value={heroOverview.floatingPills[1]} />
+			</div>
+			<div class="animate-float-soft absolute -bottom-3 left-20 z-10 hidden lg:block">
+				<MetricPill value={heroOverview.floatingPills[2]} />
+			</div>
 
-					{#if imageError}
-						<div
-							class="flex min-h-65 items-center justify-center rounded-2xl bg-muted p-8 text-center sm:min-h-90"
+			<Card class="shadow-3d-lg overflow-hidden rounded-3xl border-2">
+				<CardContent class="grid gap-4 p-4 md:grid-cols-[0.9fr_1.1fr]">
+					<MockPhone title="Ningki" subtitle="AI WhatsApp CRM" class="md:translate-y-4">
+						<WhatsAppBubble>Kak menu non-coffee ada?</WhatsAppBubble>
+						<WhatsAppBubble variant="outgoing">
+							Ada Kak. Hari ini ada Matcha Latte, Chocolate, dan Lychee Tea. Mau saya bantu
+							pilihkan?
+						</WhatsAppBubble>
+						<WhatsAppBubble variant="system">Customer 360 updated</WhatsAppBubble>
+						<WhatsAppBubble variant="success">Hot lead score naik ke 87</WhatsAppBubble>
+					</MockPhone>
+
+					<div class="grid gap-4">
+						<Card class="shadow-3d rounded-3xl border-2">
+							<CardHeader>
+								<CardTitle>Customer 360</CardTitle>
+							</CardHeader>
+							<CardContent class="space-y-4">
+								<div class="flex items-center gap-3">
+									<div
+										class="grid size-12 place-items-center rounded-full bg-primary text-lg font-bold text-primary-foreground"
+									>
+										F
+									</div>
+									<div>
+										<p class="font-bold">Faisal</p>
+										<p class="text-xs text-muted-foreground">Interest: Non-coffee</p>
+									</div>
+								</div>
+								<div>
+									<div class="mb-2 flex justify-between text-xs font-bold">
+										<span>Lead score</span>
+										<span>87/100</span>
+									</div>
+									<Progress value={87} />
+								</div>
+								<div class="grid grid-cols-2 gap-2">
+									{#each ownerMetrics as metric (metric.label)}
+										<div class="rounded-2xl border-2 bg-muted/40 p-3">
+											<p class="text-xs text-muted-foreground">{metric.label}</p>
+											<p class="text-xl font-bold">{metric.value}</p>
+										</div>
+									{/each}
+								</div>
+							</CardContent>
+						</Card>
+
+						<Card
+							class="rounded-3xl border-2 bg-primary text-primary-foreground shadow-[0_8px_0_0_var(--shadow-3d-primary)]"
 						>
-							<div>
-								<p class="text-lg font-bold">Image gagal dimuat</p>
-								<p class="mt-2 text-sm text-muted-foreground">
-									Cek URL gambar atau pindahkan image ke folder static.
+							<CardContent class="space-y-3 p-4">
+								<p class="text-sm font-bold">Owner digest mini</p>
+								<p class="text-2xl font-bold">Hari ini: 12 chat, 3 order, 2 hot lead</p>
+								<p class="text-sm text-primary-foreground/75">
+									Saran: buat follow-up promo sore untuk customer non-coffee.
 								</p>
-							</div>
-						</div>
-					{:else}
-						<img
-							bind:this={imageEl}
-							src={heroContent.image.src}
-							alt={heroContent.image.alt}
-							class="h-auto w-full rounded-2xl object-cover"
-							class:opacity-0={!imageLoaded}
-							loading="eager"
-							decoding="async"
-							fetchpriority="high"
-							onload={handleImageLoad}
-							onerror={handleImageError}
-						/>
-					{/if}
+							</CardContent>
+						</Card>
+					</div>
 				</CardContent>
 			</Card>
 		</div>
 	</div>
-</div>
+</section>
