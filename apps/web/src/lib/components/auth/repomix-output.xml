@@ -1,0 +1,202 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+AuthMockup.svelte
+AuthShell.svelte
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="AuthMockup.svelte">
+<script lang="ts">
+	import * as Card from '$lib/components/ui/card';
+	import { Progress } from '$lib/components/ui/progress';
+
+	let { mode }: { mode: 'login' | 'register' } = $props();
+</script>
+
+<div class="shadow-3d-lg rounded-[2rem] border-2 bg-muted/40 p-4">
+	<Card.Root class="shadow-3d rounded-3xl border-2 bg-background">
+		<Card.Header>
+			<Card.Title>
+				{mode === 'register' ? 'Workspace setup' : 'Dashboard preview'}
+			</Card.Title>
+			<Card.Description>
+				{mode === 'register'
+					? 'Akun demo menyiapkan workspace, onboarding, dan agent Ningki.'
+					: 'Masuk ke dashboard untuk melihat chat, lead, order, dan digest.'}
+			</Card.Description>
+		</Card.Header>
+
+		<Card.Content class="space-y-4">
+			{#if mode === 'register'}
+				<div class="rounded-2xl border-2 bg-muted/40 p-4">
+					<p class="text-xs font-bold text-muted-foreground">Onboarding</p>
+					<p class="mt-1 text-2xl font-bold">Ningki ready</p>
+					<div class="mt-4">
+						<div class="mb-2 flex justify-between text-xs font-bold">
+							<span>Progress</span>
+							<span>25%</span>
+						</div>
+						<Progress value={25} />
+					</div>
+				</div>
+
+				<div class="grid gap-3 sm:grid-cols-2">
+					<div class="shadow-3d-sm rounded-2xl border-2 bg-background p-4">
+						<p class="text-xs text-muted-foreground">Business</p>
+						<p class="mt-1 font-heading text-xl font-bold">Coffee Shop</p>
+					</div>
+					<div class="shadow-3d-sm rounded-2xl border-2 bg-background p-4">
+						<p class="text-xs text-muted-foreground">Agent</p>
+						<p class="mt-1 font-heading text-xl font-bold">Ningki</p>
+					</div>
+				</div>
+
+				<div class="rounded-2xl border-2 border-primary bg-primary/5 p-4">
+					<p class="text-sm font-bold text-primary">Next step</p>
+					<p class="mt-1 text-sm text-muted-foreground">
+						Hubungkan WhatsApp dan upload knowledge menu.
+					</p>
+				</div>
+			{:else}
+				<div class="grid gap-3 sm:grid-cols-3">
+					<div class="shadow-3d-sm rounded-2xl border-2 bg-background p-4">
+						<p class="text-xs text-muted-foreground">Chat</p>
+						<p class="mt-1 text-2xl font-bold">12</p>
+					</div>
+					<div class="shadow-3d-sm rounded-2xl border-2 bg-background p-4">
+						<p class="text-xs text-muted-foreground">Order</p>
+						<p class="mt-1 text-2xl font-bold">3</p>
+					</div>
+					<div class="shadow-3d-sm rounded-2xl border-2 bg-background p-4">
+						<p class="text-xs text-muted-foreground">Hot lead</p>
+						<p class="mt-1 text-2xl font-bold">2</p>
+					</div>
+				</div>
+
+				<div class="shadow-3d-primary rounded-2xl border-2 bg-primary p-4 text-primary-foreground">
+					<p class="text-sm font-bold">Owner digest</p>
+					<p class="mt-2 text-xl font-bold">Promo sore siap dibuat</p>
+					<p class="mt-2 text-sm text-primary-foreground/80">
+						9 customer tanya menu non-coffee hari ini.
+					</p>
+				</div>
+
+				<div class="rounded-2xl border-2 bg-background p-4">
+					<p class="text-sm font-bold">Follow-up queue</p>
+					<p class="mt-1 text-sm text-muted-foreground">2 customer perlu dibalas sebelum malam.</p>
+				</div>
+			{/if}
+		</Card.Content>
+	</Card.Root>
+</div>
+</file>
+
+<file path="AuthShell.svelte">
+<script lang="ts">
+	import type { Snippet } from 'svelte';
+	import * as Card from '$lib/components/ui/card';
+	import AuthMockup from './AuthMockup.svelte';
+
+	let {
+		eyebrow,
+		title,
+		description,
+		highlights = [],
+		mode,
+		children
+	}: {
+		eyebrow: string;
+		title: string;
+		description: string;
+		highlights?: string[];
+		mode: 'login' | 'register';
+		children: Snippet;
+	} = $props();
+</script>
+
+<section class="bg-background py-12 md:py-20">
+	<div
+		class="mx-auto grid min-h-[calc(100vh-9rem)] w-full max-w-7xl gap-10 px-4 lg:grid-cols-[0.92fr_1.08fr] lg:items-center"
+	>
+		<div class="order-2 lg:order-1">
+			<Card.Root class="shadow-3d-lg rounded-3xl border-2">
+				<Card.Header>
+					<p class="text-xs font-black tracking-[0.18em] text-primary uppercase">
+						{eyebrow}
+					</p>
+					<Card.Title class="font-heading text-4xl leading-tight font-bold md:text-5xl">
+						{title}
+					</Card.Title>
+					<Card.Description class="text-base leading-relaxed">
+						{description}
+					</Card.Description>
+				</Card.Header>
+
+				<Card.Content>
+					<div class="grid gap-2">
+						{#each highlights as item (item)}
+							<div
+								class="shadow-3d-sm rounded-2xl border-2 bg-muted/40 px-4 py-3 text-sm font-bold"
+							>
+								{item}
+							</div>
+						{/each}
+					</div>
+
+					<div class="mt-8">
+						{@render children()}
+					</div>
+				</Card.Content>
+			</Card.Root>
+		</div>
+
+		<div class="order-1 lg:order-2">
+			<AuthMockup {mode} />
+		</div>
+	</div>
+</section>
+</file>
+
+</files>

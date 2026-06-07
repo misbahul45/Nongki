@@ -2,7 +2,7 @@ import type { Component } from 'svelte';
 
 export type ProductFlowTone = 'primary' | 'secondary' | 'accent' | 'muted';
 export type ProductFlowDisplay = 'canvas' | 'simpleGrid';
-export type ProductFlowNodeVariant = 'normal' | 'compact' | 'titleOnly';
+export type ProductFlowNodeVariant = 'normal' | 'compact' | 'titleOnly' | 'numbered';
 
 export type ProductFlowNode = {
 	id: string;

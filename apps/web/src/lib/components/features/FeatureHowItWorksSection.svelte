@@ -1,8 +1,23 @@
 <script lang="ts">
 	import type { FeaturePageData } from '$lib/constants/features';
+	import ProductFlowCanvas from '$lib/components/product/flow/ProductFlowCanvas.svelte';
+	import { createProductSimpleGridFlow } from '$lib/constants/product-flow';
 	import Reveal from '$lib/components/home/Reveal.svelte';
 
 	let { feature }: { feature: FeaturePageData } = $props();
+
+	const workflowFlow = $derived(
+		createProductSimpleGridFlow({
+			nodeVariant: 'numbered',
+			showStepNumber: true,
+			nodes: feature.howItWorks.steps.map((step, index) => ({
+				id: `step-${index + 1}`,
+				title: step.title,
+				description: step.description,
+				tone: index % 3 === 1 ? 'secondary' : index % 3 === 2 ? 'accent' : 'primary'
+			}))
+		})
+	);
 </script>
 
 <section class="bg-background px-4 py-16 md:py-24">
@@ -20,28 +35,7 @@
 		</Reveal>
 
 		<Reveal delay={0.1} class="mt-10">
-			<div
-				class="shadow-3d-lg relative overflow-hidden rounded-3xl border-2 bg-background p-5 md:p-7"
-			>
-				<div
-					aria-hidden="true"
-					class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle,var(--border)_1px,transparent_1px)] bg-size-[24px_24px] opacity-60"
-				></div>
-
-				<div class="relative grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-					{#each feature.howItWorks.steps as step, index (step.title)}
-						<article class="shadow-3d-sm rounded-3xl border-2 bg-background p-5">
-							<div
-								class="grid size-12 place-items-center rounded-2xl border-2 border-primary bg-primary text-sm font-black text-primary-foreground"
-							>
-								{String(index + 1).padStart(2, '0')}
-							</div>
-							<h3 class="mt-4 font-heading text-xl font-black">{step.title}</h3>
-							<p class="mt-3 leading-relaxed text-muted-foreground">{step.description}</p>
-						</article>
-					{/each}
-				</div>
-			</div>
+			<ProductFlowCanvas flow={workflowFlow} animated />
 		</Reveal>
 	</div>
 </section>

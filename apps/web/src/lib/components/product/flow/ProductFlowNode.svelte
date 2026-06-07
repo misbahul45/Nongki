@@ -20,19 +20,22 @@
 	const Icon = $derived(item.icon);
 	const currentVariant = $derived(variant ?? (compact ? 'compact' : 'normal'));
 	const isTitleOnly = $derived(currentVariant === 'titleOnly');
-	const isCompact = $derived(currentVariant === 'compact' || compact || isTitleOnly);
+	const isNumbered = $derived(currentVariant === 'numbered');
+	const isCompact = $derived(currentVariant === 'compact' || compact || isTitleOnly || isNumbered);
 </script>
 
 <div
 	class={`shadow-3d-sm hover:shadow-3d-lg rounded-3xl border-2 bg-background transition-all duration-300 hover:-translate-y-1 ${
-		isTitleOnly
-			? 'flex min-h-[132px] flex-col items-center justify-center p-5 text-center'
-			: isCompact
-				? 'p-4'
-				: 'p-5'
+		isNumbered
+			? 'flex min-h-[168px] flex-col items-center justify-center p-5 text-center'
+			: isTitleOnly
+				? 'flex min-h-[132px] flex-col items-center justify-center p-5 text-center'
+				: isCompact
+					? 'p-4'
+					: 'p-5'
 	}`}
 >
-	{#if isTitleOnly}
+	{#if isTitleOnly || isNumbered}
 		{#if showStepNumber}
 			<div
 				class="grid size-12 shrink-0 place-items-center rounded-2xl border-2 border-primary bg-primary text-sm font-black text-primary-foreground shadow-[0_4px_0_0_var(--shadow-3d-primary)]"
@@ -51,6 +54,12 @@
 		<h3 class="mt-4 font-heading text-xl leading-tight font-bold">
 			{item.title}
 		</h3>
+
+		{#if isNumbered && item.description}
+			<p class="mt-3 text-sm leading-relaxed text-muted-foreground">
+				{item.description}
+			</p>
+		{/if}
 	{:else}
 		<div class="flex items-start gap-3">
 			<div

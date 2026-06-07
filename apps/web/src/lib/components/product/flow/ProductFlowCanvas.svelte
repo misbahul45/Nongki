@@ -206,7 +206,7 @@
 						<div data-flow-node>
 							<ProductFlowNode
 								{item}
-								variant="titleOnly"
+								variant={flow.nodeVariant ?? 'titleOnly'}
 								showStepNumber={flow.showStepNumber ?? true}
 								stepNumber={stepNumberById.get(item.id)}
 							/>
@@ -217,7 +217,7 @@
 
 			<ProductMobileFlow
 				nodes={flow.nodes}
-				variant="titleOnly"
+				variant={flow.nodeVariant ?? 'titleOnly'}
 				showStepNumber={flow.showStepNumber ?? true}
 			/>
 		{:else}

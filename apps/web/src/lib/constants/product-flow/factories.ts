@@ -63,18 +63,20 @@ export function createProductSimpleGridFlow({
 	title,
 	description,
 	nodes,
-	showStepNumber = true
+	showStepNumber = true,
+	nodeVariant = 'titleOnly'
 }: {
 	title?: string;
 	description?: string;
 	nodes: ProductFlowNode[];
 	showStepNumber?: boolean;
+	nodeVariant?: ProductFlowNodeVariant;
 }): ProductFlowCanvasData {
 	return {
 		title,
 		description,
 		display: 'simpleGrid',
-		nodeVariant: 'titleOnly',
+		nodeVariant,
 		showStepNumber,
 		viewBox: '0 0 1000 420',
 		minHeightClass: 'min-h-[420px]',

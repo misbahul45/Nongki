@@ -458,39 +458,58 @@ export const demoPreview = {
 };
 
 export const pricingPreview = {
-	title: 'Mulai dari kebutuhan bisnis kecil.',
+	title: 'Mulai gratis, lalu bayar sesuai pemakaian AI.',
 	description:
-		'Pilih paket sesuai tahap bisnis. Mulai dari CRM dasar sampai insight dan campaign berbasis AI.',
+		'Nongki memakai model hybrid: Starter gratis untuk mencoba CRM dasar, kredit AI untuk fitur berbasis AI, dan Pro untuk bisnis yang butuh multi-outlet.',
 	detail: {
-		label: 'Detail paket lengkap',
+		label: 'Lihat detail harga',
 		href: '/pricing'
 	},
 	items: [
 		{
 			title: 'Starter',
-			label: 'Mulai gratis',
-			description: 'Untuk bisnis kecil yang ingin auto-reply dan CRM dasar.',
-			features: ['AI reply terbatas', 'Customer 360 dasar', '1 nomor WhatsApp'],
-			cta: 'Coba Starter',
+			label: 'Free',
+			description: 'Untuk bisnis kecil yang ingin mencoba CRM dasar tanpa biaya awal.',
+			features: [
+				'Gratis',
+				'CRM dasar',
+				'Customer 360 dasar',
+				'AI reply terbatas',
+				'1 nomor WhatsApp'
+			],
+			cta: 'Mulai Gratis',
 			href: '/auth/register'
 		},
 		{
-			title: 'Growth',
-			label: 'Pay as you go',
-			description: 'Untuk bisnis yang butuh insight, digest owner, dan campaign draft.',
-			features: ['Reactive insight', 'Owner digest', 'Campaign draft', 'Kredit AI'],
-			cta: 'Mulai Growth',
-			href: '/auth/register',
+			title: 'Kredit AI',
+			label: 'Pay-as-you-go',
+			description: 'Untuk fitur AI yang lebih aktif dengan biaya yang tetap dikontrol owner.',
+			features: [
+				'Bayar sesuai pemakaian',
+				'AI reply tambahan',
+				'Reactive insight',
+				'Owner digest',
+				'Campaign draft',
+				'Top-up via AstraPay QRIS'
+			],
+			cta: 'Lihat Kredit AI',
+			href: '/pricing',
 			highlight: true,
-			badge: 'Paling cocok'
+			badge: 'Monetisasi utama'
 		},
 		{
 			title: 'Pro',
-			label: 'Custom',
-			description: 'Untuk multi-outlet dan kebutuhan integrasi tambahan.',
-			features: ['Multi outlet', 'Advanced analytics', 'Custom workflow'],
-			cta: 'Hubungi Tim',
-			href: '/docs'
+			label: 'Opsional',
+			description: 'Untuk multi-outlet, kuota lebih besar, dan fitur operasional lanjutan.',
+			features: [
+				'Coming soon',
+				'Multi-outlet',
+				'Kuota lebih besar',
+				'Advanced analytics',
+				'Priority support'
+			],
+			cta: 'Diskusi Pro',
+			href: '/auth/register'
 		}
 	]
 };
