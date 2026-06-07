@@ -110,7 +110,17 @@ src/
         ProductProblemSection.svelte
         ProductWorkflowSection.svelte
         RelatedProductsSection.svelte
-        repomix-output.xml
+      solutions/
+        SolutionCtaSection.svelte
+        SolutionDetailPage.svelte
+        SolutionFeatureStack.svelte
+        SolutionHero.svelte
+        SolutionMockup.svelte
+        SolutionOutcomeSection.svelte
+        SolutionPainSection.svelte
+        SolutionRelatedSection.svelte
+        SolutionScenarioSection.svelte
+        SolutionWorkflowSection.svelte
       ui/
         accordion/
           accordion-content.svelte
@@ -463,6 +473,7 @@ src/
       footer.ts
       header.ts
       product.ts
+      solutions.ts
     hooks/
       is-mobile.svelte.ts
       is-mobile.ts
@@ -5473,671 +5484,12 @@ export function flowLabelStyle(flow: ProductFlowCanvasData, x: number, y: number
 </section>
 </file>
 
-<file path="src/lib/components/product/repomix-output.xml">
-This file is a merged representation of the entire codebase, combined into a single document by Repomix.
-
-<file_summary>
-This section contains a summary of this file.
-
-<purpose>
-This file contains a packed representation of the entire repository's contents.
-It is designed to be easily consumable by AI systems for analysis, code review,
-or other automated processes.
-</purpose>
-
-<file_format>
-The content is organized as follows:
-1. This summary section
-2. Repository information
-3. Directory structure
-4. Repository files (if enabled)
-5. Multiple file entries, each consisting of:
-  - File path as an attribute
-  - Full contents of the file
-</file_format>
-
-<usage_guidelines>
-- This file should be treated as read-only. Any changes should be made to the
-  original repository files, not this packed version.
-- When processing this file, use the file path to distinguish
-  between different files in the repository.
-- Be aware that this file may contain sensitive information. Handle it with
-  the same level of security as you would the original repository.
-</usage_guidelines>
-
-<notes>
-- Some files may have been excluded based on .gitignore rules and Repomix's configuration
-- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
-- Files matching patterns in .gitignore are excluded
-- Files matching default ignore patterns are excluded
-- Files are sorted by Git change count (files with more changes are at the bottom)
-</notes>
-
-</file_summary>
-
-<directory_structure>
-flow/
-  product-flow.types.ts
-  product-flow.utils.ts
-  ProductFlowArrowLayer.svelte
-  ProductFlowCanvas.svelte
-  ProductFlowNode.svelte
-  ProductMobileFlow.svelte
-ProductBenefitSection.svelte
-ProductCapabilityGrid.svelte
-ProductCtaSection.svelte
-ProductDetailPage.svelte
-ProductHero.svelte
-ProductIndexPage.svelte
-ProductIntegrationSection.svelte
-ProductMockup.svelte
-ProductPreviewSection.svelte
-ProductProblemSection.svelte
-ProductWorkflowSection.svelte
-RelatedProductsSection.svelte
-</directory_structure>
-
-<files>
-This section contains the contents of the repository's files.
-
-<file path="flow/product-flow.types.ts">
-import type { Component } from 'svelte';
-
-export type ProductFlowTone = 'primary' | 'secondary' | 'accent' | 'muted';
-export type ProductFlowDisplay = 'canvas' | 'simpleGrid';
-export type ProductFlowNodeVariant = 'normal' | 'compact' | 'titleOnly';
-
-export type ProductFlowNode = {
-	id: string;
-	title: string;
-	description?: string;
-	eyebrow?: string;
-	icon?: Component;
-	tone?: ProductFlowTone;
-	metrics?: string[];
-};
-
-export type ProductFlowConnector = {
-	id: string;
-	from: string;
-	to: string;
-	label?: string;
-	tone?: ProductFlowTone;
-	path: string;
-	head: {
-		x: number;
-		y: number;
-		rotate: number;
-	};
-	dot: {
-		x: number;
-		y: number;
-	};
-};
-
-export type ProductFlowLayoutNode = {
-	id: string;
-	className: string;
-};
-
-export type ProductFlowCanvasData = {
-	title?: string;
-	description?: string;
-	viewBox: string;
-	minHeightClass: string;
-	display?: ProductFlowDisplay;
-	nodeVariant?: ProductFlowNodeVariant;
-	nodes: ProductFlowNode[];
-	layout: ProductFlowLayoutNode[];
-	connectors: ProductFlowConnector[];
-};
-</file>
-
-<file path="flow/product-flow.utils.ts">
-import type { ProductFlowCanvasData, ProductFlowTone } from './product-flow.types';
-
-export function iconToneClass(tone: ProductFlowTone = 'primary') {
-	if (tone === 'secondary') return 'bg-secondary text-secondary-foreground';
-	if (tone === 'accent') return 'bg-accent text-accent-foreground';
-	if (tone === 'muted') return 'bg-muted text-foreground';
-	return 'bg-primary text-primary-foreground';
-}
-
-export function metricToneClass(tone: ProductFlowTone = 'primary') {
-	if (tone === 'secondary') return 'bg-secondary/20 text-foreground';
-	if (tone === 'accent') return 'bg-accent/10 text-accent';
-	if (tone === 'muted') return 'bg-muted/60 text-foreground';
-	return 'bg-primary/10 text-primary';
-}
-
-export function strokeToneClass(tone: ProductFlowTone = 'primary') {
-	if (tone === 'secondary') return 'stroke-secondary';
-	if (tone === 'accent') return 'stroke-accent';
-	if (tone === 'muted') return 'stroke-muted-foreground';
-	return 'stroke-primary';
-}
-
-export function fillToneClass(tone: ProductFlowTone = 'primary') {
-	if (tone === 'secondary') return 'fill-secondary';
-	if (tone === 'accent') return 'fill-accent';
-	if (tone === 'muted') return 'fill-muted-foreground';
-	return 'fill-primary';
-}
-
-export function flowLabelStyle(flow: ProductFlowCanvasData, x: number, y: number) {
-	const [, , width = '1000', height = '760'] = flow.viewBox.split(' ');
-	const left = (x / Number(width)) * 100;
-	const top = (y / Number(height)) * 100;
-
-	return `left:${left}%;top:${top}%;`;
-}
-</file>
-
-<file path="flow/ProductFlowArrowLayer.svelte">
-<script lang="ts">
-	import { fillToneClass, strokeToneClass } from './product-flow.utils';
-	import type { ProductFlowCanvasData } from './product-flow.types';
-
-	let {
-		flow,
-		arrowSvgEl = $bindable()
-	}: {
-		flow: ProductFlowCanvasData;
-		arrowSvgEl?: SVGSVGElement;
-	} = $props();
-</script>
-
-<svg
-	bind:this={arrowSvgEl}
-	class="pointer-events-none absolute inset-0 z-10 h-full w-full"
-	viewBox={flow.viewBox}
-	preserveAspectRatio="none"
-	aria-hidden="true"
->
-	{#each flow.connectors as connector (connector.id)}
-		<path
-			data-flow-path
-			d={connector.path}
-			class={strokeToneClass(connector.tone)}
-			fill="none"
-			stroke-width={connector.tone === 'accent' ? '3.5' : '3'}
-			stroke-linecap="round"
-			stroke-linejoin="round"
-		></path>
-
-		<path
-			data-flow-head
-			d="M 0 -5 L 10 0 L 0 5 z"
-			class={fillToneClass(connector.tone)}
-			transform={`translate(${connector.head.x} ${connector.head.y}) rotate(${connector.head.rotate})`}
-		></path>
-
-		<circle
-			data-flow-dot
-			cx={connector.dot.x}
-			cy={connector.dot.y}
-			r={connector.tone === 'accent' ? '5' : '4.5'}
-			class={fillToneClass(connector.tone)}
-		></circle>
-	{/each}
-</svg>
-</file>
-
-<file path="flow/ProductFlowCanvas.svelte">
-<script lang="ts">
-	import { onMount, tick } from 'svelte';
-	import { productFlowAnimationConfig } from '$lib/constants/product-flow';
-	import ProductFlowArrowLayer from './ProductFlowArrowLayer.svelte';
-	import ProductFlowNode from './ProductFlowNode.svelte';
-	import ProductMobileFlow from './ProductMobileFlow.svelte';
-	import { flowLabelStyle } from './product-flow.utils';
-	import type { ProductFlowCanvasData } from './product-flow.types';
-
-	let { flow, animated = false }: { flow: ProductFlowCanvasData; animated?: boolean } = $props();
-
-	let canvasEl = $state<HTMLDivElement>();
-	let arrowSvgEl = $state<SVGSVGElement>();
-
-	const nodeById = $derived(new Map(flow.nodes.map((node) => [node.id, node])));
-	const isSimpleGrid = $derived(flow.display === 'simpleGrid');
-	const simpleGridNodes = $derived(
-		flow.nodes.length >= 6
-			? [
-					flow.nodes[0],
-					flow.nodes[1],
-					flow.nodes[2],
-					flow.nodes[5],
-					flow.nodes[4],
-					flow.nodes[3]
-				].filter(Boolean)
-			: flow.nodes
-	);
-	const animation = productFlowAnimationConfig;
-
-	onMount(() => {
-		if (!animated) return;
-
-		let ctx: { revert: () => void } | undefined;
-		let observer: IntersectionObserver | undefined;
-
-		async function init() {
-			await tick();
-
-			if (!canvasEl || (!isSimpleGrid && !arrowSvgEl)) return;
-
-			const canvas = canvasEl;
-			const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-			const gsap = (await import('gsap')).default;
-			const paths = arrowSvgEl
-				? Array.from(arrowSvgEl.querySelectorAll<SVGPathElement>('[data-flow-path]'))
-				: [];
-			const heads = arrowSvgEl
-				? Array.from(arrowSvgEl.querySelectorAll<SVGPathElement>('[data-flow-head]'))
-				: [];
-			const dots = arrowSvgEl
-				? Array.from(arrowSvgEl.querySelectorAll<SVGCircleElement>('[data-flow-dot]'))
-				: [];
-			const nodes = Array.from(canvas.querySelectorAll<HTMLElement>('[data-flow-node]'));
-			const labels = Array.from(canvas.querySelectorAll<HTMLElement>('[data-flow-label]'));
-
-			paths.forEach((path) => {
-				const length = path.getTotalLength();
-				path.style.strokeDasharray = `${length}`;
-				path.style.strokeDashoffset = `${length}`;
-			});
-
-			if (prefersReducedMotion) {
-				paths.forEach((path) => {
-					path.style.strokeDashoffset = '0';
-				});
-
-				gsap.set([...heads, ...dots, ...labels, ...nodes], {
-					opacity: 1,
-					y: 0,
-					scale: 1
-				});
-
-				return;
-			}
-
-			gsap.set(dots, animation.dot.from);
-			gsap.set(heads, animation.head.from);
-			gsap.set(labels, animation.label.from);
-			gsap.set(nodes, animation.node.from);
-
-			let hasPlayed = false;
-
-			function play() {
-				if (hasPlayed) return;
-				hasPlayed = true;
-
-				ctx = gsap.context(() => {
-					const tl = gsap.timeline({
-						defaults: {
-							ease: animation.ease
-						}
-					});
-
-					if (isSimpleGrid) {
-						tl.to(nodes, {
-							...animation.node.to,
-							stagger: animation.node.stagger
-						});
-						return;
-					}
-
-					if (nodes[0]) {
-						tl.to(nodes[0], {
-							...animation.node.to,
-							duration: animation.node.firstDuration
-						});
-					}
-
-					paths.forEach((path, index) => {
-						const dot = dots[index];
-						const head = heads[index];
-						const label = labels[index];
-						const nextNode = nodes[index + 1];
-
-						if (dot) {
-							tl.to(
-								dot,
-								{
-									...animation.dot.to
-								},
-								animation.overlap.dot
-							);
-						}
-
-						tl.to(
-							path,
-							{
-								strokeDashoffset: 0,
-								duration:
-									index === 2 ? animation.path.verticalDuration : animation.path.defaultDuration
-							},
-							animation.overlap.path
-						);
-
-						if (head) {
-							tl.to(
-								head,
-								{
-									...animation.head.to
-								},
-								animation.overlap.head
-							);
-						}
-
-						if (label) {
-							tl.to(
-								label,
-								{
-									...animation.label.to
-								},
-								animation.overlap.label
-							);
-						}
-
-						if (nextNode) {
-							tl.to(
-								nextNode,
-								{
-									...animation.node.to
-								},
-								animation.overlap.nextNode
-							);
-						}
-					});
-				}, canvas);
-			}
-
-			observer = new IntersectionObserver(
-				([entry]) => {
-					if (entry?.isIntersecting && entry.intersectionRatio >= animation.playRatio) {
-						play();
-						observer?.disconnect();
-					}
-				},
-				{
-					threshold: [...animation.observerThreshold]
-				}
-			);
-
-			observer.observe(canvas);
-		}
-
-		init();
-
-		return () => {
-			observer?.disconnect();
-			ctx?.revert();
-		};
-	});
-</script>
-
-<div class="shadow-3d-lg relative overflow-hidden rounded-3xl border-2 bg-background p-5 md:p-8">
-	<div
-		aria-hidden="true"
-		class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle,var(--border)_1px,transparent_1px)] bg-size-[24px_24px] opacity-60"
-	></div>
-
-	<div class="relative z-10">
-		{#if isSimpleGrid}
-			<div bind:this={canvasEl} class="relative hidden lg:block">
-				<div class="grid grid-cols-3 gap-x-10 gap-y-10">
-					{#each simpleGridNodes as item (item.id)}
-						<div data-flow-node>
-							<ProductFlowNode {item} variant="titleOnly" />
-						</div>
-					{/each}
-				</div>
-			</div>
-
-			<ProductMobileFlow nodes={flow.nodes} variant="titleOnly" />
-		{:else}
-			<div bind:this={canvasEl} class={`relative hidden ${flow.minHeightClass} lg:block`}>
-				<ProductFlowArrowLayer {flow} bind:arrowSvgEl />
-
-				{#each flow.connectors as connector (connector.id)}
-					{#if connector.label}
-						<div
-							data-flow-label
-							class="shadow-3d-sm absolute z-20 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 bg-background px-3 py-1 text-[11px] font-bold"
-							style={flowLabelStyle(
-								flow,
-								(connector.dot.x + connector.head.x) / 2,
-								(connector.dot.y + connector.head.y) / 2
-							)}
-						>
-							{connector.label}
-						</div>
-					{/if}
-				{/each}
-
-				{#each flow.layout as layoutNode (layoutNode.id)}
-					{@const item = nodeById.get(layoutNode.id)}
-
-					{#if item}
-						<div data-flow-node class={`absolute z-30 ${layoutNode.className}`}>
-							<ProductFlowNode {item} variant={flow.nodeVariant ?? 'normal'} />
-						</div>
-					{/if}
-				{/each}
-			</div>
-
-			<ProductMobileFlow nodes={flow.nodes} variant={flow.nodeVariant ?? 'compact'} />
-		{/if}
-	</div>
-</div>
-</file>
-
-<file path="flow/ProductFlowNode.svelte">
-<script lang="ts">
-	import { iconToneClass, metricToneClass } from './product-flow.utils';
-	import type { ProductFlowNode, ProductFlowNodeVariant } from './product-flow.types';
-
-	let {
-		item,
-		compact = false,
-		variant
-	}: {
-		item: ProductFlowNode;
-		compact?: boolean;
-		variant?: ProductFlowNodeVariant;
-	} = $props();
-
-	const tone = $derived(item.tone ?? 'primary');
-	const Icon = $derived(item.icon);
-	const currentVariant = $derived(variant ?? (compact ? 'compact' : 'normal'));
-	const isTitleOnly = $derived(currentVariant === 'titleOnly');
-	const isCompact = $derived(currentVariant === 'compact' || compact || isTitleOnly);
-</script>
-
-<div
-	class={`shadow-3d-sm hover:shadow-3d-lg rounded-3xl border-2 bg-background transition-all duration-300 hover:-translate-y-1 ${
-		isTitleOnly
-			? 'flex min-h-[150px] flex-col justify-center p-5 text-center'
-			: isCompact
-				? 'p-4'
-				: 'p-5'
-	}`}
->
-	{#if isTitleOnly}
-		<div class={`grid size-12 shrink-0 place-items-center rounded-2xl ${iconToneClass(tone)}`}>
-			{#if Icon}
-				<Icon class="size-5" />
-			{:else}
-				<span class="text-sm font-black">{item.title.slice(0, 1)}</span>
-			{/if}
-		</div>
-		<h3 class="mt-4 font-heading text-xl leading-tight font-bold">
-			{item.title}
-		</h3>
-	{:else}
-		<div class="flex items-start gap-3">
-			<div
-				class={`grid shrink-0 place-items-center rounded-2xl ${isCompact ? 'size-10' : 'size-11'} ${iconToneClass(tone)}`}
-			>
-				{#if Icon}
-					<Icon class={isCompact ? 'size-4' : 'size-5'} />
-				{:else}
-					<span class="text-sm font-black">{item.title.slice(0, 1)}</span>
-				{/if}
-			</div>
-
-			<div class="min-w-0 flex-1">
-				{#if item.eyebrow}
-					<p
-						class="mb-2 inline-flex rounded-full border-2 bg-muted/40 px-2.5 py-1 text-[11px] font-black text-muted-foreground"
-					>
-						{item.eyebrow}
-					</p>
-				{/if}
-				<h3 class={`font-heading leading-tight font-bold ${isCompact ? 'text-base' : 'text-xl'}`}>
-					{item.title}
-				</h3>
-			</div>
-		</div>
-
-		{#if item.description}
-			<p class={`mt-3 leading-relaxed text-muted-foreground ${isCompact ? 'text-sm' : 'text-sm'}`}>
-				{item.description}
-			</p>
-		{/if}
-
-		{#if item.metrics?.length}
-			<div class="mt-4 flex flex-wrap gap-2">
-				{#each item.metrics as metric (metric)}
-					<span class={`rounded-full px-2.5 py-1 text-[11px] font-black ${metricToneClass(tone)}`}>
-						{metric}
-					</span>
-				{/each}
-			</div>
-		{/if}
-	{/if}
-</div>
-</file>
-
-<file path="flow/ProductMobileFlow.svelte">
-<script lang="ts">
-	import ProductFlowNode from './ProductFlowNode.svelte';
-	import type {
-		ProductFlowNode as ProductFlowNodeData,
-		ProductFlowNodeVariant
-	} from './product-flow.types';
-
-	let {
-		nodes,
-		variant = 'compact'
-	}: { nodes: ProductFlowNodeData[]; variant?: ProductFlowNodeVariant } = $props();
-</script>
-
-<div class="grid gap-4 lg:hidden">
-	{#each nodes as item, index (item.id)}
-		<ProductFlowNode {item} compact {variant} />
-
-		{#if index < nodes.length - 1}
-			<div class="flex justify-center">
-				<div class="flex h-10 flex-col items-center">
-					<div class="h-7 w-0.5 rounded-full bg-primary/50"></div>
-					<div
-						class="size-0 border-x-[7px] border-t-[9px] border-x-transparent border-t-primary"
-					></div>
-				</div>
-			</div>
-		{/if}
-	{/each}
-</div>
-</file>
-
-<file path="ProductBenefitSection.svelte">
+<file path="src/lib/components/solutions/SolutionCtaSection.svelte">
 <script lang="ts">
 	import Reveal from '$lib/components/home/Reveal.svelte';
-	import type { ProductPageData } from '$lib/constants/product';
+	import type { SolutionPageData } from '$lib/constants/solutions';
 
-	let { product }: { product: ProductPageData } = $props();
-</script>
-
-<section class="bg-muted/40 py-16 md:py-28">
-	<div class="mx-auto w-full max-w-7xl px-4">
-		<Reveal>
-			<h2 class="max-w-3xl font-heading text-3xl leading-tight font-bold md:text-5xl">
-				Dampaknya untuk owner.
-			</h2>
-		</Reveal>
-
-		<div class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-			{#each product.benefits as benefit, index (benefit.title)}
-				<Reveal delay={index * 0.04}>
-					<div
-						class={`h-full rounded-3xl border-2 p-5 ${
-							index === 0
-								? 'shadow-3d-primary border-primary bg-primary/5'
-								: 'shadow-3d-sm bg-background'
-						}`}
-					>
-						<h3 class="font-heading text-xl font-bold">{benefit.title}</h3>
-						<p class="mt-3 text-sm leading-relaxed text-muted-foreground">{benefit.description}</p>
-					</div>
-				</Reveal>
-			{/each}
-		</div>
-	</div>
-</section>
-</file>
-
-<file path="ProductCapabilityGrid.svelte">
-<script lang="ts">
-	import Reveal from '$lib/components/home/Reveal.svelte';
-	import type { ProductPageData } from '$lib/constants/product';
-
-	let { product }: { product: ProductPageData } = $props();
-</script>
-
-<section class="bg-background py-16 md:py-28">
-	<div class="mx-auto w-full max-w-7xl px-4">
-		<Reveal>
-			<div class="max-w-3xl space-y-4">
-				<h2 class="font-heading text-3xl leading-tight font-bold md:text-5xl">
-					Yang bisa dilakukan modul ini.
-				</h2>
-				<p class="text-lg text-muted-foreground">
-					Ringkasan kemampuan utama tanpa masuk terlalu teknis.
-				</p>
-			</div>
-		</Reveal>
-
-		<div class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-			{#each product.capabilities as capability, index (capability.title)}
-				{@const Icon = capability.icon}
-				<Reveal delay={index * 0.04}>
-					<div
-						class="shadow-3d-sm hover:shadow-3d-lg h-full rounded-3xl border-2 bg-card p-5 transition-all duration-300 hover:-translate-y-1"
-					>
-						<div
-							class="grid size-11 place-items-center rounded-2xl bg-primary text-primary-foreground"
-						>
-							<Icon class="size-5" />
-						</div>
-						<h3 class="mt-5 font-heading text-xl font-bold">{capability.title}</h3>
-						<p class="mt-2 text-sm leading-relaxed text-muted-foreground">
-							{capability.description}
-						</p>
-					</div>
-				</Reveal>
-			{/each}
-		</div>
-	</div>
-</section>
-</file>
-
-<file path="ProductCtaSection.svelte">
-<script lang="ts">
-	import Reveal from '$lib/components/home/Reveal.svelte';
-	import type { ProductPageData } from '$lib/constants/product';
-
-	let { product }: { product: ProductPageData } = $props();
+	let { solution }: { solution: SolutionPageData } = $props();
 </script>
 
 <section class="bg-primary py-16 text-primary-foreground md:py-28">
@@ -6145,24 +5497,24 @@ export function flowLabelStyle(flow: ProductFlowCanvasData, x: number, y: number
 		<Reveal>
 			<div class="space-y-6">
 				<h2 class="font-heading text-3xl leading-tight font-bold md:text-5xl">
-					Siap mencoba {product.title}
+					Mulai ubah chat pelanggan menjadi data dan action.
 				</h2>
 				<p class="mx-auto max-w-2xl text-lg text-primary-foreground/85">
-					Mulai hubungkan WhatsApp bisnismu dan lihat bagaimana chat berubah menjadi data, insight,
-					dan action.
+					Hubungkan workflow WhatsApp bisnismu, biarkan Ningki membantu membalas, mencatat customer,
+					dan memberi rekomendasi action.
 				</p>
 				<div class="flex flex-col justify-center gap-3 sm:flex-row">
 					<a
-						href="/auth/register"
-						class="inline-flex h-12 items-center justify-center rounded-xl border-2 border-background bg-background px-6 font-bold text-primary shadow-[0_5px_0_0_var(--shadow-3d-primary)] transition-all active:translate-y-1"
+						href={solution.primaryCta.href}
+						class="inline-flex h-12 items-center justify-center rounded-xl border-2 border-background bg-background px-6 font-bold text-primary shadow-[0_5px_0_0_var(--shadow-3d-primary)] transition-all hover:-translate-y-0.5 active:translate-y-1"
 					>
-						Mulai Gratis
+						{solution.primaryCta.label}
 					</a>
 					<a
-						href="/docs"
-						class="inline-flex h-12 items-center justify-center rounded-xl border-2 border-primary-foreground/70 px-6 font-bold text-primary-foreground shadow-[0_5px_0_0_var(--shadow-3d-primary)] transition-all active:translate-y-1"
+						href="/product"
+						class="inline-flex h-12 items-center justify-center rounded-xl border-2 border-primary-foreground/50 bg-primary-foreground/10 px-6 font-bold text-primary-foreground shadow-[0_5px_0_0_var(--shadow-3d-primary)] transition-all hover:-translate-y-0.5 active:translate-y-1"
 					>
-						Lihat Docs
+						Lihat Produk
 					</a>
 				</div>
 			</div>
@@ -6171,42 +5523,83 @@ export function flowLabelStyle(flow: ProductFlowCanvasData, x: number, y: number
 </section>
 </file>
 
-<file path="ProductDetailPage.svelte">
+<file path="src/lib/components/solutions/SolutionDetailPage.svelte">
 <script lang="ts">
-	import type { ProductPageData } from '$lib/constants/product';
-	import ProductBenefitSection from './ProductBenefitSection.svelte';
-	import ProductCapabilityGrid from './ProductCapabilityGrid.svelte';
-	import ProductCtaSection from './ProductCtaSection.svelte';
-	import ProductHero from './ProductHero.svelte';
-	import ProductIntegrationSection from './ProductIntegrationSection.svelte';
-	import ProductPreviewSection from './ProductPreviewSection.svelte';
-	import ProductProblemSection from './ProductProblemSection.svelte';
-	import ProductWorkflowSection from './ProductWorkflowSection.svelte';
-	import RelatedProductsSection from './RelatedProductsSection.svelte';
+	import type { SolutionPageData } from '$lib/constants/solutions';
+	import SolutionCtaSection from './SolutionCtaSection.svelte';
+	import SolutionFeatureStack from './SolutionFeatureStack.svelte';
+	import SolutionHero from './SolutionHero.svelte';
+	import SolutionOutcomeSection from './SolutionOutcomeSection.svelte';
+	import SolutionPainSection from './SolutionPainSection.svelte';
+	import SolutionRelatedSection from './SolutionRelatedSection.svelte';
+	import SolutionScenarioSection from './SolutionScenarioSection.svelte';
+	import SolutionWorkflowSection from './SolutionWorkflowSection.svelte';
 
-	let { product }: { product: ProductPageData } = $props();
+	let { solution }: { solution: SolutionPageData } = $props();
 </script>
 
-<ProductHero {product} />
-<ProductProblemSection {product} />
-<ProductCapabilityGrid {product} />
-<ProductWorkflowSection {product} />
-<ProductPreviewSection {product} />
-<ProductBenefitSection {product} />
-<ProductIntegrationSection {product} />
-<RelatedProductsSection {product} />
-<ProductCtaSection {product} />
+<SolutionHero {solution} />
+<SolutionPainSection {solution} />
+<SolutionWorkflowSection {solution} />
+<SolutionFeatureStack {solution} />
+<SolutionScenarioSection {solution} />
+<SolutionOutcomeSection {solution} />
+<SolutionRelatedSection {solution} />
+<SolutionCtaSection {solution} />
 </file>
 
-<file path="ProductHero.svelte">
+<file path="src/lib/components/solutions/SolutionFeatureStack.svelte">
 <script lang="ts">
 	import Reveal from '$lib/components/home/Reveal.svelte';
-	import type { ProductPageData } from '$lib/constants/product';
-	import ProductMockup from './ProductMockup.svelte';
+	import type { SolutionPageData } from '$lib/constants/solutions';
 
-	let { product }: { product: ProductPageData } = $props();
+	let { solution }: { solution: SolutionPageData } = $props();
+</script>
 
-	const proofPills = ['WhatsApp-ready', 'Data-driven', 'Owner-friendly'];
+<section class="bg-primary/5 py-16 md:py-28">
+	<div class="mx-auto w-full max-w-7xl px-4">
+		<Reveal>
+			<div class="max-w-3xl space-y-4">
+				<h2 class="font-heading text-3xl leading-tight font-bold md:text-5xl">
+					{solution.featureStack.title}
+				</h2>
+				<p class="text-lg text-muted-foreground">{solution.featureStack.description}</p>
+			</div>
+		</Reveal>
+
+		<div class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+			{#each solution.featureStack.items as item, index (item.title)}
+				{@const Icon = item.icon}
+				<Reveal delay={index * 0.04}>
+					<a
+						href={item.href}
+						class="shadow-3d-sm hover:shadow-3d-lg block h-full rounded-3xl border-2 bg-background p-5 transition-all duration-300 hover:-translate-y-1"
+					>
+						<div
+							class="grid size-11 place-items-center rounded-2xl bg-primary text-primary-foreground"
+						>
+							<Icon class="size-5" />
+						</div>
+						<h3 class="mt-5 font-heading text-xl font-bold">{item.title}</h3>
+						<p class="mt-3 text-sm leading-relaxed text-muted-foreground">{item.description}</p>
+						<p class="mt-5 text-sm font-black text-primary">Lihat modul -&gt;</p>
+					</a>
+				</Reveal>
+			{/each}
+		</div>
+	</div>
+</section>
+</file>
+
+<file path="src/lib/components/solutions/SolutionHero.svelte">
+<script lang="ts">
+	import Reveal from '$lib/components/home/Reveal.svelte';
+	import type { SolutionPageData } from '$lib/constants/solutions';
+	import SolutionMockup from './SolutionMockup.svelte';
+
+	let { solution }: { solution: SolutionPageData } = $props();
+
+	const proofPills = ['Chat jadi data', 'Owner digest', 'QRIS ready'];
 </script>
 
 <section class="bg-background py-16 md:py-28">
@@ -6217,30 +5610,30 @@ export function flowLabelStyle(flow: ProductFlowCanvasData, x: number, y: number
 			<div class="space-y-7">
 				<div class="space-y-4">
 					<p class="text-sm font-black tracking-[0.18em] text-primary uppercase">
-						{product.eyebrow}
+						{solution.eyebrow}
 					</p>
 					<h1
 						class="max-w-4xl font-heading text-4xl leading-tight font-bold text-balance md:text-6xl"
 					>
-						{product.title}
+						{solution.title}
 					</h1>
 					<p class="max-w-2xl text-lg leading-relaxed text-muted-foreground">
-						{product.description}
+						{solution.description}
 					</p>
 				</div>
 
 				<div class="flex flex-col gap-3 sm:flex-row">
 					<a
-						href={product.primaryCta.href}
-						class="shadow-3d-primary inline-flex h-12 items-center justify-center rounded-xl border-2 border-primary bg-primary px-6 font-bold text-primary-foreground transition-all active:translate-y-1 sm:w-auto"
+						href={solution.primaryCta.href}
+						class="shadow-3d-primary inline-flex h-12 items-center justify-center rounded-xl border-2 border-primary bg-primary px-6 font-bold text-primary-foreground transition-all hover:-translate-y-0.5 active:translate-y-1"
 					>
-						{product.primaryCta.label}
+						{solution.primaryCta.label}
 					</a>
 					<a
-						href={product.secondaryCta.href}
-						class="shadow-3d inline-flex h-12 items-center justify-center rounded-xl border-2 bg-background px-6 font-bold transition-all active:translate-y-1 sm:w-auto"
+						href={solution.secondaryCta.href}
+						class="shadow-3d inline-flex h-12 items-center justify-center rounded-xl border-2 bg-background px-6 font-bold transition-all hover:-translate-y-0.5 active:translate-y-1"
 					>
-						{product.secondaryCta.label}
+						{solution.secondaryCta.label}
 					</a>
 				</div>
 
@@ -6256,390 +5649,79 @@ export function flowLabelStyle(flow: ProductFlowCanvasData, x: number, y: number
 
 		<Reveal delay={0.08}>
 			<div class="shadow-3d-lg rounded-[2rem] border-2 bg-muted/40 p-4">
-				<ProductMockup type={product.preview.type} />
+				<SolutionMockup type={solution.mockupType} />
 			</div>
 		</Reveal>
 	</div>
 </section>
 </file>
 
-<file path="ProductIndexPage.svelte">
+<file path="src/lib/components/solutions/SolutionMockup.svelte">
 <script lang="ts">
-	import Reveal from '$lib/components/home/Reveal.svelte';
-	import { productIndex, productIndexFlow, productPages } from '$lib/constants/product';
-	import ProductFlowCanvas from './flow/ProductFlowCanvas.svelte';
-	import ProductMockup from './ProductMockup.svelte';
-</script>
+	import type { SolutionMockupType } from '$lib/constants/solutions';
 
-<section class="bg-background py-16 md:py-28">
-	<div
-		class="mx-auto grid w-full max-w-7xl gap-10 px-4 lg:grid-cols-[0.95fr_1.05fr] lg:items-center"
-	>
-		<Reveal>
-			<div class="space-y-6">
-				<p class="text-sm font-black tracking-[0.18em] text-primary uppercase">
-					{productIndex.eyebrow}
-				</p>
-
-				<h1 class="font-heading text-4xl leading-tight font-bold text-balance md:text-6xl">
-					{productIndex.title}
-				</h1>
-
-				<p class="max-w-2xl text-lg leading-relaxed text-muted-foreground">
-					{productIndex.description}
-				</p>
-
-				<div class="flex flex-col gap-3 sm:flex-row">
-					<a
-						href="/auth/register"
-						class="shadow-3d-primary inline-flex h-12 items-center justify-center rounded-xl border-2 border-primary bg-primary px-6 font-bold text-primary-foreground transition-all hover:-translate-y-0.5 active:translate-y-1"
-					>
-						Mulai Gratis
-					</a>
-
-					<a
-						href="#product-grid"
-						class="shadow-3d inline-flex h-12 items-center justify-center rounded-xl border-2 bg-background px-6 font-bold transition-all hover:-translate-y-0.5 active:translate-y-1"
-					>
-						Lihat Produk
-					</a>
-				</div>
-			</div>
-		</Reveal>
-
-		<Reveal delay={0.08}>
-			<div class="shadow-3d-lg rounded-[2rem] border-2 bg-muted/40 p-4">
-				<ProductMockup type="dashboard" />
-			</div>
-		</Reveal>
-	</div>
-</section>
-
-<section id="product-grid" class="bg-muted/40 py-16 md:py-28">
-	<div class="mx-auto w-full max-w-7xl px-4">
-		<Reveal>
-			<div class="max-w-3xl space-y-4">
-				<h2 class="font-heading text-3xl leading-tight font-bold md:text-5xl">
-					Pilih modul sesuai workflow bisnismu.
-				</h2>
-
-				<p class="text-lg text-muted-foreground">
-					Mulai dari chat, lanjut ke data customer, order, payment, dan insight owner.
-				</p>
-			</div>
-		</Reveal>
-
-		<div class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-			{#each productIndex.products as slug, index (slug)}
-				{@const product = productPages[slug]}
-				{@const Icon = product.icon}
-
-				<Reveal delay={index * 0.04}>
-					<a
-						href={`/product/${product.slug}`}
-						class="shadow-3d-sm hover:shadow-3d-lg block h-full rounded-3xl border-2 bg-background p-5 transition-all duration-300 hover:-translate-y-1"
-					>
-						<div
-							class="grid size-12 place-items-center rounded-2xl bg-primary text-primary-foreground"
-						>
-							<Icon class="size-5" />
-						</div>
-
-						<h3 class="mt-5 font-heading text-2xl font-bold">
-							{product.eyebrow}
-						</h3>
-
-						<p class="mt-3 text-sm leading-relaxed text-muted-foreground">
-							{product.description}
-						</p>
-
-						<p class="mt-5 text-sm font-black text-primary">Lihat detail -&gt;</p>
-					</a>
-				</Reveal>
-			{/each}
-		</div>
-	</div>
-</section>
-
-<section class="bg-background py-16 md:py-28">
-	<div class="mx-auto w-full max-w-7xl px-4">
-		<Reveal>
-			<div class="mx-auto max-w-3xl space-y-4 text-center">
-				<h2 class="font-heading text-3xl leading-tight font-bold md:text-5xl">
-					Satu ekosistem untuk chat, data, pembayaran, dan insight.
-				</h2>
-
-				<p class="text-lg text-muted-foreground">
-					WhatsApp jadi pintu masuk, lalu data mengalir sampai owner punya action.
-				</p>
-			</div>
-		</Reveal>
-
-		<Reveal delay={0.08}>
-			<div class="mt-10">
-				<ProductFlowCanvas flow={productIndexFlow} animated />
-			</div>
-		</Reveal>
-	</div>
-</section>
-
-<section class="bg-primary py-16 text-primary-foreground md:py-28">
-	<div class="mx-auto w-full max-w-5xl px-4 text-center">
-		<Reveal>
-			<div class="space-y-6">
-				<h2 class="font-heading text-3xl leading-tight font-bold md:text-5xl">
-					Mulai ubah WhatsApp jadi sistem bisnis.
-				</h2>
-
-				<p class="mx-auto max-w-2xl text-lg text-primary-foreground/85">
-					Pilih modul pertama, hubungkan workflow chat, lalu biarkan data pelanggan tersusun rapi.
-				</p>
-
-				<a
-					href="/auth/register"
-					class="inline-flex h-12 items-center justify-center rounded-xl border-2 border-background bg-background px-6 font-bold text-primary shadow-[0_5px_0_0_var(--shadow-3d-primary)] transition-all hover:-translate-y-0.5 active:translate-y-1"
-				>
-					Mulai Gratis
-				</a>
-			</div>
-		</Reveal>
-	</div>
-</section>
-</file>
-
-<file path="ProductIntegrationSection.svelte">
-<script lang="ts">
-	import Reveal from '$lib/components/home/Reveal.svelte';
-	import { createProductSimpleGridFlow } from '$lib/constants/product-flow';
-	import type { ProductPageData } from '$lib/constants/product';
-	import ProductFlowCanvas from './flow/ProductFlowCanvas.svelte';
-
-	let { product }: { product: ProductPageData } = $props();
-
-	const integrationFlow = $derived(
-		product.integration.items.length >= 5
-			? createProductSimpleGridFlow({
-					nodes: [
-						...product.integration.items.map((item, index) => ({
-							id: `module-${index + 1}`,
-							title: item,
-							icon: product.icon,
-							tone:
-								index % 3 === 1
-									? ('secondary' as const)
-									: index % 3 === 2
-										? ('accent' as const)
-										: ('primary' as const)
-						})),
-						...(product.integration.items.length === 5
-							? [
-									{
-										id: 'module-output',
-										title: 'Owner Action',
-										icon: product.icon,
-										tone: 'secondary' as const
-									}
-								]
-							: [])
-					]
-				})
-			: undefined
-	);
-</script>
-
-<section class="bg-background py-16 md:py-28">
-	<div class="mx-auto w-full max-w-7xl px-4">
-		<Reveal>
-			<div class="max-w-3xl space-y-4">
-				<h2 class="font-heading text-3xl leading-tight font-bold md:text-5xl">
-					{product.integration.title}
-				</h2>
-				<p class="text-lg text-muted-foreground">{product.integration.description}</p>
-			</div>
-		</Reveal>
-
-		<Reveal delay={0.08}>
-			<div class="mt-10">
-				{#if integrationFlow}
-					<ProductFlowCanvas flow={integrationFlow} animated />
-				{:else}
-					<div
-						class="shadow-3d-lg relative overflow-hidden rounded-3xl border-2 bg-background p-5 md:p-7"
-					>
-						<div
-							aria-hidden="true"
-							class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle,var(--border)_1px,transparent_1px)] bg-size-[24px_24px] opacity-50"
-						></div>
-
-						<div class="relative z-10 hidden items-stretch gap-3 lg:flex">
-							{#each product.integration.items as item, index (item)}
-								<div
-									class={`shadow-3d-sm flex min-h-24 min-w-0 flex-1 flex-col justify-center rounded-2xl border-2 px-4 py-3 ${
-										index === 0 ? 'border-primary bg-primary/5' : 'bg-background'
-									}`}
-								>
-									<p class="text-[11px] font-black tracking-[0.14em] text-primary uppercase">
-										{index === 0 ? 'Current flow' : `Module ${index + 1}`}
-									</p>
-									<p class="mt-2 font-heading text-lg leading-tight font-bold">{item}</p>
-								</div>
-
-								{#if index < product.integration.items.length - 1}
-									<div class="grid shrink-0 place-items-center text-2xl font-black text-primary">
-										-&gt;
-									</div>
-								{/if}
-							{/each}
-						</div>
-
-						<div class="relative z-10 grid gap-3 lg:hidden">
-							{#each product.integration.items as item, index (item)}
-								<div
-									class={`shadow-3d-sm rounded-2xl border-2 px-4 py-3 ${
-										index === 0 ? 'border-primary bg-primary/5' : 'bg-background'
-									}`}
-								>
-									<p class="text-[11px] font-black tracking-[0.14em] text-primary uppercase">
-										{index === 0 ? 'Current flow' : `Module ${index + 1}`}
-									</p>
-									<p class="mt-2 font-heading text-lg leading-tight font-bold">{item}</p>
-								</div>
-
-								{#if index < product.integration.items.length - 1}
-									<div class="text-center text-2xl font-black text-primary">↓</div>
-								{/if}
-							{/each}
-						</div>
-					</div>
-				{/if}
-			</div>
-		</Reveal>
-	</div>
-</section>
-</file>
-
-<file path="ProductMockup.svelte">
-<script lang="ts">
-	import type { ProductMockupType } from '$lib/constants/product';
-
-	let { type }: { type: ProductMockupType } = $props();
+	let { type }: { type: SolutionMockupType } = $props();
 </script>
 
 <div class="shadow-3d-lg w-full overflow-hidden rounded-[2rem] border-2 bg-background p-5">
-	{#if type === 'agent'}
+	{#if type === 'coffee'}
 		<div class="space-y-4">
 			<div class="flex items-center justify-between border-b-2 pb-4">
 				<div>
-					<p class="font-heading text-xl font-bold">Ningki AI</p>
-					<p class="text-sm text-muted-foreground">Confidence 92%</p>
+					<p class="font-heading text-xl font-bold">Coffee Shop Inbox</p>
+					<p class="text-sm text-muted-foreground">Menu, promo, repeat customer</p>
 				</div>
 				<span class="rounded-full bg-primary px-3 py-1 text-xs font-bold text-primary-foreground"
 					>Live</span
 				>
 			</div>
+
 			<div class="rounded-3xl border-2 bg-muted/40 p-4">
 				<p class="text-xs font-bold text-muted-foreground">Customer</p>
-				<p class="mt-2 font-bold">Ada menu rice bowl yang cocok buat makan siang?</p>
+				<p class="mt-2 font-bold">Kak menu non-coffee ada?</p>
 			</div>
 			<div class="ml-8 rounded-3xl border-2 border-primary bg-primary p-4 text-primary-foreground">
-				<p class="text-xs font-bold text-primary-foreground/80">AI Reply</p>
-				<p class="mt-2 font-bold">
-					Ada. Untuk makan siang, Chicken Sambal Matah paling sering dipilih.
-				</p>
+				<p class="text-xs font-bold text-primary-foreground/80">Ningki</p>
+				<p class="mt-2 font-bold">Ada. Kamu bisa coba matcha latte atau chocolate series.</p>
 			</div>
-			<div class="flex flex-wrap gap-2">
-				<span class="rounded-full border-2 bg-background px-3 py-1 text-xs font-bold">Menu</span>
-				<span class="rounded-full border-2 bg-background px-3 py-1 text-xs font-bold">Harga</span>
-				<span class="rounded-full border-2 bg-background px-3 py-1 text-xs font-bold"
-					>Rekomendasi</span
-				>
-			</div>
-		</div>
-	{:else if type === 'chat'}
-		<div class="grid min-h-[360px] gap-4 md:grid-cols-[0.82fr_1.18fr]">
-			<div class="space-y-3">
-				{#each ['Fina', 'Raka', 'Dewi'] as name, index (name)}
-					<div
-						class={`rounded-2xl border-2 p-3 ${index === 0 ? 'border-primary bg-primary/5' : 'bg-muted/40'}`}
-					>
-						<div class="flex items-center justify-between gap-3">
-							<p class="font-bold">{name}</p>
-							<span class="text-xs font-bold text-primary">{index === 0 ? 'Hot' : 'New'}</span>
-						</div>
-						<p class="mt-1 truncate text-xs text-muted-foreground">Mau tanya paket reservasi...</p>
-					</div>
-				{/each}
-			</div>
-			<div class="rounded-3xl border-2 bg-muted/40 p-4">
-				<div class="flex items-center justify-between border-b-2 pb-3">
-					<div>
-						<p class="font-heading text-lg font-bold">Fina</p>
-						<p class="text-xs text-muted-foreground">Lead status: Hot</p>
-					</div>
-					<span class="rounded-full bg-primary px-3 py-1 text-xs font-bold text-primary-foreground"
-						>Follow-up</span
-					>
-				</div>
-				<div class="mt-4 space-y-3">
-					<div class="max-w-[82%] rounded-2xl border-2 bg-background p-3 text-sm font-bold">
-						Ada meja untuk 6 orang?
-					</div>
-					<div
-						class="ml-auto max-w-[82%] rounded-2xl border-2 border-primary bg-primary p-3 text-sm font-bold text-primary-foreground"
-					>
-						Ada. Mau saya bantu cek jamnya?
-					</div>
-					<div class="rounded-2xl border-2 bg-background p-3 text-xs text-muted-foreground">
-						Summary: tertarik reservasi grup, perlu follow-up hari ini.
-					</div>
-				</div>
-			</div>
-		</div>
-	{:else if type === 'profile'}
-		<div class="space-y-4">
-			<div class="flex items-center gap-4 rounded-3xl border-2 bg-primary/5 p-4">
-				<div
-					class="grid size-16 shrink-0 place-items-center rounded-full bg-primary text-2xl font-black text-primary-foreground"
-				>
-					F
-				</div>
-				<div>
-					<p class="font-heading text-xl font-bold">Fina Rahma</p>
-					<p class="text-sm text-muted-foreground">Last interaction: 12 menit lalu</p>
-				</div>
-			</div>
+
 			<div class="grid gap-3 sm:grid-cols-2">
-				<div class="rounded-2xl border-2 bg-muted/40 p-4">
-					<p class="text-xs font-bold text-muted-foreground">Lead score</p>
-					<p class="mt-2 font-heading text-3xl font-bold text-primary">86</p>
+				<div class="rounded-2xl border-2 bg-primary/5 p-4">
+					<p class="text-xs font-bold text-muted-foreground">Interest</p>
+					<p class="mt-2 font-heading text-lg font-bold">Non-coffee</p>
 				</div>
 				<div class="rounded-2xl border-2 bg-muted/40 p-4">
-					<p class="text-xs font-bold text-muted-foreground">Favorite product</p>
-					<p class="mt-2 font-bold">Rice Bowl</p>
+					<p class="text-xs font-bold text-muted-foreground">Action</p>
+					<p class="mt-2 font-heading text-lg font-bold">Follow-up ready</p>
 				</div>
-			</div>
-			<div class="rounded-3xl border-2 bg-background p-4">
-				<p class="text-xs font-bold text-muted-foreground">Next best action</p>
-				<p class="mt-2 font-bold">Kirim promo lunch bundle sebelum jam 11.00.</p>
 			</div>
 		</div>
-	{:else if type === 'payment'}
-		<div class="grid gap-4 md:grid-cols-[0.95fr_1.05fr]">
-			<div class="space-y-3 rounded-3xl border-2 bg-muted/40 p-4">
-				<p class="font-heading text-xl font-bold">Order #NGK-1082</p>
-				<div class="flex justify-between border-b-2 pb-2 text-sm">
-					<span>Chicken bowl x2</span><b>Rp78k</b>
+	{:else if type === 'cafeResto'}
+		<div class="grid gap-4 md:grid-cols-[1fr_0.9fr]">
+			<div class="space-y-4">
+				<div class="rounded-3xl border-2 bg-primary/5 p-4">
+					<p class="font-heading text-xl font-bold">Reservasi Rani</p>
+					<p class="mt-1 text-sm text-muted-foreground">Sabtu, 19.00 WIB</p>
+					<div class="mt-4 grid grid-cols-3 gap-2">
+						<span class="rounded-xl border-2 bg-background p-2 text-center text-xs font-bold"
+							>12 Jun</span
+						>
+						<span class="rounded-xl border-2 bg-background p-2 text-center text-xs font-bold"
+							>19.00</span
+						>
+						<span class="rounded-xl border-2 bg-background p-2 text-center text-xs font-bold"
+							>6 pax</span
+						>
+					</div>
 				</div>
-				<div class="flex justify-between border-b-2 pb-2 text-sm">
-					<span>Iced tea x2</span><b>Rp24k</b>
-				</div>
-				<div class="flex justify-between text-base font-black">
-					<span>Total</span><span>Rp102k</span>
+				<div class="rounded-3xl border-2 bg-muted/40 p-4">
+					<p class="text-xs font-bold text-muted-foreground">Order status</p>
+					<p class="mt-2 font-heading text-lg font-bold">Confirmed</p>
 				</div>
 			</div>
 			<div class="rounded-3xl border-2 bg-background p-4 text-center">
 				<div
-					class="mx-auto grid aspect-square max-w-44 grid-cols-5 gap-1 rounded-2xl border-2 bg-muted/40 p-3"
+					class="mx-auto grid aspect-square max-w-36 grid-cols-5 gap-1 rounded-2xl border-2 bg-muted/40 p-3"
 				>
 					{#each Array(25) as _, index (index)}
 						<span
@@ -6648,138 +5730,71 @@ export function flowLabelStyle(flow: ProductFlowCanvasData, x: number, y: number
 					{/each}
 				</div>
 				<p class="mt-4 rounded-full bg-primary px-3 py-2 text-sm font-bold text-primary-foreground">
-					Waiting payment
+					Owner notified
 				</p>
-			</div>
-		</div>
-	{:else if type === 'dashboard'}
-		<div class="space-y-4">
-			<div class="grid gap-3 sm:grid-cols-3">
-				{#each [{ label: 'Hot lead', value: '18' }, { label: 'Lost order', value: '5' }, { label: 'Asked menu', value: '42' }] as stat (stat.label)}
-					<div class="rounded-2xl border-2 bg-muted/40 p-4">
-						<p class="text-xs font-bold text-muted-foreground">{stat.label}</p>
-						<p class="mt-2 font-heading text-3xl font-bold">{stat.value}</p>
-					</div>
-				{/each}
-			</div>
-			<div class="rounded-3xl border-2 bg-primary/5 p-4">
-				<p class="font-heading text-xl font-bold">Owner Digest</p>
-				<p class="mt-2 text-sm text-muted-foreground">
-					Lunch bundle sering ditanya. Ada 7 lead yang belum dibalas lebih dari 1 jam.
-				</p>
-			</div>
-			<div class="space-y-2">
-				{#each ['Follow-up Fina untuk reservasi', 'Review promo weekday', 'Cek menu paling sering ditanya'] as insight (insight)}
-					<div class="rounded-2xl border-2 bg-background px-4 py-3 text-sm font-bold">
-						{insight}
-					</div>
-				{/each}
 			</div>
 		</div>
 	{:else}
 		<div class="space-y-4">
-			<div class="rounded-3xl border-2 bg-primary/5 p-4">
-				<p class="font-heading text-xl font-bold">Reservasi Fina</p>
-				<p class="text-sm text-muted-foreground">Sabtu, 19.00 WIB</p>
+			<div class="rounded-3xl border-2 bg-muted/40 p-4">
+				<p class="text-xs font-bold text-muted-foreground">Product inquiry</p>
+				<p class="mt-2 font-bold">Brownies hampers masih ada untuk Jumat?</p>
 			</div>
 			<div class="grid gap-3 sm:grid-cols-3">
-				<div class="rounded-2xl border-2 bg-muted/40 p-4">
-					<p class="text-xs text-muted-foreground">Date</p>
-					<b>12 Jun</b>
+				<div class="rounded-2xl border-2 bg-primary/5 p-4">
+					<p class="text-xs text-muted-foreground">Repeat</p>
+					<p class="mt-2 font-heading text-xl font-bold">12</p>
 				</div>
 				<div class="rounded-2xl border-2 bg-muted/40 p-4">
-					<p class="text-xs text-muted-foreground">Time</p>
-					<b>19.00</b>
+					<p class="text-xs text-muted-foreground">Seasonal</p>
+					<p class="mt-2 font-heading text-xl font-bold">Hampers</p>
 				</div>
 				<div class="rounded-2xl border-2 bg-muted/40 p-4">
-					<p class="text-xs text-muted-foreground">Pax</p>
-					<b>6 orang</b>
+					<p class="text-xs text-muted-foreground">Paid</p>
+					<p class="mt-2 font-heading text-xl font-bold">QRIS</p>
 				</div>
 			</div>
 			<div class="rounded-3xl border-2 bg-background p-4">
-				<p class="text-xs font-bold text-muted-foreground">Confirmation</p>
-				<p class="mt-2 font-bold">Meja indoor, dekat jendela, status confirmed.</p>
+				<p class="text-xs font-bold text-muted-foreground">Campaign draft</p>
+				<p class="mt-2 font-bold">Kirim reminder pre-order hampers ke customer repeat.</p>
 			</div>
-			<p
-				class="rounded-full bg-primary px-4 py-3 text-center text-sm font-bold text-primary-foreground"
-			>
-				Confirmed
-			</p>
 		</div>
 	{/if}
 </div>
 </file>
 
-<file path="ProductPreviewSection.svelte">
+<file path="src/lib/components/solutions/SolutionOutcomeSection.svelte">
 <script lang="ts">
 	import Reveal from '$lib/components/home/Reveal.svelte';
-	import type { ProductPageData } from '$lib/constants/product';
-	import ProductMockup from './ProductMockup.svelte';
+	import type { SolutionPageData } from '$lib/constants/solutions';
 
-	let { product }: { product: ProductPageData } = $props();
-
-	const details = ['Realtime context', 'Readable status', 'Action-ready'];
-</script>
-
-<section class="bg-background py-16 md:py-28">
-	<div
-		class="mx-auto grid w-full max-w-7xl gap-10 px-4 lg:grid-cols-[1.05fr_0.95fr] lg:items-center"
-	>
-		<Reveal>
-			<ProductMockup type={product.preview.type} />
-		</Reveal>
-
-		<Reveal delay={0.08}>
-			<div class="space-y-6">
-				<div class="space-y-4">
-					<p class="text-sm font-black tracking-[0.18em] text-primary uppercase">Preview</p>
-					<h2 class="font-heading text-3xl leading-tight font-bold md:text-5xl">
-						{product.preview.title}
-					</h2>
-					<p class="text-lg text-muted-foreground">{product.preview.description}</p>
-				</div>
-
-				<div class="grid gap-3 sm:grid-cols-3">
-					{#each details as detail (detail)}
-						<div class="shadow-3d-sm rounded-2xl border-2 bg-muted/40 px-4 py-3 text-sm font-bold">
-							{detail}
-						</div>
-					{/each}
-				</div>
-			</div>
-		</Reveal>
-	</div>
-</section>
-</file>
-
-<file path="ProductProblemSection.svelte">
-<script lang="ts">
-	import Reveal from '$lib/components/home/Reveal.svelte';
-	import type { ProductPageData } from '$lib/constants/product';
-
-	let { product }: { product: ProductPageData } = $props();
+	let { solution }: { solution: SolutionPageData } = $props();
 </script>
 
 <section class="bg-muted/40 py-16 md:py-28">
 	<div class="mx-auto w-full max-w-7xl px-4">
 		<Reveal>
 			<div class="max-w-3xl space-y-4">
-				<p class="text-sm font-black tracking-[0.18em] text-primary uppercase">
-					Masalah yang dibereskan
-				</p>
 				<h2 class="font-heading text-3xl leading-tight font-bold md:text-5xl">
-					{product.problem.title}
+					{solution.outcomes.title}
 				</h2>
-				<p class="text-lg text-muted-foreground">{product.problem.description}</p>
+				<p class="text-lg text-muted-foreground">{solution.outcomes.description}</p>
 			</div>
 		</Reveal>
 
-		<div class="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-			{#each product.problem.items as item, index (item)}
-				<Reveal delay={index * 0.04}>
-					<div class="shadow-3d-sm h-full rounded-3xl border-2 bg-background p-5">
-						<p class="text-sm font-black text-primary">0{index + 1}</p>
-						<p class="mt-4 text-base font-bold">{item}</p>
+		<div class="mt-10 grid gap-5 md:grid-cols-3">
+			{#each solution.outcomes.items as item, index (item.value)}
+				<Reveal delay={index * 0.05}>
+					<div
+						class={`h-full rounded-3xl border-2 p-5 ${
+							index === 0
+								? 'shadow-3d-primary border-primary bg-primary/5'
+								: 'shadow-3d-sm bg-background'
+						}`}
+					>
+						<p class="font-heading text-3xl font-bold text-primary">{item.value}</p>
+						<h3 class="mt-4 font-heading text-xl font-bold">{item.label}</h3>
+						<p class="mt-3 text-sm leading-relaxed text-muted-foreground">{item.description}</p>
 					</div>
 				</Reveal>
 			{/each}
@@ -6788,76 +5803,68 @@ export function flowLabelStyle(flow: ProductFlowCanvasData, x: number, y: number
 </section>
 </file>
 
-<file path="ProductWorkflowSection.svelte">
+<file path="src/lib/components/solutions/SolutionPainSection.svelte">
 <script lang="ts">
 	import Reveal from '$lib/components/home/Reveal.svelte';
-	import { productWorkflowFlows, type ProductPageData } from '$lib/constants/product';
-	import ProductFlowCanvas from './flow/ProductFlowCanvas.svelte';
+	import type { SolutionPageData } from '$lib/constants/solutions';
 
-	let { product }: { product: ProductPageData } = $props();
-
-	const canvasFlow = $derived(productWorkflowFlows[product.slug]);
+	let { solution }: { solution: SolutionPageData } = $props();
 </script>
 
-<section class="bg-primary/5 py-16 md:py-28">
+<section class="bg-muted/40 py-16 md:py-28">
 	<div class="mx-auto w-full max-w-7xl px-4">
 		<Reveal>
-			<div class="mx-auto max-w-3xl space-y-4 text-center">
+			<div class="max-w-3xl space-y-4">
 				<h2 class="font-heading text-3xl leading-tight font-bold md:text-5xl">
-					{canvasFlow?.title ?? product.workflow.title}
+					{solution.pains.title}
 				</h2>
-				<p class="text-lg text-muted-foreground">
-					{canvasFlow?.description ?? product.workflow.description}
-				</p>
+				<p class="text-lg text-muted-foreground">{solution.pains.description}</p>
 			</div>
 		</Reveal>
 
-		<Reveal delay={0.08}>
-			<div class="mt-10">
-				{#if canvasFlow}
-					<ProductFlowCanvas flow={canvasFlow} animated />
-				{/if}
-			</div>
-		</Reveal>
+		<div class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+			{#each solution.pains.items as item, index (item.title)}
+				<Reveal delay={index * 0.04}>
+					<div
+						class="shadow-3d-sm hover:shadow-3d-lg h-full rounded-3xl border-2 bg-background p-5 transition-all duration-300 hover:-translate-y-1"
+					>
+						<p class="text-sm font-black text-primary">{String(index + 1).padStart(2, '0')}</p>
+						<h3 class="mt-4 font-heading text-xl font-bold">{item.title}</h3>
+						<p class="mt-3 text-sm leading-relaxed text-muted-foreground">{item.description}</p>
+					</div>
+				</Reveal>
+			{/each}
+		</div>
 	</div>
 </section>
 </file>
 
-<file path="RelatedProductsSection.svelte">
+<file path="src/lib/components/solutions/SolutionRelatedSection.svelte">
 <script lang="ts">
 	import Reveal from '$lib/components/home/Reveal.svelte';
-	import { productPages, type ProductPageData } from '$lib/constants/product';
+	import type { SolutionPageData } from '$lib/constants/solutions';
 
-	let { product }: { product: ProductPageData } = $props();
-
-	const relatedProducts = $derived(product.related.slice(0, 3).map((slug) => productPages[slug]));
+	let { solution }: { solution: SolutionPageData } = $props();
 </script>
 
-<section class="bg-primary/5 py-16 md:py-28">
+<section class="bg-background py-16 md:py-28">
 	<div class="mx-auto w-full max-w-7xl px-4">
 		<Reveal>
 			<h2 class="font-heading text-3xl leading-tight font-bold md:text-5xl">
-				Lanjutkan ke modul terkait.
+				Lihat solution lainnya.
 			</h2>
 		</Reveal>
 
-		<div class="mt-10 grid gap-5 md:grid-cols-3">
-			{#each relatedProducts as related, index (related.slug)}
-				{@const Icon = related.icon}
-				<Reveal delay={index * 0.04}>
+		<div class="mt-10 grid gap-5 md:grid-cols-2">
+			{#each solution.related as item, index (item.href)}
+				<Reveal delay={index * 0.05}>
 					<a
-						href={`/product/${related.slug}`}
-						class="shadow-3d-sm hover:shadow-3d-lg block h-full rounded-3xl border-2 bg-background p-5 transition-all duration-300 hover:-translate-y-1"
+						href={item.href}
+						class="shadow-3d-sm hover:shadow-3d-lg block h-full rounded-3xl border-2 bg-muted/40 p-5 transition-all duration-300 hover:-translate-y-1"
 					>
-						<div
-							class="grid size-11 place-items-center rounded-2xl bg-primary text-primary-foreground"
-						>
-							<Icon class="size-5" />
-						</div>
-						<h3 class="mt-5 font-heading text-xl font-bold">{related.eyebrow}</h3>
-						<p class="mt-2 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
-							{related.description}
-						</p>
+						<h3 class="font-heading text-2xl font-bold">{item.title}</h3>
+						<p class="mt-3 text-sm leading-relaxed text-muted-foreground">{item.description}</p>
+						<p class="mt-5 text-sm font-black text-primary">Buka solution -&gt;</p>
 					</a>
 				</Reveal>
 			{/each}
@@ -6866,7 +5873,97 @@ export function flowLabelStyle(flow: ProductFlowCanvasData, x: number, y: number
 </section>
 </file>
 
-</files>
+<file path="src/lib/components/solutions/SolutionScenarioSection.svelte">
+<script lang="ts">
+	import Reveal from '$lib/components/home/Reveal.svelte';
+	import type { SolutionPageData } from '$lib/constants/solutions';
+
+	let { solution }: { solution: SolutionPageData } = $props();
+</script>
+
+<section class="bg-background py-16 md:py-28">
+	<div class="mx-auto grid w-full max-w-7xl gap-10 px-4 lg:grid-cols-[0.85fr_1.15fr]">
+		<Reveal>
+			<div class="space-y-4 lg:sticky lg:top-28">
+				<h2 class="font-heading text-3xl leading-tight font-bold md:text-5xl">
+					{solution.scenarios.title}
+				</h2>
+				<p class="text-lg text-muted-foreground">{solution.scenarios.description}</p>
+			</div>
+		</Reveal>
+
+		<div class="grid gap-5">
+			{#each solution.scenarios.items as item, index (item.title)}
+				<Reveal delay={index * 0.05}>
+					<div class="shadow-3d-sm rounded-3xl border-2 bg-muted/40 p-5">
+						<h3 class="font-heading text-2xl font-bold">{item.title}</h3>
+						<p class="mt-2 text-sm leading-relaxed text-muted-foreground">{item.description}</p>
+						<div class="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+							{#each item.steps as step, stepIndex (step)}
+								<span
+									class="shadow-3d-sm rounded-2xl border-2 bg-background px-4 py-2 text-sm font-bold"
+								>
+									{step}
+								</span>
+								{#if stepIndex < item.steps.length - 1}
+									<span class="hidden font-black text-primary sm:inline">-&gt;</span>
+									<span class="text-center font-black text-primary sm:hidden">↓</span>
+								{/if}
+							{/each}
+						</div>
+					</div>
+				</Reveal>
+			{/each}
+		</div>
+	</div>
+</section>
+</file>
+
+<file path="src/lib/components/solutions/SolutionWorkflowSection.svelte">
+<script lang="ts">
+	import Reveal from '$lib/components/home/Reveal.svelte';
+	import { createProductSimpleGridFlow } from '$lib/constants/product-flow';
+	import type { SolutionPageData } from '$lib/constants/solutions';
+	import ProductFlowCanvas from '$lib/components/product/flow/ProductFlowCanvas.svelte';
+
+	let { solution }: { solution: SolutionPageData } = $props();
+
+	const workflowFlow = $derived(
+		createProductSimpleGridFlow({
+			showStepNumber: true,
+			nodes: solution.workflow.steps.map((step, index) => ({
+				id: `workflow-${index + 1}`,
+				title: step.title,
+				description: step.description,
+				tone:
+					index % 3 === 1
+						? ('secondary' as const)
+						: index % 3 === 2
+							? ('accent' as const)
+							: ('primary' as const)
+			}))
+		})
+	);
+</script>
+
+<section class="bg-background py-16 md:py-28">
+	<div class="mx-auto w-full max-w-7xl px-4">
+		<Reveal>
+			<div class="mx-auto max-w-3xl space-y-4 text-center">
+				<h2 class="font-heading text-3xl leading-tight font-bold md:text-5xl">
+					{solution.workflow.title}
+				</h2>
+				<p class="text-lg text-muted-foreground">{solution.workflow.description}</p>
+			</div>
+		</Reveal>
+
+		<Reveal delay={0.08}>
+			<div class="mt-10">
+				<ProductFlowCanvas flow={workflowFlow} animated />
+			</div>
+		</Reveal>
+	</div>
+</section>
 </file>
 
 <file path="src/lib/components/ui/accordion/accordion-content.svelte">
@@ -18062,6 +17159,494 @@ export const productIndexFlow: ProductFlowCanvasData = createProductSimpleGridFl
 });
 </file>
 
+<file path="src/lib/constants/solutions.ts">
+import {
+	Bot,
+	CalendarCheck,
+	CheckCircle2,
+	Coffee,
+	ContactRound,
+	CreditCard,
+	LayoutDashboard,
+	MessageCircle,
+	Send,
+	Sparkles,
+	Store,
+	TrendingUp,
+	Users,
+	Utensils
+} from '@lucide/svelte';
+import type { Component } from 'svelte';
+
+export type SolutionSlug = 'coffee-shop' | 'cafe-resto' | 'umkm-fnb';
+export type SolutionMockupType = 'coffee' | 'cafeResto' | 'umkm';
+
+export type SolutionPageData = {
+	slug: SolutionSlug;
+	eyebrow: string;
+	title: string;
+	description: string;
+	icon: Component;
+	mockupType: SolutionMockupType;
+	primaryCta: { label: string; href: string };
+	secondaryCta: { label: string; href: string };
+	pains: {
+		title: string;
+		description: string;
+		items: { title: string; description: string }[];
+	};
+	workflow: {
+		title: string;
+		description: string;
+		steps: { title: string; description: string }[];
+	};
+	featureStack: {
+		title: string;
+		description: string;
+		items: { title: string; description: string; href: string; icon: Component }[];
+	};
+	scenarios: {
+		title: string;
+		description: string;
+		items: { title: string; description: string; steps: string[] }[];
+	};
+	outcomes: {
+		title: string;
+		description: string;
+		items: { value: string; label: string; description: string }[];
+	};
+	related: { title: string; description: string; href: string }[];
+};
+
+const defaultCta = {
+	primaryCta: { label: 'Mulai Gratis', href: '/auth/register' },
+	secondaryCta: { label: 'Lihat Produk', href: '/product' }
+};
+
+export const solutionPages: Record<SolutionSlug, SolutionPageData> = {
+	'coffee-shop': {
+		...defaultCta,
+		slug: 'coffee-shop',
+		eyebrow: 'Solution for Coffee Shop',
+		title: 'Bantu coffee shop membalas chat, follow-up customer, dan membaca pola menu.',
+		description:
+			'Nongki membantu coffee shop yang menerima pertanyaan menu, promo harian, jam buka, repeat order, dan customer yang hampir checkout tapi menghilang.',
+		icon: Coffee,
+		mockupType: 'coffee',
+		pains: {
+			title: 'Chat coffee shop ramai, tapi banyak peluang hilang.',
+			description:
+				'Nongki membantu owner melihat sinyal dari chat harian tanpa harus membaca percakapan satu per satu.',
+			items: [
+				{
+					title: 'Pertanyaan menu berulang',
+					description: 'Menu, harga, jam buka, dan promo sering ditanyakan setiap hari.'
+				},
+				{
+					title: 'Customer hilang sebelum checkout',
+					description: 'Customer tanya promo atau harga, lalu tidak lanjut order.'
+				},
+				{
+					title: 'Pola menu sulit dibaca',
+					description: 'Owner tidak tahu menu apa yang paling sering ditanyakan.'
+				},
+				{
+					title: 'Repeat customer mulai pasif',
+					description: 'Pelanggan lama berhenti order tanpa terdeteksi lebih awal.'
+				}
+			]
+		},
+		workflow: {
+			title: 'Dari chat menu sampai follow-up customer.',
+			description:
+				'Chat WhatsApp berubah menjadi profil customer, sinyal lost order, dan draft action untuk owner.',
+			steps: [
+				{ title: 'Customer tanya menu/promo', description: 'Pertanyaan masuk dari WhatsApp.' },
+				{ title: 'Ningki membalas', description: 'Jawaban mengikuti knowledge coffee shop.' },
+				{ title: 'Minat tercatat', description: 'Interest masuk ke Customer 360.' },
+				{
+					title: 'Lost opportunity ditandai',
+					description: 'Customer yang hilang sebelum checkout terlihat.'
+				},
+				{
+					title: 'Owner menerima digest',
+					description: 'Insight dan rekomendasi action diringkas.'
+				},
+				{ title: 'Owner approve action', description: 'Follow-up atau promo tetap direview owner.' }
+			]
+		},
+		featureStack: {
+			title: 'Modul yang paling sering dipakai coffee shop.',
+			description: 'Fokusnya menjawab cepat, membaca minat customer, dan menjaga repeat order.',
+			items: [
+				{
+					title: 'AI Agent',
+					description: 'Balas FAQ menu, promo, dan jam buka.',
+					href: '/product/ai-agent',
+					icon: Bot
+				},
+				{
+					title: 'Customer 360',
+					description: 'Minat dan histori customer tersusun dari chat.',
+					href: '/product/customer-360',
+					icon: ContactRound
+				},
+				{
+					title: 'Lost Order Reminder',
+					description: 'Tandai customer yang tertarik tapi belum checkout.',
+					href: '/features/reminder',
+					icon: CalendarCheck
+				},
+				{
+					title: 'Owner Dashboard',
+					description: 'Lihat menu yang sering ditanya dan customer prioritas.',
+					href: '/product/dashboard',
+					icon: LayoutDashboard
+				},
+				{
+					title: 'QRIS Payment',
+					description: 'Bantu pembayaran order saat customer siap checkout.',
+					href: '/product/qris-payment',
+					icon: CreditCard
+				}
+			]
+		},
+		scenarios: {
+			title: 'Skenario harian coffee shop.',
+			description: 'Nongki bekerja dari chat yang memang sudah terjadi setiap hari.',
+			items: [
+				{
+					title: 'Customer tanya menu non-coffee',
+					description: 'Pertanyaan menu jadi sinyal produk yang sedang dicari.',
+					steps: ['Customer chat', 'AI reply', 'Interest tercatat', 'Owner lihat insight']
+				},
+				{
+					title: 'Customer tanya harga lalu hilang',
+					description: 'Peluang yang berhenti di tengah jalan tidak ikut tenggelam.',
+					steps: ['Tanya harga', 'Belum checkout', 'Lost order detected', 'Owner approve']
+				},
+				{
+					title: 'Repeat customer mulai pasif',
+					description: 'Owner bisa menindaklanjuti customer lama sebelum benar-benar hilang.',
+					steps: ['Histori dibaca', 'Customer at-risk', 'Digest owner', 'Campaign draft']
+				}
+			]
+		},
+		outcomes: {
+			title: 'Hasil yang terasa untuk owner.',
+			description: 'Bukan klaim angka, tapi workflow yang lebih mudah dipantau.',
+			items: [
+				{
+					value: 'Lebih cepat',
+					label: 'FAQ terjawab',
+					description: 'Menu dan jam buka bisa dijawab otomatis.'
+				},
+				{
+					value: 'Lebih rapi',
+					label: 'Customer repeat tercatat',
+					description: 'Profil customer terbentuk dari chat.'
+				},
+				{
+					value: 'Lebih terlihat',
+					label: 'Menu populer muncul',
+					description: 'Lost order dan produk yang sering ditanya masuk dashboard.'
+				}
+			]
+		},
+		related: [
+			{
+				title: 'Cafe & Resto',
+				description: 'Untuk reservasi, order, komplain, dan pelanggan loyal.',
+				href: '/solutions/cafe-resto'
+			},
+			{
+				title: 'UMKM F&B',
+				description: 'Untuk bakery, dessert, cloud kitchen, dan repeat order.',
+				href: '/solutions/umkm-fnb'
+			}
+		]
+	},
+	'cafe-resto': {
+		...defaultCta,
+		slug: 'cafe-resto',
+		eyebrow: 'Solution for Cafe & Resto',
+		title: 'Kelola reservasi, order, komplain, dan campaign loyal customer dari WhatsApp.',
+		description:
+			'Nongki cocok untuk kafe dan resto yang banyak menerima reservasi, pertanyaan jam buka, order, komplain, paket keluarga, dan campaign pelanggan loyal.',
+		icon: Utensils,
+		mockupType: 'cafeResto',
+		pains: {
+			title: 'Resto butuh response cepat dan alur order yang tidak tercecer.',
+			description:
+				'Nongki membantu merapikan intent pelanggan, draft order, histori, dan action owner.',
+			items: [
+				{
+					title: 'Reservasi perlu tanya ulang',
+					description: 'Tanggal, jam, dan jumlah orang sering belum lengkap.'
+				},
+				{
+					title: 'Order tercecer di chat',
+					description: 'Detail order bisa tertumpuk percakapan lain.'
+				},
+				{
+					title: 'Komplain tidak terdokumentasi',
+					description: 'Masukan pelanggan sulit dilacak sebagai histori.'
+				},
+				{
+					title: 'Customer loyal sulit terlihat',
+					description: 'Owner perlu tahu pelanggan aktif dan yang mulai pasif.'
+				}
+			]
+		},
+		workflow: {
+			title: 'Dari reservasi masuk sampai customer tercatat.',
+			description:
+				'Detail pelanggan dikumpulkan bertahap, lalu tersimpan sebagai histori yang bisa ditindaklanjuti.',
+			steps: [
+				{ title: 'Customer chat', description: 'Reservasi, order, atau komplain masuk.' },
+				{ title: 'Intent dibaca', description: 'Ningki mengumpulkan detail yang dibutuhkan.' },
+				{ title: 'Draft dibuat', description: 'Order atau reservasi siap direview admin.' },
+				{ title: 'QRIS diterbitkan', description: 'Pembayaran bisa dibuat jika perlu.' },
+				{
+					title: 'Histori diperbarui',
+					description: 'Customer 360 menyimpan status dan aktivitas.'
+				},
+				{
+					title: 'Owner menerima ringkasan',
+					description: 'Insight dan rekomendasi action masuk ke dashboard.'
+				}
+			]
+		},
+		featureStack: {
+			title: 'Modul untuk operasional kafe dan resto.',
+			description: 'Fokusnya merapikan reservasi, order, pembayaran, dan customer loyal.',
+			items: [
+				{
+					title: 'Order & Reservation',
+					description: 'Buat draft order dan reservasi dari chat.',
+					href: '/product/order-reservation',
+					icon: CalendarCheck
+				},
+				{
+					title: 'QRIS Payment',
+					description: 'Hubungkan order dengan pembayaran QRIS.',
+					href: '/product/qris-payment',
+					icon: CreditCard
+				},
+				{
+					title: 'WhatsApp CRM',
+					description: 'Percakapan pelanggan masuk ke inbox yang rapi.',
+					href: '/product/whatsapp-crm',
+					icon: MessageCircle
+				},
+				{
+					title: 'Customer 360',
+					description: 'Histori order, reservasi, dan komplain tersimpan.',
+					href: '/product/customer-360',
+					icon: ContactRound
+				},
+				{
+					title: 'Human Takeover',
+					description: 'Admin mengambil alih percakapan sensitif.',
+					href: '/features/human-takeover',
+					icon: Users
+				}
+			]
+		},
+		scenarios: {
+			title: 'Skenario harian cafe dan resto.',
+			description: 'Workflow tetap humanis, owner dan admin masih bisa approve.',
+			items: [
+				{
+					title: 'Reservasi meja',
+					description: 'Detail booking dikumpulkan sebelum admin proses.',
+					steps: ['Tanya slot', 'Kumpulkan tanggal/jam/pax', 'Draft reservasi', 'Admin approve']
+				},
+				{
+					title: 'Order keluarga',
+					description: 'Order dari chat bisa lanjut ke payment yang tervalidasi.',
+					steps: ['Customer order', 'Total dibuat', 'QRIS dikirim', 'Owner notified']
+				},
+				{
+					title: 'Komplain pelanggan',
+					description: 'Percakapan penting tidak hilang sebagai chat biasa.',
+					steps: ['Komplain masuk', 'Chat ditandai', 'Human takeover', 'Histori tersimpan']
+				}
+			]
+		},
+		outcomes: {
+			title: 'Operasional lebih mudah dipantau.',
+			description: 'Owner mendapat ringkasan, admin tetap punya kendali.',
+			items: [
+				{
+					value: 'Reservasi rapi',
+					label: 'Detail booking lengkap',
+					description: 'Admin tidak perlu mulai dari nol.'
+				},
+				{
+					value: 'Payment jelas',
+					label: 'Order bisa lanjut QRIS',
+					description: 'Status paid membantu proses berikutnya.'
+				},
+				{
+					value: 'Customer loyal terlihat',
+					label: 'Histori tersusun',
+					description: 'Engagement dan order masuk ke Customer 360.'
+				}
+			]
+		},
+		related: [
+			{
+				title: 'Coffee Shop',
+				description: 'Untuk menu, promo harian, dan repeat customer.',
+				href: '/solutions/coffee-shop'
+			},
+			{
+				title: 'UMKM F&B',
+				description: 'Untuk bisnis F&B kecil yang jualan lewat chat.',
+				href: '/solutions/umkm-fnb'
+			}
+		]
+	},
+	'umkm-fnb': {
+		...defaultCta,
+		slug: 'umkm-fnb',
+		eyebrow: 'Solution for UMKM F&B',
+		title: 'Satu sistem WhatsApp CRM untuk bakery, dessert, cloud kitchen, dan F&B kecil.',
+		description:
+			'Nongki membantu UMKM F&B yang menjual lewat chat: repeat order, produk seasonal, reminder pelanggan, promo harian, dan pembayaran QRIS.',
+		icon: Store,
+		mockupType: 'umkm',
+		pains: {
+			title: 'UMKM F&B butuh sistem ringan, bukan CRM yang rumit.',
+			description:
+				'Nongki membuat data customer terbentuk dari chat, tanpa input manual yang membebani owner.',
+			items: [
+				{
+					title: 'Owner sibuk operasional',
+					description: 'Tidak sempat input CRM manual setelah melayani order.'
+				},
+				{
+					title: 'Repeat order lupa di-follow-up',
+					description: 'Pelanggan lama sering lewat tanpa reminder.'
+				},
+				{
+					title: 'Produk seasonal tidak terbaca',
+					description: 'Pertanyaan pelanggan belum menjadi insight produk.'
+				},
+				{ title: 'Payment belum rapi', description: 'Pembayaran dan status order belum terhubung.' }
+			]
+		},
+		workflow: {
+			title: 'Dari chat harian menjadi data dan action.',
+			description:
+				'Nongki membantu UMKM F&B mengubah percakapan menjadi follow-up, order, payment, dan digest owner.',
+			steps: [
+				{
+					title: 'Customer tanya produk',
+					description: 'Pertanyaan promo atau menu masuk dari WhatsApp.'
+				},
+				{ title: 'Minat dicatat', description: 'Ningki menjawab dan menyimpan interest customer.' },
+				{ title: 'Order dibuat', description: 'Jika lanjut, detail order dikumpulkan.' },
+				{ title: 'QRIS diterbitkan', description: 'Payment bisa dibuat dan dipantau.' },
+				{ title: 'Dashboard diperbarui', description: 'Customer 360 dan insight ikut berubah.' },
+				{ title: 'Owner menerima action', description: 'Rekomendasi follow-up siap direview.' }
+			]
+		},
+		featureStack: {
+			title: 'Modul ringan untuk UMKM F&B.',
+			description: 'Mulai dari chat, profil customer, campaign draft, sampai pembayaran.',
+			items: [
+				{
+					title: 'WhatsApp CRM',
+					description: 'Rapikan percakapan penjualan harian.',
+					href: '/product/whatsapp-crm',
+					icon: MessageCircle
+				},
+				{
+					title: 'AI Agent',
+					description: 'Bantu jawab pertanyaan produk dan promo.',
+					href: '/product/ai-agent',
+					icon: Bot
+				},
+				{
+					title: 'Customer 360',
+					description: 'Repeat customer tercatat otomatis.',
+					href: '/product/customer-360',
+					icon: ContactRound
+				},
+				{
+					title: 'Campaign Draft',
+					description: 'Draft promo dan reminder bisa direview owner.',
+					href: '/features/automation-flow',
+					icon: Send
+				},
+				{
+					title: 'QRIS Payment',
+					description: 'Order chat bisa lanjut ke payment.',
+					href: '/product/qris-payment',
+					icon: CreditCard
+				}
+			]
+		},
+		scenarios: {
+			title: 'Skenario untuk bakery, dessert, dan cloud kitchen.',
+			description: 'Cocok untuk bisnis yang transaksi utamanya terjadi lewat chat.',
+			items: [
+				{
+					title: 'Bakery repeat order',
+					description: 'Customer lama bisa diingatkan tanpa input manual.',
+					steps: ['Pernah beli', 'Histori dibaca', 'Reminder follow-up', 'Owner approve']
+				},
+				{
+					title: 'Dessert seasonal promo',
+					description: 'Produk seasonal yang ramai ditanya bisa jadi draft campaign.',
+					steps: ['Banyak tanya', 'Insight muncul', 'Draft promo', 'Owner approve']
+				},
+				{
+					title: 'Cloud kitchen order',
+					description: 'Order dari chat terhubung ke payment dan dashboard.',
+					steps: ['Order chat', 'Detail dikumpulkan', 'QRIS dibuat', 'Dashboard update']
+				}
+			]
+		},
+		outcomes: {
+			title: 'Sistem lebih ringan untuk owner.',
+			description: 'Nongki membantu owner jualan tanpa memaksa tim belajar CRM rumit.',
+			items: [
+				{
+					value: 'Lebih ringan',
+					label: 'CRM dari chat',
+					description: 'Data customer terbentuk tanpa input manual.'
+				},
+				{
+					value: 'Lebih siap jualan',
+					label: 'Promo dan repeat order',
+					description: 'Follow-up bisa ditindaklanjuti.'
+				},
+				{
+					value: 'Lebih terukur',
+					label: 'Pola chat dan payment',
+					description: 'Owner melihat sinyal order dan pembayaran.'
+				}
+			]
+		},
+		related: [
+			{
+				title: 'Coffee Shop',
+				description: 'Untuk menu, promo, dan pelanggan repeat.',
+				href: '/solutions/coffee-shop'
+			},
+			{
+				title: 'Cafe & Resto',
+				description: 'Untuk reservasi, order, komplain, dan QRIS.',
+				href: '/solutions/cafe-resto'
+			}
+		]
+	}
+};
+</file>
+
 <file path="src/lib/hooks/is-mobile.svelte.ts">
 import { MediaQuery } from "svelte/reactivity";
 
@@ -18557,31 +18142,13 @@ export const prerender = true;
 
 <file path="src/routes/solutions/cafe-resto/+page.svelte">
 <script lang="ts">
-  import { siteConfig } from "$lib/constants/header";
+	import SolutionDetailPage from '$lib/components/solutions/SolutionDetailPage.svelte';
+	import { solutionPages } from '$lib/constants/solutions';
 
-  const title = "Cafe Resto";
+	const solution = solutionPages['cafe-resto'];
 </script>
 
-<svelte:head>
-  <title>{title} | {siteConfig.name}</title>
-  <meta name="description" content="{title} page for {siteConfig.description}" />
-</svelte:head>
-
-<section class="mx-auto flex min-h-[70vh] w-full max-w-6xl flex-col justify-center px-6 py-24">
-  <div class="max-w-2xl space-y-5">
-    <p class="text-sm font-medium text-primary">
-      {siteConfig.name}
-    </p>
-
-    <h1 class="text-4xl font-bold tracking-tight md:text-6xl">
-      {title}
-    </h1>
-
-    <p class="text-lg text-muted-foreground">
-      Halaman ini sedang disiapkan untuk fitur {title} pada {siteConfig.description}.
-    </p>
-  </div>
-</section>
+<SolutionDetailPage {solution} />
 </file>
 
 <file path="src/routes/solutions/cafe-resto/+page.ts">
@@ -18590,31 +18157,13 @@ export const prerender = true;
 
 <file path="src/routes/solutions/coffee-shop/+page.svelte">
 <script lang="ts">
-  import { siteConfig } from "$lib/constants/header";
+	import SolutionDetailPage from '$lib/components/solutions/SolutionDetailPage.svelte';
+	import { solutionPages } from '$lib/constants/solutions';
 
-  const title = "Coffee Shop";
+	const solution = solutionPages['coffee-shop'];
 </script>
 
-<svelte:head>
-  <title>{title} | {siteConfig.name}</title>
-  <meta name="description" content="{title} page for {siteConfig.description}" />
-</svelte:head>
-
-<section class="mx-auto flex min-h-[70vh] w-full max-w-6xl flex-col justify-center px-6 py-24">
-  <div class="max-w-2xl space-y-5">
-    <p class="text-sm font-medium text-primary">
-      {siteConfig.name}
-    </p>
-
-    <h1 class="text-4xl font-bold tracking-tight md:text-6xl">
-      {title}
-    </h1>
-
-    <p class="text-lg text-muted-foreground">
-      Halaman ini sedang disiapkan untuk fitur {title} pada {siteConfig.description}.
-    </p>
-  </div>
-</section>
+<SolutionDetailPage {solution} />
 </file>
 
 <file path="src/routes/solutions/coffee-shop/+page.ts">
@@ -18623,31 +18172,13 @@ export const prerender = true;
 
 <file path="src/routes/solutions/umkm-fnb/+page.svelte">
 <script lang="ts">
-  import { siteConfig } from "$lib/constants/header";
+	import SolutionDetailPage from '$lib/components/solutions/SolutionDetailPage.svelte';
+	import { solutionPages } from '$lib/constants/solutions';
 
-  const title = "Umkm Fnb";
+	const solution = solutionPages['umkm-fnb'];
 </script>
 
-<svelte:head>
-  <title>{title} | {siteConfig.name}</title>
-  <meta name="description" content="{title} page for {siteConfig.description}" />
-</svelte:head>
-
-<section class="mx-auto flex min-h-[70vh] w-full max-w-6xl flex-col justify-center px-6 py-24">
-  <div class="max-w-2xl space-y-5">
-    <p class="text-sm font-medium text-primary">
-      {siteConfig.name}
-    </p>
-
-    <h1 class="text-4xl font-bold tracking-tight md:text-6xl">
-      {title}
-    </h1>
-
-    <p class="text-lg text-muted-foreground">
-      Halaman ini sedang disiapkan untuk fitur {title} pada {siteConfig.description}.
-    </p>
-  </div>
-</section>
+<SolutionDetailPage {solution} />
 </file>
 
 <file path="src/routes/solutions/umkm-fnb/+page.ts">

@@ -1,20 +1,19 @@
 <script lang="ts">
-	import { onMount, tick } from "svelte";
+	import { onMount, tick } from 'svelte';
 	import {
 		authNavigation,
 		featureNavigation,
 		productNavigation,
 		siteConfig,
-		solutionNavigation,
-		workflowNavigation
-	} from "$lib/constants/header";
-	import { headerAnimation } from "$lib/constants/header";
-	import logo from "$lib/assets/logo.png";
-	import { Button } from "$lib/components/ui/button/index.js";
-	import DesktopNavigation from "$lib/components/layouts/header/DesktopNavigation.svelte";
-	import UserMenu from "$lib/components/layouts/header/UserMenu.svelte";
-	import { cn } from "$lib/utils.js";
-	import { Menu, X } from "@lucide/svelte";
+		solutionNavigation
+	} from '$lib/constants/header';
+	import { headerAnimation } from '$lib/constants/header';
+	import logo from '$lib/assets/logo.png';
+	import { Button } from '$lib/components/ui/button/index.js';
+	import DesktopNavigation from '$lib/components/layouts/header/DesktopNavigation.svelte';
+	import UserMenu from '$lib/components/layouts/header/UserMenu.svelte';
+	import { cn } from '$lib/utils.js';
+	import { Menu, X } from '@lucide/svelte';
 
 	let isMobileMenuOpen = $state(false);
 	let isLogin = $state(false);
@@ -22,29 +21,25 @@
 	let mobileMenuEl = $state<HTMLDivElement>();
 	let mobileMenuInnerEl = $state<HTMLDivElement>();
 
-	let gsap = $state<typeof import("gsap").default>();
+	let gsap = $state<typeof import('gsap').default>();
 
 	const mobileGroups = [
 		{
-			title: "Produk",
+			title: 'Produk',
 			items: productNavigation
 		},
 		{
-			title: "Solusi",
+			title: 'Solusi',
 			items: solutionNavigation
 		},
 		{
-			title: "Fitur",
+			title: 'Fitur',
 			items: featureNavigation
-		},
-		{
-			title: "Alur Sistem",
-			items: workflowNavigation
 		}
 	];
 
 	onMount(async () => {
-		gsap = (await import("gsap")).default;
+		gsap = (await import('gsap')).default;
 	});
 
 	const animateMobileMenuOpen = async () => {
@@ -101,8 +96,8 @@
 
 <header
 	class={cn(
-		"sticky top-0 z-50 border-b backdrop-blur transition-colors duration-300",
-		isMobileMenuOpen ? "min-h-screen bg-background" : "bg-background/80"
+		'sticky top-0 z-50 border-b backdrop-blur transition-colors duration-300',
+		isMobileMenuOpen ? 'min-h-screen bg-background' : 'bg-background/80'
 	)}
 >
 	<nav class="container mx-auto flex items-center justify-between px-4 py-3">
@@ -148,7 +143,10 @@
 	</nav>
 
 	{#if isMobileMenuOpen}
-		<div bind:this={mobileMenuEl} class="overflow-hidden border-t bg-background shadow-sm lg:hidden">
+		<div
+			bind:this={mobileMenuEl}
+			class="overflow-hidden border-t bg-background shadow-sm lg:hidden"
+		>
 			<div
 				bind:this={mobileMenuInnerEl}
 				class="container mx-auto max-h-[calc(100vh-73px)] overflow-y-auto px-4 py-4"
@@ -222,13 +220,9 @@
 
 				<div class="mt-4 grid gap-2 border-t pt-4">
 					{#if isLogin}
-						<Button href="/dashboard" variant="outline" onclick={closeMobileMenu}>
-							Dashboard
-						</Button>
+						<Button href="/dashboard" variant="outline" onclick={closeMobileMenu}>Dashboard</Button>
 
-						<Button href="/settings" variant="outline" onclick={closeMobileMenu}>
-							Settings
-						</Button>
+						<Button href="/settings" variant="outline" onclick={closeMobileMenu}>Settings</Button>
 
 						<Button href="/auth/logout" variant="destructive" onclick={closeMobileMenu}>
 							Logout
